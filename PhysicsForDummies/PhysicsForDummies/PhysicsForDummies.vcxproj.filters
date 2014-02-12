@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source">
+      <UniqueIdentifier>{1bd63710-edcb-41f6-9d7f-a1204c52c5b7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\opengl">
+      <UniqueIdentifier>{ca3c41f4-fc83-4521-9883-d361939623db}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Source\Entry.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\opengl\primitives.cpp">
+      <Filter>Source\opengl</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\opengl\stb_image.cpp">
+      <Filter>Source\opengl</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Source\opengl\primitives.h">
+      <Filter>Source\opengl</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\opengl\stb_image.h">
+      <Filter>Source\opengl</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\opengl\opengl.h">
+      <Filter>Source\opengl</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
