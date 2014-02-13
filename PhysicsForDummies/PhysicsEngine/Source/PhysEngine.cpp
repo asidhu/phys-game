@@ -192,7 +192,7 @@ void PhysEngine::step(float time){
 		float tangent = fric.dot(ptr2->accumulatedImpulse);
 		float crossA = cd->contactPoint[0].crossZ(cd->contactNormal), crossB = cd->contactPoint[1].crossZ(cd->contactNormal);
 		float forceA = (tangent + fric.dot(ptr->velocity)*ptr->mass);
-		vec2 fricA = (forceA>0?1:-1)*(fric)*min(maxForce,abs(forceA) );
+		vec2 fricA = (forceA>0?1.f:-1.f)*(fric)*min(maxForce,abs(forceA) );
 		ptr->impulse -= cd->contactNormal*cd->normalImpulse + fricA;
 		ptr->instantTorque -= crossA*cd->normalImpulse;
 		if (abs(ptr->instantTorque - ptr->accumTorque)<.001 && ptr->instantTorque!=0)
@@ -203,7 +203,7 @@ void PhysEngine::step(float time){
 			crossA = 1;
 
 		float forceB = (tangent + fric.dot(ptr2->velocity)*ptr2->mass);
-		vec2 fricB = (forceB>0 ? 1 : -1)*(fric)*min(maxForce, abs(forceB));
+		vec2 fricB = (forceB>0 ? 1.f : -1.f)*(fric)*min(maxForce, abs(forceB));
 		ptr2->impulse += cd->contactNormal*cd->normalImpulse-fricB;
 		ptr2->instantTorque += crossB*cd->normalImpulse;
 		if (abs(ptr2->instantTorque - ptr2->accumTorque)<.001 && ptr2->instantTorque != 0)

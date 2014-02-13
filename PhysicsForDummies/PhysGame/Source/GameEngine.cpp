@@ -1,21 +1,19 @@
 #include "GameEngine.h"
 #include "Actor.h"
 #include <PhysicsEngine\Source\PhysEngine.h>
-
-
-
-//NOPERS SHOULDNT USE THIS :O
+#include "PlatformDependent\GLFWInput.h"
+#include "PlatformDependent\GLFWGraphics.h"
 #include <GLFW\glfw3.h>
-
-
+#include "PhysGame\Source\RenderList.h"
+#include "PhysGame\Source\Scene.h"
+#define MAXPLAYERSPEED 4
 GameEngine::GameEngine(){
 
 	//setup physics engine
 	m_physEngine = new PhysEngine();
-	m_physEngine->setup(-9.81);// no magic constants... oh well
-
-	//setup renderer?
-	//m_renderer.init();
+	m_physEngine->setup(-9.81f);// no magic constants... oh well
+	m_list = new RenderList();
+	m_exit = false;
 }	
 
 void GameEngine::tick(){
@@ -26,6 +24,7 @@ void GameEngine::tick(){
 			it = m_actors.erase(it);
 	}
 	inputTick();
+	m_input->pollInput();
 }
 vec2 move_speed(.2f, 0);
 vec2 up_speed(0, 8);
@@ -54,24 +53,34 @@ void GameEngine::addActor(Actor* actor){
 
 void GameEngine::handleKey(int key, int state){
 	if (key == GLFW_KEY_D){
-		D_Down = (state != GLFW_RELEASE);
+		D_Down = (state != KEY_UP);
 	}
 	if (key == GLFW_KEY_A){
-		A_Down = (state != GLFW_RELEASE);
+		A_Down = (state != KEY_UP);
 	}
 	if (key == GLFW_KEY_W){
-		W_Down = (state != GLFW_RELEASE);
+		W_Down = (state != KEY_UP);
 	}
 	if (key == GLFW_KEY_S){
-		S_Down = (state != GLFW_RELEASE);
+		S_Down = (state != KEY_UP);
 	}
 }
 
-void GameEngine::handleMouse(int x, int y, int button, int state){
+void GameEngine::handleMouse(float x, float y, int button, int state){
 
 }
 
-void GameEngine::handleMouseMove(int x, int y){
+void GameEngine::handleMouseMove(float x, float y){
 
 }
-//void GameEngine::render()
+void GameEngine::render(){
+	for (std::list<Actor*>::iterator it = m_actors.begin(); it != m_actors.end(); it++){
+		Actor* actor = *it;
+		actor->render(m_list);
+	}
+	m_graphics->start();
+	m_graphics->drawList(m_scene->render(0));
+	m_graphics->drawList(m_list);
+	m_graphics->close();
+	m_list->clear();
+}

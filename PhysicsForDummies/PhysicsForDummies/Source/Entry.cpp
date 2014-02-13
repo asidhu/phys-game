@@ -11,7 +11,7 @@ primitives renderer;
 PhysEngine phys;
 GLuint texID;
 #define random() (float)rand()/RAND_MAX
-#define rad2deg(x) (x*57.2957795131) 
+#define rad2deg(x) (x*57.2957795131f) 
 bool step = false, go = true;
 void error_callback(int error, const char* description)
 {
@@ -119,9 +119,9 @@ int main(int argc, char* argv[])
 		//phys.createBox(0, 2 + 3.f*i, mass + i*.1f, mass, 0, 0, 2, .0f, 0);
 		
 		if (random()>1.f)
-			phys.createBody(random() * 2 * ratio - ratio, 5, mass ,random()*.8f-.4f,random()*.8f-.4f,mass,.9f);
+			phys.createBody(random() * 2.f * ratio - ratio, 5.f, mass ,random()*.8f-.4f,random()*.8f-.4f,mass,.9f);
 		else
-			phys.createBox(random() * 4 * ratio - ratio, 5+ random()*4, mass, mass, 0, 0, 2+i, .0f, ((i%2)==1) ? 0.78539816339 : 0.1);
+			phys.createBox(random() * 4.f * ratio - ratio, 5.f+ random()*4.f, mass, mass, 0.f, 0.f, 2.f+(float)i, .0f, ((i%2)==1) ? 0.78539816339f : 0.1f);
 			
 	}
 	LARGE_INTEGER freq;

@@ -1,5 +1,6 @@
 #pragma once
 class body;
+class RenderList;
 class Actor{
 private:
 	int m_actorID;
@@ -16,6 +17,8 @@ public:
 	body* getBody(){
 		return m_body;
 	}
+
+	void render(RenderList*);
 
 	bool tick(){
 		return false;

@@ -13,7 +13,7 @@ bool overlap(extent& a, float min, float max){
 float halfextent(extent& a){
 	return (a.max - a.min) / 2;
 }
-vec2& extent2point(unsigned char a, box* b){
+vec2 extent2point(unsigned char a, box* b){
 	int num = 4;
 	vec2 avg;
 	if ((a & 1) != 0)

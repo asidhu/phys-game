@@ -17,7 +17,7 @@ struct bodydef{
 		mass = 1;
 		width = height = 1;
 		restitution = 0;
-		linearDamping = angularDamping = .999998;
+		linearDamping = angularDamping = .999998f;
 		coeffFriction = .1f;
 		data = NULL;
 	}

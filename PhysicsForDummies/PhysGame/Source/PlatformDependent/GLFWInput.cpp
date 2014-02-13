@@ -1,11 +1,14 @@
 #include "PhysGame\Source\PlatformDependent\GLFWInput.h"
 #include <GLFW\glfw3.h>
-
-
+#include "PhysGame\Source\GameEngine.h"
+#include "PhysGame\Source\PlatformDependent\GLFWGraphics.h"
 GLFWInput *current_input;
 static void mouse_callback(GLFWwindow* win, int button, int action, int mods){
 	double x, y;
 	glfwGetCursorPos(win, &x, &y);
+	GLFWGraphics* gfx = (GLFWGraphics*)current_input->getGraphics();
+	float worldX = ((float)x / gfx->m_win_width*(gfx->getWidth()) + gfx->getLeft());
+	float worldY = ((float)y / gfx->m_win_height*(gfx->m_top - gfx->m_bottom) + gfx->m_top);
 	int out = 0, outbtn = 0;
 	if (action == GLFW_PRESS)
 		out = MOUSE_PRESS;
@@ -15,20 +18,23 @@ static void mouse_callback(GLFWwindow* win, int button, int action, int mods){
 		outbtn = MOUSE_LEFT;
 	else if (button == GLFW_MOUSE_BUTTON_RIGHT)
 		outbtn = MOUSE_RIGHT;
-	if (outbtn != 0 && current_input->onMouse != NULL){
-		current_input->onMouse((int)(x), (int)(y), outbtn, out);
-	}
+	current_input->m_engine->handleMouse(worldX, worldY, outbtn, out);
 }
 static void mousepos_callback(GLFWwindow* win, double x, double y){
-	if (current_input->onMouseMove != NULL){
-		current_input->onMouseMove((int)(x), (int)(y));
-	}
+	GLFWGraphics* gfx = (GLFWGraphics*)current_input->getGraphics();
+	float worldX = ((float)x / gfx->m_win_width*(gfx->getWidth()) + gfx->getLeft());
+	float worldY = ((float)y / gfx->m_win_height*(gfx->m_top - gfx->m_bottom) + gfx->m_top);
+	current_input->m_engine->handleMouseMove(worldX, worldY);
 }
 static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
-	if (current_input->onKey != NULL){
-		current_input->onKey(key, action);
-	}
+	int out = 0;
+	if (action == GLFW_PRESS)
+		out = KEY_DOWN;
+	else if (action == GLFW_RELEASE)
+		out = KEY_UP;
+	if(out!=0)
+		current_input->m_engine->handleKey(key, out);
 	/*
 	if (key == GLFW_KEY_SPACE && action == GLFW_PRESS)
 	step = true;
@@ -37,9 +43,8 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 	if (key == GLFW_KEY_SPACE && action == GLFW_REPEAT)
 	step = true;
 	*/
-
-
 }
+
 GLFWInput::GLFWInput(GLFWwindow* win){
 	m_window = win;
 	glfwSetKeyCallback(m_window, key_callback);
@@ -48,4 +53,7 @@ GLFWInput::GLFWInput(GLFWwindow* win){
 }
 void GLFWInput::pollInput(){
 	current_input = this;
+	glfwPollEvents();
+	if (glfwWindowShouldClose(m_window))
+		m_engine->close();
 }

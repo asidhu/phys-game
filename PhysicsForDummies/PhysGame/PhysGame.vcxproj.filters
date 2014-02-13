@@ -33,6 +33,15 @@
     <ClCompile Include="Source\PlatformDependent\GLFWInput.cpp">
       <Filter>Source\PlatformDependent\Crossplatform</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Actor.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\StaticFixture.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scene.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\opengl\primitives.h">
@@ -64,6 +73,12 @@
     </ClInclude>
     <ClInclude Include="Source\PlatformDependent\GLFWInput.h">
       <Filter>Source\PlatformDependent\Crossplatform</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\RenderList.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\StaticFixture.h">
+      <Filter>Source</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

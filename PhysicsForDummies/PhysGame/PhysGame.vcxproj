@@ -51,12 +51,15 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Actor.cpp" />
     <ClCompile Include="Source\Entry.cpp" />
     <ClCompile Include="Source\GameEngine.cpp" />
     <ClCompile Include="Source\opengl\primitives.cpp" />
     <ClCompile Include="Source\opengl\stb_image.cpp" />
     <ClCompile Include="Source\PlatformDependent\GLFWGraphics.cpp" />
     <ClCompile Include="Source\PlatformDependent\GLFWInput.cpp" />
+    <ClCompile Include="Source\Scene.cpp" />
+    <ClCompile Include="Source\StaticFixture.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Actor.h" />
@@ -68,7 +71,9 @@
     <ClInclude Include="Source\PlatformDependent\GLFWInput.h" />
     <ClInclude Include="Source\PlatformDependent\PlatformGraphics.h" />
     <ClInclude Include="Source\PlatformDependent\PlatformInput.h" />
+    <ClInclude Include="Source\RenderList.h" />
     <ClInclude Include="Source\Scene.h" />
+    <ClInclude Include="Source\StaticFixture.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{F20A13A8-DCDB-4588-BF31-A1937929057B}</ProjectGuid>

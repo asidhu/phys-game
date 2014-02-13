@@ -5,7 +5,7 @@
 #include "Body.h"
 #include "BodyDef.h"
 class body;
-class bodydef;
+struct bodydef;
 class PhysEngine{
 private:
 	float gravity;

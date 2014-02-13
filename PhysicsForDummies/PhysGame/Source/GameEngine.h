@@ -1,28 +1,47 @@
 #pragma once
-#include "opengl\primitives.h"
 #include <list>
 class PhysEngine;
+class PlatformGraphics;
+class PlatformInput;
 class Actor;
-
-#define MAXPLAYERSPEED 4 
+class RenderList;
+class Scene;
 
 class GameEngine{
 private:
 	PhysEngine* m_physEngine;
-	primitives m_renderer; //replace with a graphics engine ricky :O
+	PlatformGraphics* m_graphics;
+	PlatformInput* m_input;
 	std::list<Actor*> m_actors;
-
+	RenderList* m_list;
+	Scene* m_scene;
+	bool m_exit;
 public:
 	GameEngine();
+	void setup(PlatformGraphics* g, PlatformInput* i){
+		m_graphics = g;
+		m_input = i;
+	}
+	void close(){
+		m_exit = true;
+	}
+	bool shouldClose(){
+		return m_exit;
+	}
+	void setupScene(Scene* s){
+		m_scene = s;
+	}
 	void tick();
+	void render();
 	void addActor(Actor*);
-
 	PhysEngine* getPhysEngine(){ return m_physEngine; } //THIS IS A HACK. GET RID OF LATER.
+
 	//these are hacks - make input manager!
 	void handleKey(int key, int state);
-	void handleMouse(int x, int y,int button, int state);
-	void handleMouseMove(int x, int y);
+	void handleMouse(float x, float y,int button, int state);
+	void handleMouseMove(float x, float y);
 	void inputTick();
+
 	
 	bool W_Down;
 	bool A_Down;
@@ -32,4 +51,6 @@ public:
 	//hacksss
 	Actor* player;
 	//void render();
+	friend class PlatformInput;
+	friend class PlatformGraphics;
 };
