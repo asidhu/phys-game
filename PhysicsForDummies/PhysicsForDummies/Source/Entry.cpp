@@ -37,14 +37,15 @@ void render(GLFWwindow* window){
 	glClear(GL_COLOR_BUFFER_BIT);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	glOrtho(-10*ratio, 10*ratio, -1.f, 19.f, 1.f, -1.f);
+	glOrtho(-ratio, ratio, -1.f, 1.f, 1.f, -1.f);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-	std::vector<body*> bodies = phys.getBodies();
-	std::vector<body*>::iterator it = bodies.begin();
-	renderer.setColor(1, 1, 1, 1);
-	renderer.setLineWidth(1);
-	while (it != bodies.end()){
+	//std::vector<body*> bodies = phys.getBodies();
+	//std::vector<body*>::iterator it = bodies.begin();
+	//renderer.setColor(1, 1, 1, 1);
+	//renderer.setLineWidth(1);
+	renderer.drawTexture(texID, 0,0);
+	/*while (it != bodies.end()){
 		body* b = *it;
 		if (b->form->type == CIRCLE_TYPE)
 			renderer.drawCircle(b->position.x, b->position.y, ((circle*)b->form)->radius);
@@ -55,7 +56,7 @@ void render(GLFWwindow* window){
 			//renderer.drawRect(b->position.x, b->position.y, ((box*)b->form)->halfwidth * 2, ((box*)b->form)->halfheight * 2, 0);
 		}
 		it++;
-	}
+	}*/
 	glfwSwapBuffers(window);
 }
 int main(int argc, char* argv[])
@@ -85,7 +86,7 @@ int main(int argc, char* argv[])
 	std::cout << "Vendor: " << glGetString(GL_VENDOR) << std::endl;
 	std::cout << "Renderer: " << glGetString(GL_RENDERER) << std::endl;
 
-	unsigned char* data = stbi_load("./test.bmp", &x, &y, &comp, 0);
+	unsigned char* data = stbi_load("./reddiamond.png", &x, &y, &comp, 0);
 	glGenTextures(1, &texID);
 	glBindTexture(GL_TEXTURE_2D, texID);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, x, y, 0, (comp == 3) ? GL_RGB : GL_RGBA, GL_UNSIGNED_BYTE, data);

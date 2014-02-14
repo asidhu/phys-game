@@ -10,6 +10,10 @@
 #include "PhysGame\Source\Scene.h"
 #include "GameEngine.h"
 #include "Actor.h"
+#include "NerdFestGame\Mob.h"
+#include "NerdFestGame\Player.h"
+#include "NerdFestGame\GameObjects.h"
+#include "NerdFestGame\EnemyCannoneer.h"
 GameEngine engine;
 
 #define random() (float)rand()/RAND_MAX
@@ -28,13 +32,44 @@ body* createBody(PhysEngine* engine, float x, float y, float w, float h, float m
 }
 
 
-void onGroundCheck(body* b, contactdetails* dets){
-	if (((Actor*)b->data)->onGround || dets->contactNormal.dot(vec2(0, 1)) < .5f)
-		return;
-	float relV = b->velocity.dot(vec2(0,1));
-	if (abs(relV) < 1)
-		((Actor*)b->data)->onGround = true;
-}
+
+class bgimage :public GameObject{
+public:
+	unsigned int resID;
+	bgimage(body* b, unsigned int id) :GameObject(b,true,true){ resID = id; }
+	void render(RenderList* lst){
+		RenderItem* item = lst->getItem();
+		//FIX THIS USE ACCESSOR :OOOO
+		body* b = getBody();
+		item->x = b->position.x;
+		item->y = b->position.y;
+		item->myType = texture;
+		item->tex.w = ((box*)b->form)->halfwidth * 2;
+		item->tex.h = ((box*)b->form)->halfheight * 2;
+		item->tex.s1 = item->y*.4f;
+		item->tex.t1 = item->x*.4f;
+		item->tex.s2 = item->y*.4f - item->tex.h;
+		item->tex.t2 = item->x*.4f - item->tex.w;
+		//item->tex.s1 = item->tex.t1 = 0;
+		//item->tex.s2 = item->tex.t2 = 1;
+		item->tex.resID = resID;
+		item->rot = b->rotation;
+		lst->addItem(item);
+
+		item = lst->getItem();
+		item->x = b->position.x;
+		item->y = b->position.y;
+		item->myType = hollowsquare;
+		item->rot = b->rotation;
+		item->square.lw = 1;
+		item->square.w = ((box*)b->form)->halfwidth * 2;
+		item->square.h = ((box*)b->form)->halfheight * 2;
+		item->square.a = 1;
+		item->square.r = item->square.g = item->square.b = 1;
+		lst->addItem(item);
+	}
+};
+
 
 int main(int argc, char* argv[])
 {
@@ -43,26 +78,39 @@ int main(int argc, char* argv[])
 		return -1;
 	GLFWInput *input = new GLFWInput(graphics->m_window);
 	graphics->m_centerX = 0;
-	graphics->m_top = 50;
+	graphics->m_top = 80;
+	//graphics->m_top = 1;
 	graphics->m_bottom = -1;
 	engine.setup(graphics,input);
 	input->m_engine = &engine;
 	//create random physics object and add as test...
-	StaticFixture* arr[] = { new StaticFixture(createBody(engine.getPhysEngine(), 0, 0, 50, 1, 0)),
-		new StaticFixture(createBody(engine.getPhysEngine(), -22, 25, 1, 50, 0)),
-		new StaticFixture(createBody(engine.getPhysEngine(), 22, 25, 1, 50, 0)),
-		new StaticFixture(createBody(engine.getPhysEngine(), 25, 9, 1, 50, 0, 2))
+	Actor* arr[] = {
+		new bgimage(createBody(engine.getPhysEngine(), 0, 0, 120, 4, 0),		2),
+		new bgimage(createBody(engine.getPhysEngine(), -60, 40, 4, 85, 0),	2),
+		new bgimage(createBody(engine.getPhysEngine(), 60, 40, 4, 85, 0),	2)
 	};
 	Scene* scene = new Scene(1);
-	for (int i = 0; i < 4; i++)
+	for (int i = 0; i < 3; i++){
 		scene->addFixture(arr[i], 0);
+	}
 	engine.setupScene(scene);
-	body* b = createBody(engine.getPhysEngine(), 5, 5, 1, 1, 1);
-	engine.player = new Actor(0, b);
+	body* b = createBody(engine.getPhysEngine(), 10, 10,2, 2, 1);
+	Player *m = new Player(0,b);
+	m->m_hp = 10;	
+	m->m_tex = 1;
+	m->engine = &engine;
+	graphics->loadImage(1, "./reddiamond.png");
+	graphics->loadImage(2, "./orangediamond.png");
+	graphics->loadImage(3, "./bluediamond.png");
+	engine.player = m;
 	b->data = engine.player;
-	b->on_collide = onGroundCheck;
+	//b->post_collide = onGroundCheck;
 	engine.addActor(engine.player);
-	b->angularDamping = 1;
+	for (int i = 0; i < 5; i++){
+		EnemyCannoneer* ec = new EnemyCannoneer(createBody(engine.getPhysEngine(), -60+120*(float)rand()/RAND_MAX, 10, 2, 2, 1));
+		ec->m_tex = 3;
+		engine.addActor(ec);
+	}
 	//b->angularDamping = .9998f;
 	//b->lockRotation();
 
@@ -75,16 +123,18 @@ int main(int argc, char* argv[])
 	{
 		LARGE_INTEGER start, stop;
 
-		Sleep(10);
 
-		engine.tick();
-		engine.render();
 		if (step || go){
+
 			QueryPerformanceCounter(&start);
+			engine.tick();
+			engine.render();
 			QueryPerformanceCounter(&stop);
 
 			stop.QuadPart = stop.QuadPart - start.QuadPart;
 			double time = (double)stop.QuadPart / freq.QuadPart * 1000;
+			const float waittime = 1000.f / 60.f;
+			if (time<waittime)Sleep(waittime - time);
 			totTime += time;
 			if (frames++ > 100){
 				std::cout << "time:" << totTime / frames << std::endl;

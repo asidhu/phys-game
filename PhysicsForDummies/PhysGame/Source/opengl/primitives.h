@@ -2,6 +2,10 @@
 #include "opengl/opengl.h"
 
 
+struct draw_square{
+	float x, y, w, h;
+} ;
+
 class primitives{
 private:
 	GLuint rect_VBO;
@@ -22,5 +26,6 @@ public:
 	void fillRect(float x, float y, float w, float h, float rot=0);
 	void drawCircle(float x, float y, float r);
 	void fillCircle(float x, float y, float r);
-	void drawTexture(GLuint texID, float x, float y, float w = 1.f, float h = 1.f, float rot = 0.f);
+	void drawTexture(GLuint texID, float x, float y, const float texcoords[8], float w = 1.f, float h = 1.f, float rot = 0.f);
+	void drawStenciledTexture(GLuint texID, draw_square&,draw_square&, const float texcoords[8], float rot = 0.f);
 };

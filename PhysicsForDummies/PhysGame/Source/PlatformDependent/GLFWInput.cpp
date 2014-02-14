@@ -7,8 +7,9 @@ static void mouse_callback(GLFWwindow* win, int button, int action, int mods){
 	double x, y;
 	glfwGetCursorPos(win, &x, &y);
 	GLFWGraphics* gfx = (GLFWGraphics*)current_input->getGraphics();
+	y = gfx->m_win_height - y;
 	float worldX = ((float)x / gfx->m_win_width*(gfx->getWidth()) + gfx->getLeft());
-	float worldY = ((float)y / gfx->m_win_height*(gfx->m_top - gfx->m_bottom) + gfx->m_top);
+	float worldY = ((float)y / gfx->m_win_height*(gfx->m_top - gfx->m_bottom) + gfx->m_bottom);
 	int out = 0, outbtn = 0;
 	if (action == GLFW_PRESS)
 		out = MOUSE_PRESS;

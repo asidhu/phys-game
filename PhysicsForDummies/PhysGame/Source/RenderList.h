@@ -2,12 +2,33 @@
 #include <list>
 #include <vector>
 
+enum DrawType{
+	solidsquare, hollowsquare,
+	solidcircle, hollowcircle,
+	texture, stenciltexture
+};
+
 class RenderItem{
 public:
 	float x, y;
-	float a, r, g, b;
-	float w, h;
 	float rot;
+	DrawType myType;
+	union{
+		struct{
+			float a, r, g, b, w, h,lw;
+		}square;
+		struct{
+			float a, r, g, b, radius,lw;
+		}circle;
+		struct{
+			float w,h,s1, t1, s2, t2;
+			unsigned int resID;
+		}tex;
+	};
+	RenderItem(){
+		myType = hollowsquare;
+		
+	}
 };
 class RenderList{
 	std::vector<RenderItem*> allocateRenderItems;

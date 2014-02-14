@@ -13,8 +13,11 @@ void Actor::render(RenderList* lst){
 	item->y = m_body->position.y; 
 	if (m_body->form->type == BOX_TYPE)
 	{
-		item->w = ((box*)m_body->form)->halfwidth * 2;
-		item->h = ((box*)m_body->form)->halfheight * 2;
+		item->myType = hollowsquare;
+		item->square.a = item->square.r = item->square.g = item->square.b = 1.f;
+		item->square.lw = 2;
+		item->square.w = ((box*)m_body->form)->halfwidth * 2;
+		item->square.h = ((box*)m_body->form)->halfheight * 2;
 	}
 	item->rot = m_body->rotation;
 	lst->addItem(item);

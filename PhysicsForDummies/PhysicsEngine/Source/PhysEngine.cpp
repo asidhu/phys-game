@@ -23,7 +23,7 @@ body* PhysEngine::buildBody(bodydef &def){
 		b->invMass = 1.f / b->mass;
 	b->rotation = def.rotation;
 	b->invMomentInertia = (3 * b->invMass / (c->halfwidth*c->halfwidth + c->halfheight*c->halfheight));
-	bodies.push_back(b);
+	//bodies.push_back(b);
 	if (root.nextX != 0)
 		root.nextX->prevX = b;
 	b->nextX = root.nextX;
@@ -50,7 +50,7 @@ void PhysEngine::createBody(float x, float y, float r, float vx, float vy, float
 	else
 		b->invMass = 1.f / mass;
 	b->invMomentInertia = 2*b->invMass /(r*r);
-	bodies.push_back(b);
+	//bodies.push_back(b);
 	if (root.nextX != 0)
 		root.nextX->prevX = b;
 	b->nextX = root.nextX;
@@ -77,7 +77,7 @@ void PhysEngine::createBox(float x, float y, float hw,float hh, float vx, float 
 		b->invMass = 1.f / mass;
 	b->rotation = rotate;
 	b->invMomentInertia = (3 *b->invMass / (hw*hw + hh*hh));
-	bodies.push_back(b);
+	//bodies.push_back(b);
 	if (root.nextX != 0)
 		root.nextX->prevX = b;
 	b->nextX = root.nextX;
@@ -94,8 +94,15 @@ void PhysEngine::setup(float g, float minX, float minY, float maxX, float maxY){
 	this->maxY = maxY;
 }
 
+void PhysEngine::removeBody(body* b){
+	b->prevX->nextX = b->nextX;
+	if (b->nextX != NULL)
+		b->nextX->prevX = b->prevX;
+	delete b;
+}
+
 void PhysEngine::step(float time){
-	std::vector<body*>::iterator it = bodies.begin(), it2;
+	//std::vector<body*>::iterator it = bodies.begin(), it2;
 	contactdetails tempSol[1000];
 	int numContacts = 0;
 
@@ -108,24 +115,28 @@ void PhysEngine::step(float time){
 		body * ptr2 = ptr->nextX;
 		while (ptr2 != 0){
 			if (ptr->AABB.right >= ptr2->AABB.left ){
-				if ((ptr->invMass != 0 || ptr2->invMass != 0) && ptr->AABB.overlap(ptr2->AABB) && shape::detectCollision(ptr, ptr2, (tempSol + numContacts))){
-					if (ptr->invMass == 0 && ptr2->invMass == 0 || numContacts>=1000){
+				if ( ptr->AABB.overlap(ptr2->AABB) && shape::detectCollision(ptr, ptr2, (tempSol + numContacts))){
+					if ( numContacts>=1000){
 						ptr2 = ptr2->nextX;
 						continue;
 					}
 					contactdetails *dets = tempSol + numContacts;
 					dets->b1 = ptr;
 					dets->b2 = ptr2;
-					numContacts++;
 					dets->normalImpulse = 0;
 					float crossA = dets->contactPoint[0].crossZ(dets->contactNormal), crossB = dets->contactPoint[1].crossZ(dets->contactNormal);
 					float momInertiaA = crossA*crossA*ptr->invMomentInertia,
 						momInertiaB = crossB*crossB*ptr2->invMomentInertia;
-					dets->effectiveMass = ptr->invMass + ptr2->invMass +momInertiaA + momInertiaB;
-					if (ptr->on_collide != NULL)
-						ptr->on_collide(ptr, dets);
-					if (ptr2->on_collide != NULL)
-						ptr2->on_collide(ptr2, dets);
+					dets->effectiveMass =( ptr->invMass + ptr2->invMass +momInertiaA + momInertiaB);
+					if (dets->effectiveMass != 0)
+						dets->effectiveMass = 1 / dets->effectiveMass;
+					bool a = true;
+					if (ptr->pre_collide != NULL)
+						a&=ptr->pre_collide(ptr, dets);
+					if (ptr2->pre_collide != NULL)
+						a&=ptr2->pre_collide(ptr2, dets);
+					if(a)
+						numContacts++;
 				}
 			}
 			else
@@ -145,7 +156,7 @@ void PhysEngine::step(float time){
 			vec2 relV = ptr->velocityRelative2PointAccum(cd->contactPoint[0]) - ptr2->velocityRelative2PointAccum(cd->contactPoint[1]);
 			float crossA = cd->contactPoint[0].crossZ(cd->contactNormal), crossB = cd->contactPoint[1].crossZ(cd->contactNormal);
 			float dot = relV.dot(cd->contactNormal);
-			float lamda = dot / cd->effectiveMass;
+			float lamda = dot * cd->effectiveMass;
 			float test = max(cd->normalImpulse + lamda, 0);
 			lamda = test - cd->normalImpulse;
 			cd->normalImpulse = test;
@@ -171,7 +182,7 @@ void PhysEngine::step(float time){
 			//if (shape::detectCollision(ptr, ptr2, cd)){
 			const float slop = .0002f;
 			const float percent = 3.f;
-			float impulse = max(abs(cd->penetration) - slop, 0.0f)*percent / cd->effectiveMass;
+			float impulse = max(abs(cd->penetration) - slop, 0.0f)*percent * cd->effectiveMass;
 			vec2 correction = impulse*cd->contactNormal;
 			float crossA = cd->contactPoint[0].crossZ(cd->contactNormal), crossB = cd->contactPoint[1].crossZ(cd->contactNormal);
 			ptr->impulse -= correction;
@@ -206,6 +217,10 @@ void PhysEngine::step(float time){
 		vec2 fricB = (forceB>0 ? 1.f : -1.f)*(fric)*min(maxForce, abs(forceB));
 		ptr2->impulse += cd->contactNormal*cd->normalImpulse-fricB;
 		ptr2->instantTorque += crossB*cd->normalImpulse;
+		if (ptr->post_collide != NULL)
+			ptr->post_collide(ptr, cd);
+		if (ptr2->post_collide != NULL)
+			ptr2->post_collide(ptr2, cd);
 		if (abs(ptr2->instantTorque - ptr2->accumTorque)<.001 && ptr2->instantTorque != 0)
 			continue;
 		if (ptr2->mass != 0 && crossB*cd->normalImpulse > max)
@@ -213,9 +228,10 @@ void PhysEngine::step(float time){
 		if (ptr2->mass != 0 && crossB*cd->normalImpulse > 3)
 			crossB = 1;
 	}
-	it = bodies.begin();
-	while (it != bodies.end()){
-		body* b = (*it);
+	//it = bodies.begin();
+	ptr = root.nextX;
+	while (ptr!=NULL){
+		body* b = ptr;
 		//b->impulse += b->accumulatedImpulse;
 		//b->instantTorque += b->accumTorque;
 		b->accumulatedImpulse.x = b->accumulatedImpulse.y = 0;
@@ -252,7 +268,7 @@ void PhysEngine::step(float time){
 					}
 				}
 		}*/
-		it++;
+		ptr = ptr->nextX;
 	}
 	//contact solver
 	

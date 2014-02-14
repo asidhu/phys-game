@@ -9,5 +9,5 @@ public:
 	}
 	body* m_body;
 	int m_zdist;
-	void render(RenderList*);
+	virtual void render(RenderList*);
 };

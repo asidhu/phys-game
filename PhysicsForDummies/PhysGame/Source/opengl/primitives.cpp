@@ -24,7 +24,7 @@ const GLchar *textureFragmentShader =
 	"uniform sampler2D myTexture;"
 	"varying vec2 UV;"
 	"void main(){"
-		"gl_FragColor = texture(myTexture, UV);"
+		"gl_FragColor = texture2D(myTexture, UV);"
 	"}";
 int primitives::init(){
 	//generate circle vbo
@@ -41,16 +41,18 @@ int primitives::init(){
 
 	//generate rect vbo
 	float rect_coords[] = {
-		0.f,0.f,
 		-.5f,-.5f,
-		.5f,-.5f,
-		.5f,.5f,
-		-.5f,.5f,
-		-.5f,-.5f
+		 .5f,-.5f,
+		 .5f, .5f,
+		-.5f, .5f,
+		0.0f,1.0f,
+		1.0f,1.0f,
+		1.0f,0.0f,
+		0.0f,0.0f
 	};
 	glGenBuffers(1, &(this->rect_VBO));
 	glBindBuffer(GL_ARRAY_BUFFER, this->rect_VBO);
-	glBufferData(GL_ARRAY_BUFFER, 12*sizeof(float), rect_coords, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, 16*sizeof(float), rect_coords, GL_STATIC_DRAW);
 
 	//create a generic shader program
 	this->simpleProgram = glCreateProgram();
@@ -145,27 +147,90 @@ void primitives::drawRect(float x, float y, float w, float h, float rot){
 	glBindBuffer(GL_ARRAY_BUFFER, this->rect_VBO);
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, (GLvoid*)0);
 	glLineWidth(lineWidth);
-	glDrawArrays(GL_LINE_LOOP, 2, 4);
+	glDrawArrays(GL_LINE_LOOP, 0, 4);
 	glDisableVertexAttribArray(0);
 	glUseProgram(0);
 	glPopMatrix();
 }
 
-void primitives::drawTexture(GLuint texID, float x, float y, float w, float h, float rot){
+void primitives::drawStenciledTexture(GLuint texID, draw_square& mask, draw_square& texture, const float texcoords[8], float rot){
+	//draw mask
+
+	glPushMatrix();
+	glEnable(GL_STENCIL_TEST);
+	glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
+	glDepthMask(GL_FALSE);
+	glStencilFunc(GL_NEVER, 1, 0xFF);
+	glStencilOp(GL_REPLACE, GL_KEEP, GL_KEEP);
+	glStencilMask(0xFF);
+	glClear(GL_STENCIL_BUFFER_BIT);
+
+	//draw mask.
+	glLoadIdentity();
+	glTranslatef(mask.x, mask.y, 0);
+	glRotatef(rot, 0, 0, 1);
+	glScalef(mask.w, mask.h, 0);
+	glUseProgram(this->simpleProgram);
+	glUniform4f(this->circleProgram_Color, red, green, blue, alpha);
+	glEnableVertexAttribArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, this->rect_VBO);
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, (GLvoid*)0);
+	glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+	glDisableVertexAttribArray(0);
+	glUseProgram(0);
+
+
+
+	glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+	glDepthMask(GL_TRUE);
+	glStencilMask(0x00);
+	glStencilFunc(GL_EQUAL, 1, 0xFF);
+
+	//draw texture
+	glEnable(GL_TEXTURE_2D);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, texID);
+	glLoadIdentity();
+	glTranslatef(mask.x, mask.y, 0);
+	if (mask.w>mask.h)
+		glScalef(mask.w*2,mask.w*2, 0);
+	else
+		glScalef(mask.h * 2, mask.h * 2, 0);
+	glUseProgram(this->textureProgram);
+	glUniform1i(this->textureProgram_texUnit, 0);
+	glEnableVertexAttribArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, this->rect_VBO);
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, (GLvoid*)0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+	glTexCoordPointer(2, GL_FLOAT, 0, (GLvoid*)texcoords);
+	glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+	glDisableVertexAttribArray(0);
+	glUseProgram(0);
+	glPopMatrix();
+	glDisable(GL_TEXTURE_2D);
+	glDisable(GL_STENCIL_TEST);
+}
+void primitives::drawTexture(GLuint texID, float x, float y, const float texcoords[8], float w, float h, float rot){
 	glEnable(GL_TEXTURE_2D);
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, texID);
 	glPushMatrix();
 	glLoadIdentity();
 	glTranslatef(x, y, 0);
-	glRotatef(-rot, 0, 0, 1);
+	glRotatef(rot, 0, 0, 1);
 	glScalef(w, h, 0);
 	glUseProgram(this->textureProgram);
 	glUniform1i(this->textureProgram_texUnit, 0);
 	glEnableVertexAttribArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, this->rect_VBO);
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, (GLvoid*)0);
-	glDrawArrays(GL_TRIANGLE_FAN, 0, 6);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+	glTexCoordPointer(2, GL_FLOAT, 0, (GLvoid*)texcoords);
+	glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 	glDisableVertexAttribArray(0);
 	glUseProgram(0);
 	glPopMatrix();
@@ -176,14 +241,14 @@ void primitives::fillRect(float x, float y, float w, float h, float rot){
 	glPushMatrix();
 	glLoadIdentity();
 	glTranslatef(x, y, 0);
-	glRotatef(-rot, 0, 0, 1);
+	glRotatef(rot, 0, 0, 1);
 	glScalef(w, h, 0);
 	glUseProgram(this->simpleProgram);
 	glUniform4f(this->circleProgram_Color, red, green, blue, alpha);
 	glEnableVertexAttribArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, this->rect_VBO);
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, (GLvoid*)0);
-	glDrawArrays(GL_TRIANGLE_FAN, 0, 6);
+	glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 	glDisableVertexAttribArray(0);
 	glUseProgram(0);
 	glPopMatrix();

@@ -6,12 +6,13 @@ class PlatformInput;
 class Actor;
 class RenderList;
 class Scene;
-
+class Effect;
 class GameEngine{
 private:
 	PhysEngine* m_physEngine;
 	PlatformGraphics* m_graphics;
 	PlatformInput* m_input;
+	std::list<Effect*> m_effects;
 	std::list<Actor*> m_actors;
 	RenderList* m_list;
 	Scene* m_scene;
@@ -31,6 +32,9 @@ public:
 	void setupScene(Scene* s){
 		m_scene = s;
 	}
+	void addEffect(Effect* e){
+		m_effects.push_back(e);
+	}
 	void tick();
 	void render();
 	void addActor(Actor*);
@@ -47,6 +51,8 @@ public:
 	bool A_Down;
 	bool S_Down;
 	bool D_Down;
+	bool RIGHT_Down;
+
 
 	//hacksss
 	Actor* player;

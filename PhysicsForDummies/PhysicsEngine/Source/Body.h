@@ -13,7 +13,9 @@ public:
 		linearDamping = .9995f;
 		angularDamping = .9995f;
 		nextX = prevX = nextY = prevY = NULL;
-		on_collide = NULL;
+		pre_collide =  NULL;
+		post_collide = NULL;
+		dataFlag = 0;
 	}
 	vec2 position, velocity;
 	vec2 impulse, accumulatedImpulse;
@@ -30,12 +32,13 @@ public:
 	rect AABB, boundingArea;
 	body* nextX, *prevX;
 	body* nextY, *prevY;
+	int dataFlag;
 	void* data;
 
 
 	//might want to rethink this?
-	void(*on_collide)(body*,contactdetails*);
-
+	bool(*pre_collide)(body*,contactdetails*);
+	void(*post_collide)(body*, contactdetails*);
 
 	void applyImpulse(vec2 impulse){
 		this->impulse += impulse;

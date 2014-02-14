@@ -1,26 +1,26 @@
 #pragma once
 class body;
 class RenderList;
+class GameEngine;
 class Actor{
 private:
 	int m_actorID;
 	body* m_body;
 public:
 	//hack?
-	bool onGround;
 	Actor(int actorID, body* body){
 		m_actorID = actorID;
 		m_body = body;
-		onGround = false;
 	}
 
+	virtual ~Actor(){}
 	body* getBody(){
 		return m_body;
 	}
 
-	void render(RenderList*);
+	virtual void render(RenderList*);
 
-	bool tick(){
+	virtual bool tick(GameEngine*){
 		return false;
 	}
 	
