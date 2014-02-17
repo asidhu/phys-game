@@ -72,6 +72,12 @@
     <ClCompile Include="..\NerdFestGame\EnemyCannoneer.cpp">
       <Filter>Source\Nerdfest-specific</Filter>
     </ClCompile>
+    <ClCompile Include="..\NerdFestGame\EnemyRiflesmen.cpp">
+      <Filter>Source\Nerdfest-specific</Filter>
+    </ClCompile>
+    <ClCompile Include="..\NerdFestGame\EnemyDriller.cpp">
+      <Filter>Source\Nerdfest-specific</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\opengl\primitives.h">
@@ -138,6 +144,12 @@
       <Filter>Source\Nerdfest-specific</Filter>
     </ClInclude>
     <ClInclude Include="..\NerdFestGame\EnemyCannoneer.h">
+      <Filter>Source\Nerdfest-specific</Filter>
+    </ClInclude>
+    <ClInclude Include="..\NerdFestGame\EnemyRiflesmen.h">
+      <Filter>Source\Nerdfest-specific</Filter>
+    </ClInclude>
+    <ClInclude Include="..\NerdFestGame\EnemyDriller.h">
       <Filter>Source\Nerdfest-specific</Filter>
     </ClInclude>
   </ItemGroup>

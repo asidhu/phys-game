@@ -61,7 +61,7 @@ void Player::fireMissile(GameEngine* e,float x, float y){
 void Player::render(RenderList* lst){
 	Mob::render(lst);
 	body* b = getBody();
-	if (dmgfx > 0){
+	/*if (dmgfx > 0){
 		RenderItem* item = lst->getItem();
 		item->x = b->position.x;
 		item->y = b->position.y;
@@ -74,7 +74,7 @@ void Player::render(RenderList* lst){
 		item->square.r = 1;// ((dmgfx % 8) > 4) ? 1 : 0;
 		item->square.g = item->square.b = 0;
 		lst->addItem(item);
-	}
+	}*/
 }
 
 body* createBody3(PhysEngine* engine, float x, float y, float w, float h, float mass, float rot = 0){
@@ -92,11 +92,11 @@ void Player::fireGrappleHook(float x, float y){
 	if (grappleHook == NULL){
 		vec2 dist = (vec2(x, y) - getBody()->position);
 		dist.normalize();
-		body* b = createBody3(engine->getPhysEngine(), getBody()->position.x, getBody()->position.y, .4f,.4f,.1f,0);
+		body* b = createBody3(engine->getPhysEngine(), getBody()->position.x, getBody()->position.y, 1.3f,1.3f,.1f,0);
 		grappleHook = new Grapple(0, b);
 		grappleHook->player = this;
-		grappleHook->force = .9f;
-		grappleHook->speed = PROJECTILESPEED-8 ;
+		grappleHook->force = 2.f;
+		grappleHook->speed = PROJECTILESPEED-1;
 		dist *= grappleHook->speed + max(dist.dot(getBody()->velocity),0);
 		b->velocity += dist;
 		b->data = grappleHook;
@@ -109,9 +109,9 @@ void Player::fireSecondHook(float x, float y){
 		return;
 	vec2 dist = (vec2(x, y) - getBody()->position);
 	dist.normalize();
-	body* b = createBody3(engine->getPhysEngine(), getBody()->position.x, getBody()->position.y, .4f, .4f, .1f, 0);
+	body* b = createBody3(engine->getPhysEngine(), getBody()->position.x, getBody()->position.y, 1.3f, 1.3f, .1f, 0);
 	grappleHook->otherHook = b;
-	dist *= grappleHook->speed + dist.dot(getBody()->velocity);
+	dist *= grappleHook->speed + max(dist.dot(getBody()->velocity), 0);
 	b->velocity += dist;
 	grappleHook->createOtherHook(b);
 	grappleHook = NULL;

@@ -14,6 +14,7 @@
 #include "NerdFestGame\Player.h"
 #include "NerdFestGame\GameObjects.h"
 #include "NerdFestGame\EnemyCannoneer.h"
+#include "NerdFestGame\EnemyRiflesmen.h"
 GameEngine engine;
 
 #define random() (float)rand()/RAND_MAX
@@ -73,30 +74,44 @@ public:
 
 int main(int argc, char* argv[])
 {
-	GLFWGraphics *graphics = new GLFWGraphics(1024, 800);
+	GLFWGraphics *graphics = new GLFWGraphics(1366, 700);
 	if (!graphics->m_initialized)
 		return -1;
 	GLFWInput *input = new GLFWInput(graphics->m_window);
 	graphics->m_centerX = 0;
-	graphics->m_top = 80;
+	graphics->m_top = 150;
 	//graphics->m_top = 1;
 	graphics->m_bottom = -1;
 	engine.setup(graphics,input);
 	input->m_engine = &engine;
 	//create random physics object and add as test...
 	Actor* arr[] = {
-		new bgimage(createBody(engine.getPhysEngine(), 0, 0, 120, 4, 0),		2),
-		new bgimage(createBody(engine.getPhysEngine(), -60, 40, 4, 85, 0),	2),
-		new bgimage(createBody(engine.getPhysEngine(), 60, 40, 4, 85, 0),	2)
+		new bgimage(createBody(engine.getPhysEngine(), 0, 0, 300, 16, 0), 2),
+		new bgimage(createBody(engine.getPhysEngine(), -150, 100, 16,600, 0),	2),
+		new bgimage(createBody(engine.getPhysEngine(), 150, 100, 16, 600, 0), 2),
+		new bgimage(createBody(engine.getPhysEngine(), 0, 400, 300, 16, 0), 2),
+		//WALLS
+
+
+		new bgimage(createBody(engine.getPhysEngine(), 60, 40, 60, 4, 0), 2),
+		new bgimage(createBody(engine.getPhysEngine(), 40, 50, 4, 20, 0), 2),
+		//WEIRD SHOOING PLATFORM
+
+
+		new bgimage(createBody(engine.getPhysEngine(), rand() % 50 - 25, rand() % 50 - 25, 6, 8, 15), 2),
+		new bgimage(createBody(engine.getPhysEngine(), rand() % 50 - 25, rand() % 50 - 25, 15, 5, 15), 2),
+		//RANDOM BOXES
 	};
+	arr[6]->getBody()->lockRotation();
+	arr[7]->getBody()->lockRotation();
 	Scene* scene = new Scene(1);
-	for (int i = 0; i < 3; i++){
+	for (int i = 0; i < 8; i++){
 		scene->addFixture(arr[i], 0);
 	}
 	engine.setupScene(scene);
 	body* b = createBody(engine.getPhysEngine(), 10, 10,2, 2, 1);
 	Player *m = new Player(0,b);
-	m->m_hp = 10;	
+	m->m_hp = 10;
 	m->m_tex = 1;
 	m->engine = &engine;
 	graphics->loadImage(1, "./reddiamond.png");
@@ -106,9 +121,16 @@ int main(int argc, char* argv[])
 	b->data = engine.player;
 	//b->post_collide = onGroundCheck;
 	engine.addActor(engine.player);
-	for (int i = 0; i < 5; i++){
-		EnemyCannoneer* ec = new EnemyCannoneer(createBody(engine.getPhysEngine(), -60+120*(float)rand()/RAND_MAX, 10, 2, 2, 1));
+	for (int i = 0; i < 3; i++){
+		EnemyCannoneer* ec = new EnemyCannoneer(createBody(engine.getPhysEngine(), 45+rand()%5, 60, 2, 2, 1));
 		ec->m_tex = 3;
+		ec->m_hp = 10;
+		engine.addActor(ec);
+	}
+	for (int i = 0; i < 3; i++){
+		EnemyRiflesmen* ec = new EnemyRiflesmen(createBody(engine.getPhysEngine(), -60 + 120 * (float)rand() / RAND_MAX, 10, 2, 2, 1));
+		ec->m_tex = 3;
+		ec->m_hp = 10;
 		engine.addActor(ec);
 	}
 	//b->angularDamping = .9998f;
@@ -127,17 +149,23 @@ int main(int argc, char* argv[])
 		if (step || go){
 
 			QueryPerformanceCounter(&start);
-			engine.tick();
 			engine.render();
+			engine.tick();
 			QueryPerformanceCounter(&stop);
 
 			stop.QuadPart = stop.QuadPart - start.QuadPart;
-			double time = (double)stop.QuadPart / freq.QuadPart * 1000;
-			const float waittime = 1000.f / 60.f;
-			if (time<waittime)Sleep(waittime - time);
+			double render= (double)stop.QuadPart / freq.QuadPart * 1000;
+
+
+
+			stop.QuadPart = stop.QuadPart - start.QuadPart;
+			double tick = 0;
+			double time = render + tick;
+			const float waittime = 1000.f / 120.f;
+			if (time<waittime)Sleep((DWORD)(waittime - time));
 			totTime += time;
 			if (frames++ > 100){
-				std::cout << "time:" << totTime / frames << std::endl;
+				std::cout << "time:" << totTime / frames << " tick:"<< tick << " render:"<<render<< " bodies:"<< engine.getPhysEngine()->getNumBodies() <<  std::endl;
 				frames = 0;
 				totTime = 0;
 

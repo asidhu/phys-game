@@ -6,7 +6,6 @@ class Grapple;
 class GameEngine;
 class Player : public Mob{
 public:
-	int dmgfx;
 	Grapple* grappleHook;
 	GameEngine* engine;
 	int onGround;

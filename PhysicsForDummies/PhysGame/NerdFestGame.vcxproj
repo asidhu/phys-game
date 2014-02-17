@@ -52,6 +52,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\NerdFestGame\EnemyCannoneer.cpp" />
+    <ClCompile Include="..\NerdFestGame\EnemyDriller.cpp" />
+    <ClCompile Include="..\NerdFestGame\EnemyRiflesmen.cpp" />
     <ClCompile Include="..\NerdFestGame\GameEffects.cpp" />
     <ClCompile Include="..\NerdFestGame\GameObject.cpp" />
     <ClCompile Include="..\NerdFestGame\Grapple.cpp" />
@@ -72,6 +74,8 @@
   <ItemGroup>
     <ClInclude Include="..\NerdFestGame\autoptr.h" />
     <ClInclude Include="..\NerdFestGame\EnemyCannoneer.h" />
+    <ClInclude Include="..\NerdFestGame\EnemyDriller.h" />
+    <ClInclude Include="..\NerdFestGame\EnemyRiflesmen.h" />
     <ClInclude Include="..\NerdFestGame\GameEffects.h" />
     <ClInclude Include="..\NerdFestGame\GameObjects.h" />
     <ClInclude Include="..\NerdFestGame\Grapple.h" />

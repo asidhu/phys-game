@@ -30,6 +30,7 @@ body* PhysEngine::buildBody(bodydef &def){
 	b->prevX = &root;
 	root.nextX = b;
 	b->form->calcAABB(b, &(b->AABB));
+	m_numBodies++;
 	return b;
 }
 
@@ -98,6 +99,7 @@ void PhysEngine::removeBody(body* b){
 	b->prevX->nextX = b->nextX;
 	if (b->nextX != NULL)
 		b->nextX->prevX = b->prevX;
+	m_numBodies--;
 	delete b;
 }
 

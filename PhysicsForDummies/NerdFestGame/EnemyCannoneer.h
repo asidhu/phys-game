@@ -3,6 +3,7 @@
 
 class EnemyCannoneer : public Mob{
 	int fire;
+	int jump;
 public:
 	EnemyCannoneer(body*);
 	void fireMissile(GameEngine* e,float x, float y);

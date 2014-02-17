@@ -98,7 +98,7 @@ bool Grapple::oneHookOut(GameEngine* e){
 		//dist *= force;
 		//player->getBody()->applyImpulse(-1 * dist);
 		//getBody()->applyImpulse(dist);
-		dist *= speed;
+		dist *= speed+player->getBody()->velocity.length();
 		getBody()->velocity = dist;
 		if (destroy || d < 2)
 		{
@@ -117,6 +117,7 @@ bool Grapple::oneHookOut(GameEngine* e){
 		}
 		return false;
 	}
+	getBody()->angularVelocity = 1.5f;
 	this->getBody()->position = attach->getdata()->getBody()->position + relativeAttach;
 	dist.normalize();
 	dist *= force;
@@ -129,9 +130,11 @@ bool Grapple::oneHookOut(GameEngine* e){
 }
 bool Grapple::twoHookOut(GameEngine* e){
 	if (attach != NULL){
+		getBody()->angularVelocity = 1.5f;
 		this->getBody()->position = attach->getdata()->getBody()->position + relativeAttach;
 	}
 	if (otherattach != NULL){
+		otherHook->angularVelocity = 1.5f;
 		otherHook->position = otherattach->getdata()->getBody()->position + otherRelAttach;
 	}
 	if (lifetime-- < 0){
@@ -178,7 +181,7 @@ void Grapple::render(RenderList* lst){
 	item->y = getBody()->position.y;
 	if (getBody()->form->type == BOX_TYPE)
 	{
-		item->myType = hollowsquare;
+		item->myType = solidsquare;
 		item->square.a = item->square.r = item->square.g = item->square.b = 1.f;
 		item->square.lw = 2;
 		item->square.w = ((box*)getBody()->form)->halfwidth * 2;
@@ -193,7 +196,7 @@ void Grapple::render(RenderList* lst){
 		item->y = otherHook->position.y;
 		if (otherHook->form->type == BOX_TYPE)
 		{
-			item->myType = hollowsquare;
+			item->myType = solidsquare;
 			item->square.a = item->square.r = item->square.g = item->square.b = 1.f;
 			item->square.lw = 2;
 			item->square.w = ((box*)otherHook->form)->halfwidth * 2;
