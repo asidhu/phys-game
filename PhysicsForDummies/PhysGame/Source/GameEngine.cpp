@@ -3,7 +3,6 @@
 #include <PhysicsEngine\Source\PhysEngine.h>
 #include "PlatformDependent\GLFWInput.h"
 #include "PlatformDependent\GLFWGraphics.h"
-#include <GLFW\glfw3.h>
 #include "PhysGame\Source\RenderList.h"
 #include "PhysGame\Source\Scene.h"
 #include "Effects.h"
@@ -83,16 +82,16 @@ void GameEngine::addActor(Actor* actor){
 
 void GameEngine::handleKey(int key, int state){
 	//hacked in
-	if (key == GLFW_KEY_D){
+	if (key == 68){
 		D_Down = (state != KEY_UP);
 	}
-	if (key == GLFW_KEY_A){
+	if (key == 65){
 		A_Down = (state != KEY_UP);
 	}
-	if (key == GLFW_KEY_W){
+	if (key == 87){
 		W_Down = (state != KEY_UP);
 	}
-	if (key == GLFW_KEY_S){
+	if (key == 83){
 		S_Down = (state != KEY_UP);
 	}
 }

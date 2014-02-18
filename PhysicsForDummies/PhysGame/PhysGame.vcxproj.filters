@@ -4,14 +4,14 @@
     <Filter Include="Source">
       <UniqueIdentifier>{1bd63710-edcb-41f6-9d7f-a1204c52c5b7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\opengl">
-      <UniqueIdentifier>{ca3c41f4-fc83-4521-9883-d361939623db}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source\PlatformDependent">
       <UniqueIdentifier>{f73ef5f6-fe2c-4880-85a4-cb60e5411691}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source\PlatformDependent\Crossplatform">
       <UniqueIdentifier>{e696db6d-9586-42f7-8b08-41412b488278}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\opengl">
+      <UniqueIdentifier>{ca3c41f4-fc83-4521-9883-d361939623db}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -79,6 +79,9 @@
     </ClInclude>
     <ClInclude Include="Source\StaticFixture.h">
       <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\PlatformDependent\GLFWWrapper.h">
+      <Filter>Source\PlatformDependent\Crossplatform</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

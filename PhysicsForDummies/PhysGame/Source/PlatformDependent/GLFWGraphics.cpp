@@ -37,16 +37,23 @@ void GLFWGraphics::start(){
 	float viewHeight = m_top - m_bottom;
 	glfwGetFramebufferSize(m_window, &width, &height);
 	glfwGetWindowSize(m_window, &m_win_width, &m_win_height);
+
+
 	ratio = width / (float)height;
 	glViewport(0, 0, width, height);
 	glClear(GL_COLOR_BUFFER_BIT);
+
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	glOrtho(m_left, m_right, m_bottom, m_top, 1.f, -1.f);
+
+
 	m_left = m_centerX - viewHeight / 2 * ratio;
 	m_right = m_centerX + viewHeight / 2 * ratio;
+
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
+
 }
 
 void GLFWGraphics::loadImage(unsigned int resID, char* filename){

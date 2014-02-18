@@ -69,6 +69,7 @@
     <ClInclude Include="Source\opengl\stb_image.h" />
     <ClInclude Include="Source\PlatformDependent\GLFWGraphics.h" />
     <ClInclude Include="Source\PlatformDependent\GLFWInput.h" />
+    <ClInclude Include="Source\PlatformDependent\GLFWWrapper.h" />
     <ClInclude Include="Source\PlatformDependent\PlatformGraphics.h" />
     <ClInclude Include="Source\PlatformDependent\PlatformInput.h" />
     <ClInclude Include="Source\RenderList.h" />

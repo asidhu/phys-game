@@ -16,6 +16,10 @@ private:
 	GLuint circleProgram_Color;
 	float red, green, blue, alpha;
 	float lineWidth;
+#ifdef EMSCRIPTEN
+	GLuint simpleProgram_Mat;
+#endif
+
 public:
 	int init();
 	void deinit();

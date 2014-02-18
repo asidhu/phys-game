@@ -184,7 +184,7 @@ void PhysEngine::step(float time){
 			//if (shape::detectCollision(ptr, ptr2, cd)){
 			const float slop = .0002f;
 			const float percent = 3.f;
-			float impulse = max(abs(cd->penetration) - slop, 0.0f)*percent * cd->effectiveMass;
+			float impulse = max(fabs(cd->penetration) - slop, 0.0f)*percent * cd->effectiveMass;
 			vec2 correction = impulse*cd->contactNormal;
 			float crossA = cd->contactPoint[0].crossZ(cd->contactNormal), crossB = cd->contactPoint[1].crossZ(cd->contactNormal);
 			ptr->impulse -= correction;
@@ -205,10 +205,10 @@ void PhysEngine::step(float time){
 		float tangent = fric.dot(ptr2->accumulatedImpulse);
 		float crossA = cd->contactPoint[0].crossZ(cd->contactNormal), crossB = cd->contactPoint[1].crossZ(cd->contactNormal);
 		float forceA = (tangent + fric.dot(ptr->velocity)*ptr->mass);
-		vec2 fricA = (forceA>0?1.f:-1.f)*(fric)*min(maxForce,abs(forceA) );
+		vec2 fricA = (forceA>0?1.f:-1.f)*(fric)*min(maxForce,fabs(forceA) );
 		ptr->impulse -= cd->contactNormal*cd->normalImpulse + fricA;
 		ptr->instantTorque -= crossA*cd->normalImpulse;
-		if (abs(ptr->instantTorque - ptr->accumTorque)<.001 && ptr->instantTorque!=0)
+		if (fabs(ptr->instantTorque - ptr->accumTorque)<.001 && ptr->instantTorque!=0)
 			ptr = ptr;
 		if (ptr->mass != 0 && cd->normalImpulse > max)
 			max = crossA*cd->normalImpulse;
@@ -216,14 +216,14 @@ void PhysEngine::step(float time){
 			crossA = 1;
 
 		float forceB = (tangent + fric.dot(ptr2->velocity)*ptr2->mass);
-		vec2 fricB = (forceB>0 ? 1.f : -1.f)*(fric)*min(maxForce, abs(forceB));
+		vec2 fricB = (forceB>0 ? 1.f : -1.f)*(fric)*min(maxForce, fabs(forceB));
 		ptr2->impulse += cd->contactNormal*cd->normalImpulse-fricB;
 		ptr2->instantTorque += crossB*cd->normalImpulse;
 		if (ptr->post_collide != NULL)
 			ptr->post_collide(ptr, cd);
 		if (ptr2->post_collide != NULL)
 			ptr2->post_collide(ptr2, cd);
-		if (abs(ptr2->instantTorque - ptr2->accumTorque)<.001 && ptr2->instantTorque != 0)
+		if (fabs(ptr2->instantTorque - ptr2->accumTorque)<.001 && ptr2->instantTorque != 0)
 			continue;
 		if (ptr2->mass != 0 && crossB*cd->normalImpulse > max)
 			max = crossB*cd->normalImpulse;

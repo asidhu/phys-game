@@ -1,7 +1,11 @@
 
 #include <stdio.h>
 #include <iostream>
+#ifndef EMSCRIPTEN
 #include <Windows.h>
+#else
+#include <emscripten/emscripten.h>
+#endif
 #include <time.h>
 #include <PhysicsEngine\Source\PhysEngine.h>
 #include "PhysGame\Source\PlatformDependent\GLFWGraphics.h"
@@ -20,6 +24,7 @@ GameEngine engine;
 #define random() (float)rand()/RAND_MAX
 #define rad2deg(x) (x*57.2957795131) 
 bool step = false, go = true;
+void iteration();
 
 body* createBody(PhysEngine* engine, float x, float y, float w, float h, float mass, float rot = 0){
 	bodydef bdef;
@@ -136,7 +141,7 @@ int main(int argc, char* argv[])
 	//b->angularDamping = .9998f;
 	//b->lockRotation();
 
-
+#ifndef EMSCRIPTEN
 	LARGE_INTEGER freq;
 	QueryPerformanceFrequency(&freq);
 	int frames = 0;
@@ -174,6 +179,18 @@ int main(int argc, char* argv[])
 		}
 		// Keep running
 	}
+#else
+	emscripten_set_main_loop(iteration,60,1);
+#endif
 	return 0;
 }
 
+#ifdef EMSCRIPTEN
+void iteration(){
+	engine.render();
+	engine.tick();
+}
+#else
+void iteration(){}
+
+#endif

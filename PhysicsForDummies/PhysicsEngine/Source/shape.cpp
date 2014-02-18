@@ -36,8 +36,7 @@ vec2 extent2point(unsigned char a, box* b){
 }
 inline bool floatEqualToBias(const float a, const float b){
 	const float bias = .001f;
-	float tst= abs( a - b);
-	return abs(a - b) < bias;
+	return fabs(a - b) < bias;
 }
 void circle::calcAABB(body* b, rect* aabb){
 	b->boundingArea.left = -radius;
@@ -164,8 +163,8 @@ bool shape::detectCollision(body* a, body* b, contactdetails* cd){
 			return false;
 		orientedRelPos1.x = -ax1.dot(relPos);
 		orientedRelPos1.y = -ax2.dot(relPos);
-		float penX = abs(orientedRelPos1.x) - c1->halfwidth - halfextent(axis1_extent),
-			penY = abs(orientedRelPos1.y) - c1->halfheight - halfextent(axis2_extent);
+		float penX = fabs(orientedRelPos1.x) - c1->halfwidth - halfextent(axis1_extent),
+			penY = fabs(orientedRelPos1.y) - c1->halfheight - halfextent(axis2_extent);
 		float pen1 = 0,
 			pen2 = 0;
 		if (b->rotation!=a->rotation){
@@ -175,11 +174,12 @@ bool shape::detectCollision(body* a, body* b, contactdetails* cd){
 			ax4.y = ax3.x;
 			orientedRelPos2.x = -ax3.dot(relPos);
 			orientedRelPos2.y = -ax4.dot(relPos);
-			c1->getProjections(-1*relPos, ax3, ax4, axis3_extent, axis4_extent);
+			vec2 negrelPos = -1 * relPos;
+			c1->getProjections(negrelPos, ax3, ax4, axis3_extent, axis4_extent);
 			if (!(overlap(axis3_extent,-c2->halfwidth,c2->halfwidth) && overlap(axis4_extent,-c2->halfheight,c2->halfheight)))
 				return false;
-			pen1 = abs(orientedRelPos2.x) - c2->halfwidth - halfextent(axis3_extent);
-			pen2 = abs(orientedRelPos2.y) - c2->halfheight - halfextent(axis4_extent);
+			pen1 = fabs(orientedRelPos2.x) - c2->halfwidth - halfextent(axis3_extent);
+			pen2 = fabs(orientedRelPos2.y) - c2->halfheight - halfextent(axis4_extent);
 		}
 		else pen1 = pen2 = min(penX, penY) - 1;
 
@@ -210,43 +210,48 @@ bool shape::detectCollision(body* a, body* b, contactdetails* cd){
 					//cd->contactPoint[0] = cd->contactPoint[1] + relPos;
 				}
 			}
-			if (a->rotation!=b->rotation)
-			if (pen1 > pen2){
-				if (orientedRelPos2.x < 0){
-					if (pen1>cd->penetration)
-						cd->contactNormal = ax3;
-					cd->contactPoint[0] = extent2point(axis3_extent.max_point, c1);
-					//cd->contactPoint[1] = cd->contactPoint[0] - relPos;
+			if (a->rotation != b->rotation)
+			{
+				if (pen1 > pen2){
+					if (orientedRelPos2.x < 0){
+						if (pen1>cd->penetration)
+							cd->contactNormal = ax3;
+						cd->contactPoint[0] = extent2point(axis3_extent.max_point, c1);
+						//cd->contactPoint[1] = cd->contactPoint[0] - relPos;
+					}
+					else{
+						if (pen1 > cd->penetration)
+							cd->contactNormal = -1 * ax3;
+						cd->contactPoint[0] = extent2point(axis3_extent.min_point, c1);
+						//cd->contactPoint[1] = cd->contactPoint[0] - relPos;
+					}
+
+					if (pen1 > cd->penetration){
+						cd->penetration = pen1;
+					}
 				}
 				else{
-					if (pen1>cd->penetration)
-						cd->contactNormal = -1 * ax3;
-					cd->contactPoint[0] = extent2point(axis3_extent.min_point, c1);
-					//cd->contactPoint[1] = cd->contactPoint[0] - relPos;
-				}
+					if (orientedRelPos2.y < 0){
+						if (pen1>cd->penetration)
+							cd->contactNormal = ax4;
+						cd->contactPoint[0] = extent2point(axis4_extent.max_point, c1);
+						//cd->contactPoint[1] = cd->contactPoint[0] - relPos;
+					}
+					else{
+						if (pen1 > cd->penetration)
+							cd->contactNormal = -1 * ax4;
+						cd->contactPoint[0] = extent2point(axis4_extent.min_point, c1);
+						//cd->contactPoint[1] = cd->contactPoint[0] - relPos;
+					}
 
-				if (pen1>cd->penetration)
-					cd->penetration = pen1;
-			}
-			else{
-				if (orientedRelPos2.y < 0){
-					if (pen1>cd->penetration)
-						cd->contactNormal = ax4;
-					cd->contactPoint[0] = extent2point(axis4_extent.max_point, c1);
-					//cd->contactPoint[1] = cd->contactPoint[0] - relPos;
+					if (pen2 > cd->penetration){
+						cd->penetration = pen2;
+					}
 				}
-				else{
-					if (pen1>cd->penetration)
-						cd->contactNormal = -1 * ax4;
-					cd->contactPoint[0] = extent2point(axis4_extent.min_point, c1);
-					//cd->contactPoint[1] = cd->contactPoint[0] - relPos;
-				}
-
-				if (pen2>cd->penetration)
-					cd->penetration = pen2;
 			}
-			if (abs(cd->penetration) > .15f)
+			if (fabs(cd->penetration) > .15f){
 				cd->penetration *= 1.f;
+			}
 			return true;
 	}
 	return false;
