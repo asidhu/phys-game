@@ -42,6 +42,9 @@
     <ClCompile Include="Source\Scene.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="Source\PlatformDependent\GLFWWrapper.cpp">
+      <Filter>Source\PlatformDependent\Crossplatform</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\opengl\primitives.h">
@@ -81,6 +84,9 @@
       <Filter>Source</Filter>
     </ClInclude>
     <ClInclude Include="Source\PlatformDependent\GLFWWrapper.h">
+      <Filter>Source\PlatformDependent\Crossplatform</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\PlatformDependent\WebGLWrapper.h">
       <Filter>Source\PlatformDependent\Crossplatform</Filter>
     </ClInclude>
   </ItemGroup>

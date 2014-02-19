@@ -22,7 +22,7 @@ GLFWGraphics::GLFWGraphics(int w, int h){
 	//create a window
 	m_window = glfwCreateWindow(w, h, "GLFW", NULL, NULL);
 	glfwMakeContextCurrent(m_window);
-	GLenum err = glewInit();
+	GLenum err = GlewInit();
 	if (err != GLEW_OK){
 		return;
 	}
@@ -38,21 +38,16 @@ void GLFWGraphics::start(){
 	glfwGetFramebufferSize(m_window, &width, &height);
 	glfwGetWindowSize(m_window, &m_win_width, &m_win_height);
 
-
 	ratio = width / (float)height;
 	glViewport(0, 0, width, height);
 	glClear(GL_COLOR_BUFFER_BIT);
 
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	glOrtho(m_left, m_right, m_bottom, m_top, 1.f, -1.f);
 
+	renderer.setupViewport(m_left, m_right, m_top, m_bottom );
 
 	m_left = m_centerX - viewHeight / 2 * ratio;
 	m_right = m_centerX + viewHeight / 2 * ratio;
-
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
+	
 
 }
 
@@ -68,9 +63,6 @@ void GLFWGraphics::loadImage(unsigned int resID, char* filename){
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	stbi_image_free(data);
-	//glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 16, 16, 0, GL_RGB, GL_UNSIGNED_BYTE, datapix);
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	m_resourceMap[resID] = texID;
 
 }
@@ -101,10 +93,10 @@ void GLFWGraphics::drawList(RenderList* list){
 		else if (item->myType == texture){
 			GLuint texid = m_resourceMap[item->tex.resID];
 			const float texcoords[8] = {
-				item->tex.s1, item->tex.t1,
-				item->tex.s1, item->tex.t2,
-				item->tex.s2, item->tex.t2,
-				item->tex.s2, item->tex.t1
+				item->tex.s1 + 100, item->tex.t1 + 100,
+				item->tex.s1 + 100, item->tex.t2 + 100,
+				item->tex.s2 + 100, item->tex.t2 + 100,
+				item->tex.s2 + 100, item->tex.t1 + 100
 			};
 			renderer.drawTexture(texid, item->x, item->y,texcoords, item->tex.w, item->tex.h, rad2deg(item->rot));
 			//renderer.drawTexture(texid, item->x, item->y, texcoords, item->tex.w, item->tex.h, rad2deg(item->rot));
@@ -112,10 +104,10 @@ void GLFWGraphics::drawList(RenderList* list){
 		else if (item->myType == stenciltexture){
 			GLuint texid = m_resourceMap[item->tex.resID];
 			float texcoords[8] = {
-				item->tex.s1, item->tex.t1,
-				item->tex.s1, item->tex.t2,
-				item->tex.s2, item->tex.t2,
-				item->tex.s2, item->tex.t1
+				item->tex.s1 + 100, item->tex.t1 + 100,
+				item->tex.s1 + 100, item->tex.t2 + 100,
+				item->tex.s2 + 100, item->tex.t2 + 100,
+				item->tex.s2 + 100, item->tex.t1 + 100
 			};
 			draw_square mask, tex;
 			tex.x = tex.y = 0;

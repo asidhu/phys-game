@@ -3,7 +3,7 @@
 #include "PhysGame\Source\GameEngine.h"
 #include "Missile.h"
 #include "Player.h"
-
+#include <cstdlib>
 #define max(a,b) ((a<b)?b:a)
 body* createBody68(PhysEngine* engine, float x, float y, float w, float h, float mass, float rot = 0){
 	bodydef bdef;

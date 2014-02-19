@@ -10,7 +10,6 @@
 #include <PhysicsEngine\Source\PhysEngine.h>
 #include "PhysGame\Source\PlatformDependent\GLFWGraphics.h"
 #include "PhysGame\Source\PlatformDependent\GLFWInput.h"
-#include "PhysGame\Source\StaticFixture.h"
 #include "PhysGame\Source\Scene.h"
 #include "GameEngine.h"
 #include "Actor.h"
@@ -103,8 +102,8 @@ int main(int argc, char* argv[])
 		//WEIRD SHOOING PLATFORM
 
 
-		new bgimage(createBody(engine.getPhysEngine(), rand() % 50 - 25, rand() % 50 - 25, 6, 8, 15), 2),
-		new bgimage(createBody(engine.getPhysEngine(), rand() % 50 - 25, rand() % 50 - 25, 15, 5, 15), 2),
+		new bgimage(createBody(engine.getPhysEngine(), rand() % 50 - 25, 20, 6, 8, 15), 2),
+		new bgimage(createBody(engine.getPhysEngine(), rand() % 50 - 25, 20, 15, 5, 15), 2),
 		//RANDOM BOXES
 	};
 	arr[6]->getBody()->lockRotation();

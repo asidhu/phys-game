@@ -3,70 +3,37 @@
 #ifdef EMSCRIPTEN
 #include <gl\glfw.h>
 struct GLFWwindow;
-typedef void (*GLFWkeyfun)(GLFWwindow*,int,int,int,int);
-typedef void (*GLFWmousebuttonfun)(GLFWwindow*,int,int,int);
-typedef void (*GLFWcursorposfun)(GLFWwindow*,double, double);
-typedef void (*GLFWerrorfun)(int, const char*);
+typedef void (*GLFW3keyfun)(GLFWwindow*,int,int,int,int);
+typedef void (*GLFW3mousebuttonfun)(GLFWwindow*,int,int,int);
+typedef void (*GLFW3cursorposfun)(GLFWwindow*,double, double);
+typedef void (*GLFW3errorfun)(int, const char*);
+
+void glfwSetErrorCallback(GLFW3errorfun);
 
 
-GLFWmousebuttonfun current_mousebtn_func = NULL;
-GLFWkeyfun current_key_func=NULL;
-GLFWcursorposfun current_mousepos_func=NULL;
-void glfwSetErrorCallback(GLFWerrorfun){}
+GLFWwindow* glfwCreateWindow(int w, int h, const char* title, int,int);
 
+void glfwMakeContextCurrent(GLFWwindow*);
 
-void glfwCreateWindow(GLFWwindow*, int w, int h, const char* title, int,int){
-	glfwOpenWindow(w, h, 5, 6, 5,0, 0, 0, GLFW_WINDOW);
-}
+void glfwGetWindowSize(GLFWwindow*, int* w, int *h);
 
-void glfwMakeContextCurrent(GLFWwindow*){}
+void glfwGetFramebufferSize(GLFWwindow*, int* w, int *h);
 
-void glfwGetWindowSize(GLFWwindow*, int* w, int *h){
-	glfwGetWindowSize(w,h);
-}
+void glfwSwapBuffers(GLFWwindow*);
 
-void glfwGetFramebufferSize(GLFWwindow*, int* w, int *h){
-	glfwGetWindowSize(w,h);
-}
+void keycallback(int key, int action);
+void glfwSetKeyCallback(GLFWwindow*,GLFW3keyfun a);
 
-void glfwSwapBuffers(GLFWwindow*){
-	glfwSwapBuffers();
-}
+void mouseposcallback(int x, int y);
+void glfwSetCursorPosCallback(GLFWwindow*,GLFW3cursorposfun func);
 
-void keycallback(int key, int action){
-	if(current_key_func!=NULL)
-		current_key_func(NULL,key,NULL,action,NULL);
-}
-void glfwSetKeyCallback(GLFWkeyfun a){
-	current_key_func = a;
-	glfwSetKeyCallback(keycallback);
-}
+void mousebuttoncallback(int key, int action);
 
-void mouseposcallback(int x, int y){
-	if(current_mousepos_func!=NULL)
-		current_mousepos_func(NULL, (double) x, (double) y);
-}
+void glfwSetMouseButtonCallback(GLFWwindow*,GLFW3mousebuttonfun func);
 
-void glfwSetCursorPosCallback(GLFWcursorposfun func){
-	current_mousepos_func=func;
-	glfwSetMousePosCallback(mouseposcallback);
-}
+bool glfwWindowShouldClose(GLFWwindow*);
 
-void mousebuttoncallback(int key, int action){
-	if (current_mousebtn_func != NULL)
-		current_mousebtn_func(NULL, key,action,NULL);
-}
-
-void glfwSetMouseButtonCallback(GLFWcursorposfun func){
-	current_mousebtn_func = func;
-	glfwSetMouseButtonCallback(mousebuttoncallback);
-}
-
-void glfwWindowShouldClose(GLFWwindow*){}
-
-void glfwGetCursorPos(GLFWwindow*, int* x, int* y){
-	glfwGetMousePos(x,y);
-}
+void glfwGetCursorPos(GLFWwindow*, double* x, double* y);
 
 
 #else

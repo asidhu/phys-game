@@ -122,10 +122,9 @@ void GameEngine::handleMouseMove(float x, float y){
 
 }
 void GameEngine::render(){
-	for (std::list<Effect*>::iterator it = m_effects.begin(); it != m_effects.end();){
+	for (std::list<Effect*>::iterator it = m_effects.begin(); it != m_effects.end();it++){
 		Effect* actor = *it;
 		actor->render(m_list);
-		it++;
 	}
 	for (std::list<Actor*>::iterator it = m_actors.begin(); it != m_actors.end(); it++){
 		Actor* actor = *it;

@@ -1,7 +1,8 @@
 #include "PhysGame\Source\PlatformDependent\GLFWInput.h"
-#include <GLFW\glfw3.h>
+#include "GLFWWrapper.h"
 #include "PhysGame\Source\GameEngine.h"
 #include "PhysGame\Source\PlatformDependent\GLFWGraphics.h"
+#include <iostream>
 GLFWInput *current_input;
 static void mouse_callback(GLFWwindow* win, int button, int action, int mods){
 	double x, y;
@@ -15,10 +16,12 @@ static void mouse_callback(GLFWwindow* win, int button, int action, int mods){
 		out = MOUSE_PRESS;
 	else
 		out = MOUSE_RELEASE;
-	if (button == GLFW_MOUSE_BUTTON_LEFT)
+	if (button == GLFW_MOUSE_BUTTON_LEFT){
 		outbtn = MOUSE_LEFT;
-	else if (button == GLFW_MOUSE_BUTTON_RIGHT)
+	}
+	else if (button == GLFW_MOUSE_BUTTON_RIGHT){
 		outbtn = MOUSE_RIGHT;
+	}
 	current_input->m_engine->handleMouse(worldX, worldY, outbtn, out);
 }
 static void mousepos_callback(GLFWwindow* win, double x, double y){

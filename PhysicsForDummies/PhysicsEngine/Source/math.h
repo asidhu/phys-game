@@ -13,8 +13,8 @@ public:
 	vec2& operator*=(const float);
 	inline float lengthSq(){ return x*x + y*y; }
 	inline float length(){ return sqrtf(x*x + y*y); }
-	inline float dot(vec2& b){ return x*b.x + y*b.y; }
-	inline float crossZ(vec2& b){ return x*b.y - y*b.x; }
+	inline float dot(const vec2& b){ return x*b.x + y*b.y; }
+	inline float crossZ(const vec2& b){ return x*b.y - y*b.x; }
 	void normalize();
 	float x, y;
 };

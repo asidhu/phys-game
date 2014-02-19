@@ -12,6 +12,7 @@ private:
 	GLuint circle_VBO;
 	GLuint simpleProgram;
 	GLuint textureProgram;
+	GLuint textureProgram_texCoord;
 	GLuint textureProgram_texUnit;
 	GLuint circleProgram_Color;
 	float red, green, blue, alpha;
@@ -23,6 +24,7 @@ private:
 public:
 	int init();
 	void deinit();
+	void setupViewport(float l, float r, float t, float b);
 	void setColor(float r, float g, float b, float a);
 	void setLineWidth(float w);
 	void drawRect(float x, float y, float w, float h, float rot = 0);

@@ -4,6 +4,7 @@
 #include "Missile.h"
 #include "Player.h"
 
+#include <cstdlib>
 #define max(a,b) ((a<b)?b:a)
 body* createBody64(PhysEngine* engine, float x, float y, float w, float h, float mass, float rot = 0){
 	bodydef bdef;
@@ -24,7 +25,7 @@ bool EnemyCannoneer::tick(GameEngine* e){
 	if ((fire++ % 50)==0){
 		Player* p = (Player*)e->player;
 		float dx = p->getBody()->position.x - getBody()->position.x;
-		if (abs(dx) > 30){
+		if (fabs(dx) > 30){
 			float nxtX = getBody()->position.x + (float)rand() / RAND_MAX*dx*.4f;
 			fireMissile(e, nxtX, 90);
 		}

@@ -10,4 +10,4 @@ GAME=$(wildcard NerdFestGame/*.cpp)
 all: tool
 
 tool:
-	emcc -I. -IPhysGame/Source $(PHYSENGINE) $(ENGINE) $(ENGINE2) $(ENGINE3) $(GAME) -o emscripten/test.html
+	emcc -I. -IPhysGame/Source $(PHYSENGINE) $(ENGINE) $(ENGINE2) $(ENGINE3) $(GAME) -O2 -o emscripten/test.html

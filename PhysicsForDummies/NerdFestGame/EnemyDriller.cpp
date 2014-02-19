@@ -4,6 +4,7 @@
 #include "Missile.h"
 #include "Player.h"
 
+#include <cstdlib>
 #define max(a,b) ((a<b)?b:a)
 
 
@@ -15,7 +16,7 @@ bool EnemyDriller::tick(GameEngine* e){
 	if ((fire++ % 50) == 0){
 		Player* p = (Player*)e->player;
 		float dx = p->getBody()->position.x - getBody()->position.x;
-		float nxtY = getBody()->position.y + (float)rand() / RAND_MAX*abs(dx)*2.f;
+		float nxtY = getBody()->position.y + (float)rand() / RAND_MAX*fabs(dx)*2.f;
 	}
 	/*if (((jump+=rand()%3) % 300) == 0){
 	jump = 0;

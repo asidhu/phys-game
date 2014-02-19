@@ -47,9 +47,8 @@ public:
 		{
 			allocateRenderItems.push_back(new RenderItem());
 		}
+		RenderItem* ret = allocateRenderItems.at(size);
 		size++;
-		RenderItem* ret= allocateRenderItems.back();
-		allocateRenderItems.pop_back();
 		return ret;
 	}
 	void clear(){

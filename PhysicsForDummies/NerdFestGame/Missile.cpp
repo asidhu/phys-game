@@ -8,6 +8,7 @@
 #include "PhysicsEngine\Source\PhysEngine.h"
 #include "PhysGame\Source\RenderList.h"
 #include "GameEffects.h"
+#include <cstdlib>
 body* createBody9(PhysEngine* engine, float x, float y, float w, float h, float mass, float rot = 0){
 	bodydef bdef;
 	bdef.position.x = x;
@@ -67,7 +68,7 @@ void Missile::render(RenderList* lst){
 
 bool missile_check_explode(body* b, contactdetails* cd){
 	Missile* m = (Missile*)b->data;
-	if (m->life > 4)
+	if (m->life > 6)
 		return true;
 	return false;
 }
@@ -92,4 +93,5 @@ Missile::Missile(int id, body* b) :GameObject(b,true,true){
 	b->pre_collide = missile_check_explode;
 	b->post_collide = missile_explode;
 	dmg = 1;
+	life = 0;
 }

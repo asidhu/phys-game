@@ -9,10 +9,11 @@
 #define PROJECTILESPEED 45
 #define INVULNERABLETIME 300.f
 void onGroundCheck(body* b, contactdetails* dets){
-	if (((Player*)b->data)->onGround>100 || dets->contactNormal.dot(vec2(0, 1)) < .5f)
+	const vec2 up = vec2(0, 1);
+	if (((Player*)b->data)->onGround>100 || dets->contactNormal.dot(up) < .5f)
 		return;
-	float relV = b->velocity.dot(vec2(0, 1));
-	if (abs(relV) < 1)
+	float relV = b->velocity.dot(up);
+	if (fabs(relV) < 1)
 		((Player*)b->data)->onGround++;
 }
 Player::Player(int id, body* b) :Mob(id, b){
