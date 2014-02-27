@@ -34,6 +34,9 @@
     <ClInclude Include="Source\BodyDef.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="Source\solver.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\PhysEngine.cpp">
@@ -46,6 +49,9 @@
       <Filter>Source Files\general</Filter>
     </ClCompile>
     <ClCompile Include="Source\shape.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\solver.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

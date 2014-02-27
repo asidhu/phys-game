@@ -16,6 +16,7 @@ public:
 		pre_collide =  NULL;
 		post_collide = NULL;
 		dataFlag = 0;
+		idx = -1;
 	}
 	vec2 position, velocity;
 	vec2 impulse, accumulatedImpulse;
@@ -34,7 +35,7 @@ public:
 	body* nextY, *prevY;
 	int dataFlag;
 	void* data;
-
+	int idx;
 
 	//might want to rethink this?
 	bool(*pre_collide)(body*,contactdetails*);

@@ -143,12 +143,14 @@
     <ClInclude Include="Source\PhysEngine.h" />
     <ClInclude Include="Source\rect.h" />
     <ClInclude Include="Source\shape.h" />
+    <ClInclude Include="Source\solver.h" />
     <ClInclude Include="Source\sort.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\math.cpp" />
     <ClCompile Include="Source\PhysEngine.cpp" />
     <ClCompile Include="Source\shape.cpp" />
+    <ClCompile Include="Source\solver.cpp" />
     <ClCompile Include="Source\sort.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

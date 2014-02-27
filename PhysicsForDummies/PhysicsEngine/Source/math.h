@@ -11,6 +11,12 @@ public:
 	vec2& operator+=(const vec2&);
 	vec2& operator-=(const vec2&);
 	vec2& operator*=(const float);
+	bool operator==(const vec2& o){
+		return x == o.x && y == o.y;
+	}
+	bool operator!=(const vec2& o){
+		return !operator==(o);
+	}
 	inline float lengthSq(){ return x*x + y*y; }
 	inline float length(){ return sqrtf(x*x + y*y); }
 	inline float dot(const vec2& b){ return x*b.x + y*b.y; }

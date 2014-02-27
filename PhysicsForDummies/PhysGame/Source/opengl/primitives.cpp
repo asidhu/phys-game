@@ -781,7 +781,7 @@ void primitives::drawStenciledTexture(GLuint texID, draw_square& mask, draw_squa
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, (GLvoid*)0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-	glTexCoordPointer(2, GL_FLOAT, 0, (GLvoid*)texcoords);
+	//glTexCoordPointer(2, GL_FLOAT, 0, (GLvoid*)texcoords);
 	glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 	glDisableVertexAttribArray(0);

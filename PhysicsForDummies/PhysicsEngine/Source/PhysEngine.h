@@ -16,6 +16,7 @@ private:
 	int velocityIterations, positionIterations;
 public:
 	PhysEngine():velocityIterations(10), positionIterations(3){}
+	body* getBodyList(){ return root.nextX; }
 	//std::vector<body*>& getBodies(){ return bodies; }
 	void setup(float g = -9.81f, float minX = 0.f, float minY = 0.f, float maxX = 1.f, float maxY = 1.f);
 	body* buildBody(bodydef& def);

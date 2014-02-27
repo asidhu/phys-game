@@ -125,6 +125,7 @@ int main(int argc, char* argv[])
 	b->data = engine.player;
 	//b->post_collide = onGroundCheck;
 	engine.addActor(engine.player);
+	/*
 	for (int i = 0; i < 3; i++){
 		EnemyCannoneer* ec = new EnemyCannoneer(createBody(engine.getPhysEngine(), 45+rand()%5, 60, 2, 2, 1));
 		ec->m_tex = 3;
@@ -136,7 +137,7 @@ int main(int argc, char* argv[])
 		ec->m_tex = 3;
 		ec->m_hp = 10;
 		engine.addActor(ec);
-	}
+	}*/
 	//b->angularDamping = .9998f;
 	//b->lockRotation();
 
