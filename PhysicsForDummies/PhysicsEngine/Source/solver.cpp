@@ -89,8 +89,6 @@ void solver::solveContacts(body* head, int velIterations, int posIterations){
 					}
 					dets->id1 = ptr->idx;
 					dets->id2 = ptr2->idx;
-
-					
 				}
 			}
 			else
@@ -141,18 +139,23 @@ void solver::solveContacts(body* head, int velIterations, int posIterations){
 	for (int i = 0; i < posIterations; i++){
 		for (int j = 0; j < nContacts; j++){
 			contactdetails* cd = constraints + j;
-			ptr = cd->b1;
-			body *ptr2 = cd->b2;
+			int bid1 = cd->id1, bid2 = cd->id2;
 			//if (shape::detectCollision(ptr, ptr2, cd)){
-			const float slop = .0002f;
-			const float percent = 3.f;
+			const float slop = .01f;
+			const float percent = .4f;
 			float impulse = max(fabs(cd->penetration) - slop, 0.0f)*percent * cd->effectiveMass;
-			vec2 correction = impulse*cd->contactNormal;
+			//vec2 correction = impulse*cd->contactNormal;
 			float crossA = cd->contactPoint[0].crossZ(cd->contactNormal), crossB = cd->contactPoint[1].crossZ(cd->contactNormal);
-			ptr->impulse -= correction;
-			ptr->instantTorque -= crossA*impulse;
-			ptr2->impulse += correction;
-			ptr2->instantTorque += crossB*impulse;
+			const float maxdist = .01f;
+			const float maxtheta = .001f;
+			pos[bid1] -= cd->contactNormal*min(maxdist, max(-maxdist, impulse*iMass[bid1]));
+			rot[bid1] -= crossA*min(maxtheta, max(-maxtheta, impulse*iMom[bid1]));
+			pos[bid2] += cd->contactNormal*min(maxdist, max(-maxdist, impulse*iMass[bid2]));
+			rot[bid2] += crossB*min(maxtheta, max(-maxtheta, impulse*iMom[bid2]));
+			//ptr->impulse -= correction;
+			//ptr->instantTorque -= crossA*impulse;
+			//ptr2->impulse += correction;
+			//ptr2->instantTorque += crossB*impulse;
 			//}
 		}
 	}

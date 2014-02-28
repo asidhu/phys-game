@@ -105,12 +105,10 @@ void PhysEngine::removeBody(body* b){
 }
 
 void PhysEngine::step(float time){
-	//std::vector<body*>::iterator it = bodies.begin(), it2;
 	solver s;
 	int numContacts = 0;
 
 	sortByPos(&root);
-	//collisionlist collisions;
 	//O(n) algorithm
 	
 	//solve contacts
@@ -122,42 +120,13 @@ void PhysEngine::step(float time){
 	ptr = root.nextX;
 	while (ptr!=NULL){
 		body* b = ptr;
-		//b->impulse += b->accumulatedImpulse;
-		//b->instantTorque += b->accumTorque;
-		//b->accumulatedImpulse.x = b->accumulatedImpulse.y = 0;
-		//b->accumTorque = 0;
 		b->applyImpulse();
-	//	b->impulse.y = 0;
 		b->impulse.y=b->accumulatedImpulse.y = gravity*b->mass*time;
 		b->position.x += b->velocity.x*time;
 		b->position.y += b->velocity.y*time;
 		b->rotation =  (b->rotation + b->angularVelocity*time);
 		b->form->calcAABB(b, &(b->AABB));
 		b->dampen();
-		//n^2 algorithm for testing
-		/*for (it2 = it+1; it2 != bodies.end(); it2++){
-			body *ptr = b;
-			body *ptr2 = *it2;
-			contactdetails dets;
-				if (ptr->AABB.overlap(ptr2->AABB) && shape::detectCollision(ptr,ptr2,dets) ){
-					vec2 relV2 = ptr->velocity - ptr2->velocity;
-					vec2 relV = ptr->velocityRelative2Point(dets.contactPoint[0]) - ptr2->velocityRelative2Point(dets.contactPoint[1]);
-					float dot = relV.dot(dets.contactNormal);
-					float sumInvMass = ptr->invMass + ptr2->invMass;
-					float crossA = dets.contactPoint[0].crossZ(dets.contactNormal), crossB = dets.contactPoint[1].crossZ(dets.contactNormal);
-					float momInertiaA = crossA*crossA/ptr->momentInertia,
-						momInertiaB = crossB*crossB/ptr2->momentInertia;
-					float restitution = 1 + fmaxf(ptr->restitution, ptr2->restitution);
-					if (relV.dot(dets.contactNormal) > 0){
-						vec2 impulse = (restitution*dot / (sumInvMass+momInertiaA+momInertiaB)) * dets.contactNormal;
-						float impulseMag = impulse.length();
-						ptr->impulse -= impulse;
-						ptr->instantTorque -= crossA*impulseMag;
-						ptr2->impulse += impulse;
-						ptr2->instantTorque += crossB*impulseMag;
-					}
-				}
-		}*/
 		ptr = ptr->nextX;
 	}
 	//contact solver

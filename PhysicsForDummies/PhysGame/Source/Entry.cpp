@@ -125,19 +125,19 @@ int main(int argc, char* argv[])
 	b->data = engine.player;
 	//b->post_collide = onGroundCheck;
 	engine.addActor(engine.player);
-	/*
-	for (int i = 0; i < 3; i++){
+	
+	for (int i = 0; i < 0; i++){
 		EnemyCannoneer* ec = new EnemyCannoneer(createBody(engine.getPhysEngine(), 45+rand()%5, 60, 2, 2, 1));
 		ec->m_tex = 3;
 		ec->m_hp = 10;
 		engine.addActor(ec);
 	}
-	for (int i = 0; i < 3; i++){
+	for (int i = 0; i <0; i++){
 		EnemyRiflesmen* ec = new EnemyRiflesmen(createBody(engine.getPhysEngine(), -60 + 120 * (float)rand() / RAND_MAX, 10, 2, 2, 1));
 		ec->m_tex = 3;
 		ec->m_hp = 10;
 		engine.addActor(ec);
-	}*/
+	}
 	//b->angularDamping = .9998f;
 	//b->lockRotation();
 
@@ -152,6 +152,7 @@ int main(int argc, char* argv[])
 
 
 		if (step || go){
+
 
 			QueryPerformanceCounter(&start);
 			engine.render();

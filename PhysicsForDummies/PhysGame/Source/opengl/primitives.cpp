@@ -572,7 +572,7 @@ void primitives::drawLine(float x1,float y1, float x2, float y2){
 #include "opengl/primitives.h"
 #include <cmath>
 #include <cstring>
-#define CIRCLE_RES 20
+#define CIRCLE_RES 10
 #define PIPERDEG 3.14159/180.0
 const GLchar *simpleVertexShader =
 "void main(){"
