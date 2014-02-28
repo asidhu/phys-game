@@ -16,7 +16,7 @@ bool Shrapnel::tick(GameEngine* e){
 
 Shrapnel::Shrapnel(int id, body* b) :Actor(id, b){
 	b->data = this;
-	life = 100;
+	life = 300;
 }
 
 void Shrapnel::render(RenderList* lst){

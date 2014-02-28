@@ -1,12 +1,14 @@
 #include "Body.h"
 #include "collision.h"
+#define MAX_BODIES 2000
+#define MAX_CONTACTS 3000
 class solver{
 public:
-	contactdetails constraints[1000];
-	vec2 pos[500], vel[500];
-	float rot[500], angV[500];
-	float iMass[500];
-	float iMom[500];
+	contactdetails constraints[MAX_CONTACTS];
+	vec2 pos[MAX_BODIES], vel[MAX_BODIES];
+	float rot[MAX_BODIES], angV[MAX_BODIES];
+	float iMass[MAX_BODIES];
+	float iMom[MAX_BODIES];
 	int nContacts,
 		nBodies;
 	void solveContacts(body* head, int velIterations, int posIterations);

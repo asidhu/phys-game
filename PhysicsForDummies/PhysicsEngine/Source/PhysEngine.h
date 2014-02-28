@@ -5,12 +5,14 @@
 #include "Body.h"
 #include "BodyDef.h"
 class body;
+class solver;
 struct bodydef;
 class PhysEngine{
 private:
 	float gravity;
 	float mX, mY, maxX, maxY;
 	body root;
+	solver* contacts;
 	int m_numBodies;
 	//std::vector<body*> bodies;
 	int velocityIterations, positionIterations;

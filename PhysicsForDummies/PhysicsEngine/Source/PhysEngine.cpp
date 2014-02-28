@@ -94,6 +94,7 @@ void PhysEngine::setup(float g, float minX, float minY, float maxX, float maxY){
 	mY = minY;
 	this->maxX = maxX;
 	this->maxY = maxY;
+	contacts = new solver();
 }
 
 void PhysEngine::removeBody(body* b){
@@ -105,14 +106,14 @@ void PhysEngine::removeBody(body* b){
 }
 
 void PhysEngine::step(float time){
-	solver s;
+
 	int numContacts = 0;
 
 	sortByPos(&root);
 	//O(n) algorithm
 	
 	//solve contacts
-	s.solveContacts(root.nextX, velocityIterations, positionIterations);
+	contacts->solveContacts(root.nextX, velocityIterations, positionIterations);
 
 	body *ptr;
 

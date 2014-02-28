@@ -126,13 +126,13 @@ int main(int argc, char* argv[])
 	//b->post_collide = onGroundCheck;
 	engine.addActor(engine.player);
 	
-	for (int i = 0; i < 0; i++){
+	for (int i = 0; i < 10; i++){
 		EnemyCannoneer* ec = new EnemyCannoneer(createBody(engine.getPhysEngine(), 45+rand()%5, 60, 2, 2, 1));
 		ec->m_tex = 3;
 		ec->m_hp = 10;
 		engine.addActor(ec);
 	}
-	for (int i = 0; i <0; i++){
+	for (int i = 0; i < 10; i++){
 		EnemyRiflesmen* ec = new EnemyRiflesmen(createBody(engine.getPhysEngine(), -60 + 120 * (float)rand() / RAND_MAX, 10, 2, 2, 1));
 		ec->m_tex = 3;
 		ec->m_hp = 10;
@@ -154,18 +154,21 @@ int main(int argc, char* argv[])
 		if (step || go){
 
 
+
+
 			QueryPerformanceCounter(&start);
 			engine.render();
-			engine.tick();
 			QueryPerformanceCounter(&stop);
 
 			stop.QuadPart = stop.QuadPart - start.QuadPart;
 			double render= (double)stop.QuadPart / freq.QuadPart * 1000;
 
-
+			QueryPerformanceCounter(&start);
+			engine.tick();
+			QueryPerformanceCounter(&stop);
 
 			stop.QuadPart = stop.QuadPart - start.QuadPart;
-			double tick = 0;
+			double tick = (double)stop.QuadPart / freq.QuadPart * 1000;
 			double time = render + tick;
 			const float waittime = 1000.f / 120.f;
 			if (time<waittime)Sleep((DWORD)(waittime - time));

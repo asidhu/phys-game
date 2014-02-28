@@ -38,8 +38,14 @@ public:
 		size = 0;
 	}
 	std::list<RenderItem*> renderItems;
+	std::list<RenderItem*> batchFillCircle, batchFillSquare;
 	void addItem(RenderItem* i){
-		renderItems.push_back(i);
+		if (i->myType == solidcircle)
+			batchFillCircle.push_back(i);
+		else if (i->myType == solidsquare)
+			batchFillSquare.push_back(i);
+		else
+			renderItems.push_back(i);
 	}
 
 	RenderItem* getItem(){
@@ -52,6 +58,8 @@ public:
 		return ret;
 	}
 	void clear(){
+		batchFillSquare.clear();
+		batchFillCircle.clear();
 		renderItems.clear();
 		size = 0;
 	}

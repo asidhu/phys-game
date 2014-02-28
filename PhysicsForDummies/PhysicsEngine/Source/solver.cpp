@@ -37,13 +37,13 @@ void solver::solveContacts(body* head, int velIterations, int posIterations){
 	while (ptr->nextX != 0){
 		body * ptr2 = ptr->nextX;
 		while (ptr2 != 0){
-
+			if (nContacts >= MAX_CONTACTS || nBodies >= MAX_BODIES){
+				ptr2 = ptr2->nextX;
+				continue;
+			}
 			if (ptr->AABB.right >= ptr2->AABB.left){
 				if (ptr->AABB.overlap(ptr2->AABB) && shape::detectCollision(ptr, ptr2, (constraints + nContacts))){
-					if (nContacts >= 1000){
-						ptr2 = ptr2->nextX;
-						continue;
-					}
+					
 					contactdetails *dets = constraints + nContacts;
 					dets->b1 = ptr;
 					dets->b2 = ptr2;

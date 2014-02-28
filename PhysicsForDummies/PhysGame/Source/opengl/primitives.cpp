@@ -1,6 +1,9 @@
 
 
 
+
+
+
 #ifdef EMSCRIPTEN
 #include "opengl/primitives.h"
 #include <cmath>
@@ -571,6 +574,7 @@ void primitives::drawLine(float x1,float y1, float x2, float y2){
 
 #include "opengl/primitives.h"
 #include <cmath>
+#include <vector>
 #include <cstring>
 #define CIRCLE_RES 10
 #define PIPERDEG 3.14159/180.0
@@ -581,10 +585,57 @@ const GLchar *simpleVertexShader =
 const GLchar *simpleFragmentShader =
 "uniform vec4 color;"
 "void main(){"
-"gl_FragColor = color;"
+"	gl_FragColor = color;"
 "}";
+
+const GLchar *circleInstanceVShader =
+"uniform float m_radius[256];"
+"uniform vec2  m_location[256];"
+"flat out int InstanceID;"
+"void main(){"
+"	vec4 tmp = gl_Vertex;"
+"	tmp.x *=m_radius[gl_InstanceID];"
+"	tmp.y *=m_radius[gl_InstanceID];"
+"	gl_Position = (gl_ProjectionMatrix * ((tmp) + m_location[gl_InstanceID].xy ));"
+"	InstanceID=gl_InstanceID;"
+"}";
+const GLchar *circleInstanceFShader =
+"flat in int InstanceID;"
+"uniform vec4 color[256];"
+"void main(){"
+"	gl_FragColor = color[InstanceID];"
+"}";
+
+const GLchar *rectInstanceVShader =
+"uniform vec2 m_scaling[256];"
+"uniform float m_rotation[256];"
+"uniform vec2  m_location[256];"
+"flat out int InstanceID;"
+"void main(){"
+"	float rot = m_rotation[gl_InstanceID];"
+"	float cs = cos(rot);"
+"	float sn = sin(rot);"
+"	mat4 RotationMatrix = mat4( cs, -sn, 0.0, 0.0,"
+"		sn, cs, 0.0, 0.0,"
+"		0.0, 0.0, 1.0, 0.0,"
+"		0.0, 0.0, 0.0, 1.0 ); "
+"	vec4 tmp = gl_Vertex;"
+"	tmp.x *=m_scaling[gl_InstanceID].x;"
+"	tmp.y *=m_scaling[gl_InstanceID].y;"
+"	tmp = RotationMatrix*tmp;"
+"	gl_Position = (gl_ProjectionMatrix * ((tmp) + m_location[gl_InstanceID].xy ));"
+"	InstanceID=gl_InstanceID;"
+"}";
+const GLchar *rectInstanceFShader =
+"flat in int InstanceID;"
+"uniform vec4 m_color[256];"
+"void main(){"
+"	gl_FragColor = m_color[InstanceID];"
+"}";
+
 const GLchar *textureVertexShader =
 "attribute vec2 texture_coord;"
+"varying vec2 UV;"
 "void main(){"
 	"gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;"
 	"UV=texture_coord;"
@@ -595,6 +646,107 @@ const GLchar *textureFragmentShader =
 "void main(){"
 	"gl_FragColor = texture2D(myTexture, UV);"
 "}";
+
+GLuint compileProgram(const GLchar* vShader, const GLchar* fShader){
+	//Read our shaders into the appropriate buffers\
+	
+		//Create an empty vertex shader handle
+		GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
+	
+	glShaderSource(vertexShader, 1, &vShader, 0);
+
+	//Compile the vertex shader
+	glCompileShader(vertexShader);
+
+	GLint isCompiled = 0;
+	glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &isCompiled);
+	if (isCompiled == GL_FALSE)
+	{
+		GLint maxLength = 0;
+		glGetShaderiv(vertexShader, GL_INFO_LOG_LENGTH, &maxLength);
+
+		//The maxLength includes the NULL character
+		std::vector<GLchar> infoLog(maxLength);
+		glGetShaderInfoLog(vertexShader, maxLength, &maxLength, &infoLog[0]);
+		char* data = &infoLog[0];
+		//We don't need the shader anymore.
+		glDeleteShader(vertexShader);
+
+		//Use the infoLog as you see fit.
+
+		//In this simple program, we'll just leave
+		return 0;
+	}
+
+	//Create an empty fragment shader handle
+	GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+	glShaderSource(fragmentShader, 1, &fShader, 0);
+
+	//Compile the fragment shader
+	glCompileShader(fragmentShader);
+
+	glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &isCompiled);
+	if (isCompiled == GL_FALSE)
+	{
+		GLint maxLength = 0;
+		glGetShaderiv(fragmentShader, GL_INFO_LOG_LENGTH, &maxLength);
+
+		//The maxLength includes the NULL character
+		std::vector<GLchar> infoLog(maxLength);
+		glGetShaderInfoLog(fragmentShader, maxLength, &maxLength, &infoLog[0]);
+		char* data = &infoLog[0];
+		//We don't need the shader anymore.
+		glDeleteShader(fragmentShader);
+		//Either of them. Don't leak shaders.
+		glDeleteShader(vertexShader);
+
+		//Use the infoLog as you see fit.
+
+		//In this simple program, we'll just leave
+		return 0;
+	}
+
+	//Vertex and fragment shaders are successfully compiled.
+	//Now time to link them together into a program.
+	//Get a program object.
+	GLuint program = glCreateProgram();
+
+	//Attach our shaders to our program
+	glAttachShader(program, vertexShader);
+	glAttachShader(program, fragmentShader);
+
+	//Link our program
+	glLinkProgram(program);
+
+	//Note the different functions here: glGetProgram* instead of glGetShader*.
+	GLint isLinked = 0;
+	glGetProgramiv(program, GL_LINK_STATUS, (int *)&isLinked);
+	if (isLinked == GL_FALSE)
+	{
+		GLint maxLength = 0;
+		glGetProgramiv(program, GL_INFO_LOG_LENGTH, &maxLength);
+
+		//The maxLength includes the NULL character
+		std::vector<GLchar> infoLog(maxLength);
+		glGetProgramInfoLog(program, maxLength, &maxLength, &infoLog[0]);
+		char* data = &infoLog[0];
+		//We don't need the program anymore.
+		glDeleteProgram(program);
+		//Don't leak shaders either.
+		glDeleteShader(vertexShader);
+		glDeleteShader(fragmentShader);
+
+		//Use the infoLog as you see fit.
+
+		//In this simple program, we'll just leave
+		return 0;
+	}
+
+	//Always detach shaders after a successful link.
+	glDetachShader(program, vertexShader);
+	glDetachShader(program, fragmentShader);
+	return program;
+}
 int primitives::init(){
 	//generate circle vbo
 	glGenBuffers(1, &(this->circle_VBO));
@@ -624,19 +776,16 @@ int primitives::init(){
 	glBufferData(GL_ARRAY_BUFFER, 16 * sizeof(float), rect_coords, GL_STATIC_DRAW);
 
 	//create a generic shader program
-	this->simpleProgram = glCreateProgram();
-	GLuint vertexShaderObj = glCreateShader(GL_VERTEX_SHADER);
-	GLuint fragmentShaderObj = glCreateShader(GL_FRAGMENT_SHADER);
-	glShaderSource(vertexShaderObj, 1, &simpleVertexShader, NULL);
-	glShaderSource(fragmentShaderObj, 1, &simpleFragmentShader, NULL);
-	glCompileShader(vertexShaderObj);
-	glCompileShader(fragmentShaderObj);
-	glAttachShader(this->simpleProgram, vertexShaderObj);
-	glAttachShader(this->simpleProgram, fragmentShaderObj);
-	glLinkProgram(this->simpleProgram);
+	this->simpleProgram = compileProgram(simpleVertexShader, simpleFragmentShader);
 	this->circleProgram_Color = glGetUniformLocation(this->simpleProgram, "color");
 
 	//create a texture shader program
+	this->textureProgram = compileProgram(textureVertexShader, textureFragmentShader);
+	this->textureProgram_texUnit = glGetUniformLocation(this->textureProgram, "myTexture");
+	textureProgram_texCoord = glGetAttribLocation(this->textureProgram, "texture_coord");
+
+
+	/*
 	this->textureProgram = glCreateProgram();
 	vertexShaderObj = glCreateShader(GL_VERTEX_SHADER);
 	fragmentShaderObj = glCreateShader(GL_FRAGMENT_SHADER);
@@ -647,8 +796,18 @@ int primitives::init(){
 	glAttachShader(this->textureProgram, vertexShaderObj);
 	glAttachShader(this->textureProgram, fragmentShaderObj);
 	glLinkProgram(this->textureProgram);
-	this->textureProgram_texUnit = glGetUniformLocation(this->textureProgram, "myTexture");
-	textureProgram_texCoord = glGetAttribLocation(this->textureProgram, "texture_coord");
+	*/
+	this->circleInstanceProgram = compileProgram(circleInstanceVShader, circleInstanceFShader);
+	this->ciData.locationArray = glGetUniformLocation(this->circleInstanceProgram,"m_location");
+	this->ciData.radiusArray = glGetUniformLocation(this->circleInstanceProgram, "m_radius");
+	this->ciData.color = glGetUniformLocation(this->circleInstanceProgram, "color");
+
+
+	this->rectInstanceProgram = compileProgram(rectInstanceVShader, rectInstanceFShader);
+	this->riData.locationArray = glGetUniformLocation(this->rectInstanceProgram, "m_location");
+	this->riData.rotationArray = glGetUniformLocation(this->rectInstanceProgram, "m_rotation");
+	this->riData.scalingArray = glGetUniformLocation(this->rectInstanceProgram, "m_scaling");
+	this->riData.colorArray = glGetUniformLocation(this->rectInstanceProgram, "m_color");
 	return 1;
 }
 
@@ -679,6 +838,31 @@ void primitives::setColor(float r, float g, float b, float a){
 
 void primitives::setLineWidth(float w){
 	lineWidth = w;
+}
+void primitives::batchSquare(int num, float *location, float *scaling, float* rotation, float *color){
+	glUseProgram(this->rectInstanceProgram);
+	glEnableVertexAttribArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, this->rect_VBO);
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, (GLvoid*)0);
+	glUniform2fv(this->riData.locationArray, num, location);
+	glUniform2fv(this->riData.scalingArray, num, scaling);
+	glUniform1fv(this->riData.rotationArray, num, rotation);
+	glUniform4fv(this->riData.colorArray, num, color);
+	glDrawArraysInstanced(GL_TRIANGLE_FAN, 0, 4, num);
+	glDisableVertexAttribArray(0);
+	glUseProgram(0);
+}
+void primitives::batchCircle(int num, float *location, float *radius, float *color){
+	glUseProgram(this->circleInstanceProgram);
+	glEnableVertexAttribArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, this->circle_VBO);
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, (GLvoid*)0);
+	glUniform2fv(this->ciData.locationArray, num, location);
+	glUniform1fv(this->ciData.radiusArray, num, radius);
+	glUniform4fv(this->ciData.color, num, color);
+	glDrawArraysInstanced(GL_TRIANGLE_FAN, 0, CIRCLE_RES + 2,num);
+	glDisableVertexAttribArray(0);
+	glUseProgram(0);
 }
 
 void primitives::drawCircle(float x, float y, float r){

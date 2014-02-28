@@ -34,7 +34,7 @@ bool Missile::tick(GameEngine* e){
 			s->r = 1 - ((float)rand()) / RAND_MAX*.2f;
 			s->g = ((float)rand()) / RAND_MAX*.6f;
 			s->b = .01f;
-			s->life += (int)(((float)rand()) / RAND_MAX * 100);
+			s->life += (int)(((float)rand()) / RAND_MAX * 500)+300;
 			e->addActor(s);
 		}
 		return true;

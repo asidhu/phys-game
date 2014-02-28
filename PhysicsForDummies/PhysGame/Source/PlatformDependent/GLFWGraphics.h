@@ -8,6 +8,8 @@ class GLFWGraphics :public PlatformGraphics{
 private:
 	float m_left, m_right;
 	std::map<unsigned int, unsigned int> m_resourceMap;
+	void renderBatchCircle(RenderList*);
+	void renderBatchSquare(RenderList*);
 public:
 	GLFWwindow* m_window;
 	bool m_initialized;

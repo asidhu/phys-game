@@ -69,8 +69,61 @@ void GLFWGraphics::loadImage(unsigned int resID, char* filename){
 void GLFWGraphics::close(){
 	glfwSwapBuffers(m_window);
 }
+void GLFWGraphics::renderBatchCircle(RenderList* list){
+	float location[MAX_BATCH * 2];
+	float radius[MAX_BATCH];
+	float color[MAX_BATCH * 4];
+	int num = 0;
+	for (std::list<RenderItem*>::iterator it = list->batchFillCircle.begin(); it != list->batchFillCircle.end(); ++it){
+		RenderItem* item = *it;
+		location[2 * num] = item->x;
+		location[2 * num + 1] = item->y;
+		radius[num] = item->circle.radius;
+		color[4 * num] = item->circle.r;
+		color[4 * num + 1] = item->circle.g;
+		color[4 * num + 2] = item->circle.b;
+		color[4 * num + 3] = item->circle.a;
+		num++;
+		if (num == MAX_BATCH){
+			renderer.batchCircle(num, location, radius, color);
+			num = 0;
+		}
+	}
+	if (num != 0)
+		renderer.batchCircle(num, location, radius, color);
+
+}
+void GLFWGraphics::renderBatchSquare(RenderList* list){
+	float location[MAX_BATCH * 2];
+	float scaling[MAX_BATCH*2];
+	float rotation[MAX_BATCH];
+	float color[MAX_BATCH * 4];
+	int num = 0;
+	for (std::list<RenderItem*>::iterator it = list->batchFillSquare.begin(); it != list->batchFillSquare.end(); ++it){
+		RenderItem* item = *it;
+		location[2 * num] = item->x;
+		location[2 * num + 1] = item->y;
+		scaling[2 * num] = item->square.w;
+		scaling[2 * num + 1] = item->square.h;
+		rotation[num] = item->rot;
+		color[4 * num] = item->circle.r;
+		color[4 * num + 1] = item->circle.g;
+		color[4 * num + 2] = item->circle.b;
+		color[4 * num + 3] = item->circle.a;
+		num++;
+		if (num == MAX_BATCH){
+			renderer.batchSquare(num, location, scaling, rotation, color);
+			num = 0;
+		}
+	}
+	if (num != 0)
+		renderer.batchSquare(num, location, scaling, rotation, color);
+
+}
 void GLFWGraphics::drawList(RenderList* list){
-	for (std::list<RenderItem*>::iterator it = list->renderItems.begin(); it != list->renderItems.end(); it++){
+	renderBatchCircle(list);
+	renderBatchSquare(list);
+	for (std::list<RenderItem*>::iterator it = list->renderItems.begin(); it != list->renderItems.end(); ++it){
 		RenderItem* item = *it;
 		if (item->myType == solidsquare || item->myType == hollowsquare){
 			renderer.setColor(item->square.r, item->square.g, item->square.b, item->square.a);
