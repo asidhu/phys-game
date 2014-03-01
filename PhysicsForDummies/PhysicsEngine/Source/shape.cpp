@@ -4,16 +4,16 @@
 #include "collision.h"
 #define max(a,b) ((a>b)?a:b)
 #define min(a,b) ((a<b)?a:b)
-bool overlap(extent& a, extent& b){
+inline bool overlap(const extent& a,const extent& b){
 	return !(a.max<b.min || a.min>b.max);
 }
-bool overlap(extent& a, float min, float max){
+inline bool overlap(const extent& a, const float min, const float max){
 	return !(a.max<min || a.min>max);
 }
-float halfextent(extent& a){
+inline float halfextent(const extent& a){
 	return (a.max - a.min) / 2;
 }
-vec2 extent2point(unsigned char a, box* b){
+inline vec2 extent2point(const unsigned char a,const box* b){
 	int num = 4;
 	vec2 avg;
 	if ((a & 1) != 0)

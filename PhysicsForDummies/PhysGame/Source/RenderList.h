@@ -1,7 +1,7 @@
 #pragma once
 #include <list>
 #include <vector>
-
+#include <queue>
 enum DrawType{
 	solidsquare, hollowsquare,
 	solidcircle, hollowcircle,
@@ -39,11 +39,14 @@ public:
 	}
 	std::list<RenderItem*> renderItems;
 	std::list<RenderItem*> batchFillCircle, batchFillSquare;
+	std::priority_queue<RenderItem*> batchTexSquare;
 	void addItem(RenderItem* i){
 		if (i->myType == solidcircle)
 			batchFillCircle.push_back(i);
 		else if (i->myType == solidsquare)
 			batchFillSquare.push_back(i);
+		else if (i->myType == texture || i->myType == stenciltexture)
+			batchTexSquare.push(i);
 		else
 			renderItems.push_back(i);
 	}
@@ -60,6 +63,7 @@ public:
 	void clear(){
 		batchFillSquare.clear();
 		batchFillCircle.clear();
+		batchTexSquare.empty();
 		renderItems.clear();
 		size = 0;
 	}

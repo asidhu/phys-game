@@ -33,7 +33,7 @@ void GameEngine::tick(){
 			delete actor;
 		}
 		else
-			it++;
+			++it;
 	}
 	for (std::list<Effect*>::iterator it = m_effects.begin(); it != m_effects.end();){
 		Effect* actor = *it;
@@ -42,7 +42,7 @@ void GameEngine::tick(){
 			delete actor;
 		}
 		else
-			it++;
+			++it;
 	}
 	inputTick();
 	m_input->pollInput();

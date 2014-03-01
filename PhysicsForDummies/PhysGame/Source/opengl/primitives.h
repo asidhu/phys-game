@@ -1,7 +1,7 @@
 #pragma once
 #include "opengl/opengl.h"
 #define MAX_BATCH 256
-
+#define MAX_TEX 8
 struct draw_square{
 	float x, y, w, h;
 } ;
@@ -13,6 +13,7 @@ private:
 	GLuint simpleProgram;
 	GLuint circleInstanceProgram;
 	GLuint rectInstanceProgram;
+	GLuint texInstanceProgram;
 	struct{
 		GLuint scalingArray;
 		GLuint rotationArray;
@@ -24,6 +25,14 @@ private:
 		GLuint locationArray;
 		GLuint color;
 	} ciData;
+	struct{
+		GLuint scalingArray;
+		GLuint rotationArray;
+		GLuint locationArray;
+		GLuint texSampler;
+		GLuint texScale;
+		GLuint texID;
+	} tiData;
 	GLuint textureProgram;
 	GLuint textureProgram_texCoord;
 	GLuint textureProgram_texUnit;
@@ -46,6 +55,7 @@ public:
 	void drawCircle(float x, float y, float r);
 	void batchCircle(int num, float *location, float *radius, float *color); //x,y,radius,a,r,g,b
 	void batchSquare(int num, float *location, float *scaling,float* rotation, float *color); //x,y,radius,a,r,g,b
+	void batchSquareTexture(int num, GLuint *texIDs, int numTexs, const GLint *texture, float *location, float* scaling, float* rotation, float *texScale);
 	void fillCircle(float x, float y, float r);
 	void drawTexture(GLuint texID, float x, float y, const float texcoords[8], float w = 1.f, float h = 1.f, float rot = 0.f);
 	void drawStenciledTexture(GLuint texID, draw_square&,draw_square&, const float texcoords[8], float rot = 0.f);

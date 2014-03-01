@@ -69,6 +69,43 @@ void GLFWGraphics::loadImage(unsigned int resID, char* filename){
 void GLFWGraphics::close(){
 	glfwSwapBuffers(m_window);
 }
+void GLFWGraphics::renderBatchTextureSquare(RenderList* list){
+	float location[MAX_BATCH * 2];
+	float scaling[MAX_BATCH * 2];
+	float rotation[MAX_BATCH];
+	GLint textures[MAX_BATCH];
+	GLuint texIDs[MAX_TEX];
+	float texScale[MAX_BATCH * 2];
+	int num = 0, numTex = 0;
+	while(list->batchTexSquare.size()){
+		RenderItem* item = list->batchTexSquare.top();
+		list->batchTexSquare.pop();
+		location[2 * num] = item->x;
+		location[2 * num + 1] = item->y;
+		scaling[2 * num] = item->square.w;
+		scaling[2 * num + 1] = item->square.h;
+		rotation[num] = item->rot;
+		GLuint texid = m_resourceMap[item->tex.resID];
+		texScale[2 * num] = 2;
+		texScale[2 * num + 1] = 2;
+		if (numTex == 0 || texIDs[numTex - 1] != texid){
+			texIDs[numTex] = texid;
+			textures[num] = numTex;
+			numTex++;
+		}
+		else{
+			textures[num] = numTex-1;
+		}
+		num++;
+		if (num == MAX_BATCH || numTex ==MAX_TEX){
+			renderer.batchSquareTexture(num, texIDs, numTex, textures, location, scaling, rotation, texScale);
+			num = numTex = 0;
+		}
+	}
+	if (num != 0)
+		renderer.batchSquareTexture(num, texIDs, numTex, textures, location, scaling, rotation, texScale);
+
+}
 void GLFWGraphics::renderBatchCircle(RenderList* list){
 	float location[MAX_BATCH * 2];
 	float radius[MAX_BATCH];
@@ -123,6 +160,7 @@ void GLFWGraphics::renderBatchSquare(RenderList* list){
 void GLFWGraphics::drawList(RenderList* list){
 	renderBatchCircle(list);
 	renderBatchSquare(list);
+	renderBatchTextureSquare(list);
 	for (std::list<RenderItem*>::iterator it = list->renderItems.begin(); it != list->renderItems.end(); ++it){
 		RenderItem* item = *it;
 		if (item->myType == solidsquare || item->myType == hollowsquare){

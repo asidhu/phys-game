@@ -10,6 +10,7 @@ private:
 	std::map<unsigned int, unsigned int> m_resourceMap;
 	void renderBatchCircle(RenderList*);
 	void renderBatchSquare(RenderList*);
+	void renderBatchTextureSquare(RenderList*);
 public:
 	GLFWwindow* m_window;
 	bool m_initialized;
