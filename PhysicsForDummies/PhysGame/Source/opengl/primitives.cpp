@@ -578,127 +578,28 @@ void primitives::drawLine(float x1,float y1, float x2, float y2){
 #include <cstring>
 #define CIRCLE_RES 10
 #define PIPERDEG 3.14159/180.0
-const GLchar *simpleVertexShader =
-"void main(){"
-"gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;"
-"}";
-const GLchar *simpleFragmentShader =
-"uniform vec4 color;"
-"void main(){"
-"	gl_FragColor = color;"
-"}";
+const char *simpleVertexShader = "glsl\\SimpleVShader.glsl";
+const char *simpleFragmentShader = "glsl\\SimpleFShader.glsl";
 
-const GLchar *circleInstanceVShader =
-"uniform float m_radius[256];"
-"uniform vec2  m_location[256];"
-"flat out int InstanceID;"
-"void main(){"
-"	vec4 tmp = gl_Vertex;"
-"	tmp.x *=m_radius[gl_InstanceID];"
-"	tmp.y *=m_radius[gl_InstanceID];"
-"	gl_Position = (gl_ProjectionMatrix * ((tmp) + m_location[gl_InstanceID].xy ));"
-"	InstanceID=gl_InstanceID;"
-"}";
-const GLchar *circleInstanceFShader =
-"flat in int InstanceID;"
-"uniform vec4 color[256];"
-"void main(){"
-"	gl_FragColor = color[InstanceID];"
-"}";
+const char *circleInstanceVShader = "glsl\\CircleInstanceVShader.glsl";
+const char *circleInstanceFShader = "glsl\\CircleInstanceFShader.glsl";
 
-const GLchar *rectInstanceVShader =
-"uniform vec2 m_scaling[256];"
-"uniform float m_rotation[256];"
-"uniform vec2  m_location[256];"
-"flat out int InstanceID;"
-"void main(){"
-"	float rot = m_rotation[gl_InstanceID];"
-"	float cs = cos(rot);"
-"	float sn = sin(rot);"
-"	mat4 RotationMatrix = mat4( cs, -sn, 0.0, 0.0,"
-"		sn, cs, 0.0, 0.0,"
-"		0.0, 0.0, 1.0, 0.0,"
-"		0.0, 0.0, 0.0, 1.0 ); "
-"	vec4 tmp = gl_Vertex;"
-"	tmp.x *=m_scaling[gl_InstanceID].x;"
-"	tmp.y *=m_scaling[gl_InstanceID].y;"
-"	tmp = RotationMatrix*tmp;"
-"	gl_Position = (gl_ProjectionMatrix * ((tmp) + m_location[gl_InstanceID].xy ));"
-"	InstanceID=gl_InstanceID;"
-"}";
-const GLchar *rectInstanceFShader =
-"flat in int InstanceID;"
-"uniform vec4 m_color[256];"
-"void main(){"
-"	gl_FragColor = m_color[InstanceID];"
-"}";
+const char *rectInstanceVShader = "glsl\\RectInstanceVShader.glsl";
+const char *rectInstanceFShader = "glsl\\RectInstanceFShader.glsl";
 
+const char *texBatchVShader = "glsl\\texBatchVShader.glsl";
+const char *texBatchFShader = "glsl\\texBatchFShader.glsl";
 
-const GLchar *texBatchVShader =
-"uniform vec2 m_scaling[256];"
-"uniform float m_rotation[256];"
-"uniform vec2 m_location[256];"
-"uniform vec2 m_texS;"
-"varying vec2 UV;"
-"flat out int InstanceID;"
-"void main(){"
-"	float rot = m_rotation[gl_InstanceID];"
-"	float cs = cos(rot);"
-"	float sn = sin(rot);"
-"	mat4 RotationMatrix = mat4( cs, -sn, 0.0, 0.0,"
-"		sn, cs, 0.0, 0.0,"
-"		0.0, 0.0, 1.0, 0.0,"
-"		0.0, 0.0, 0.0, 1.0 ); "
-"	vec4 tmp = gl_Vertex;"
-"	tmp.x *=m_scaling[gl_InstanceID].x;"
-"	tmp.y *=m_scaling[gl_InstanceID].y;"
-"	vec4 textmp = tmp;"
-"	tmp = RotationMatrix*tmp;"
-"	gl_Position = (gl_ProjectionMatrix * ((tmp) + m_location[gl_InstanceID].xy ));"
-"	textmp.x*=m_texS.x;"
-"	textmp.y*=m_texS.y;"
-"	textmp = RotationMatrix*textmp;"
-"	UV = textmp.xy;"
-"	InstanceID = gl_InstanceID;"
-"}";
-const GLchar *texBatchFShader =
-"uniform sampler2D m_texture[7];"
-"uniform int m_texID;"
-"varying vec2 UV;"
-"void main(){"
-"	if(m_texID<3){"
-"		if(m_texID==1)"
-"			gl_FragColor = texture2D(m_texture[1], UV);"
-"		else if(m_texID<1)"
-"			gl_FragColor = texture2D(m_texture[0], UV);"
-"		else"
-"			gl_FragColor = texture2D(m_texture[2], UV);"
-"	}"
-"	else if(m_texID==3)"
-"		gl_FragColor = texture2D(m_texture[3], UV);"
-"	else{"
-"		if(m_texID==5)"
-"			gl_FragColor = texture2D(m_texture[5], UV);"
-"		else if(m_texID<5)"
-"			gl_FragColor = texture2D(m_texture[4], UV);"
-"		else"
-"			gl_FragColor = texture2D(m_texture[6], UV);"
-"	}"
-"}";
-const GLchar *textureVertexShader =
-"attribute vec2 texture_coord;"
-"varying vec2 UV;"
-"void main(){"
-	"gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;"
-	"UV=texture_coord;"
-"}";
-const GLchar *textureFragmentShader =
-"uniform sampler2D myTexture;"
-"varying vec2 UV;"
-"void main(){"
-	"gl_FragColor = texture2D(myTexture, UV);"
-"}";
-
+const char *textureVertexShader = "glsl\\texVShader.glsl";
+const char *textureFragmentShader = "glsl\\texFShader.glsl";
+GLchar vshader[8192],fshader[8192];
+GLchar* readFile(const char* name, GLchar* data, int bufflen){
+	FILE* shader;
+	fopen_s(&shader, name, "r");
+	data[fread(data, 1, bufflen, shader)] = 0;
+	fclose(shader);
+	return data;
+}
 GLuint compileProgram(const GLchar* vShader, const GLchar* fShader){
 	//Read our shaders into the appropriate buffers
 	
@@ -828,14 +729,16 @@ int primitives::init(){
 	glBufferData(GL_ARRAY_BUFFER, 16 * sizeof(float), rect_coords, GL_STATIC_DRAW);
 
 	//create a generic shader program
-	this->simpleProgram = compileProgram(simpleVertexShader, simpleFragmentShader);
-	this->circleProgram_Color = glGetUniformLocation(this->simpleProgram, "color");
-
+	this->simpleProgram = compileProgram(readFile(simpleVertexShader, vshader, 8192), readFile(simpleFragmentShader, fshader, 8192));
+	this->spData.color = glGetUniformLocation(this->simpleProgram, "color");
+	this->spData.wMat = glGetUniformLocation(this->simpleProgram, "worldMat");
+	this->spData.mMat = glGetUniformLocation(this->simpleProgram, "modelMat");
+	/*
 	//create a texture shader program
-	this->textureProgram = compileProgram(textureVertexShader, textureFragmentShader);
+	this->textureProgram = compileProgram(readFile(textureVertexShader, vshader, 8192), readFile(textureFragmentShader, fshader, 8192));
 	this->textureProgram_texUnit = glGetUniformLocation(this->textureProgram, "myTexture");
 	textureProgram_texCoord = glGetAttribLocation(this->textureProgram, "texture_coord");
-
+	*/
 
 	/*
 	this->textureProgram = glCreateProgram();
@@ -849,19 +752,23 @@ int primitives::init(){
 	glAttachShader(this->textureProgram, fragmentShaderObj);
 	glLinkProgram(this->textureProgram);
 	*/
-	this->circleInstanceProgram = compileProgram(circleInstanceVShader, circleInstanceFShader);
+	this->circleInstanceProgram = compileProgram(readFile(circleInstanceVShader, vshader, 8192), readFile(circleInstanceFShader, fshader, 8192));
+	
 	this->ciData.locationArray = glGetUniformLocation(this->circleInstanceProgram,"m_location");
 	this->ciData.radiusArray = glGetUniformLocation(this->circleInstanceProgram, "m_radius");
 	this->ciData.color = glGetUniformLocation(this->circleInstanceProgram, "color");
+	this->ciData.worldMat = glGetUniformLocation(this->circleInstanceProgram, "worldMat");
 
 
-	this->rectInstanceProgram = compileProgram(rectInstanceVShader, rectInstanceFShader);
+	this->rectInstanceProgram = compileProgram(readFile(rectInstanceVShader, vshader, 8192), readFile(rectInstanceFShader, fshader, 8192));
 	this->riData.locationArray = glGetUniformLocation(this->rectInstanceProgram, "m_location");
 	this->riData.rotationArray = glGetUniformLocation(this->rectInstanceProgram, "m_rotation");
 	this->riData.scalingArray = glGetUniformLocation(this->rectInstanceProgram, "m_scaling");
 	this->riData.colorArray = glGetUniformLocation(this->rectInstanceProgram, "m_color");
+	this->riData.worldMat = glGetUniformLocation(this->rectInstanceProgram, "worldMat");
 
-	this->texInstanceProgram = compileProgram(texBatchVShader, texBatchFShader);
+	this->texInstanceProgram = compileProgram(readFile(texBatchVShader, vshader, 8192), readFile(texBatchFShader, fshader, 8192));
+	this->tiData.worldMat = glGetUniformLocation(this->texInstanceProgram, "worldMat");
 	this->tiData.locationArray = glGetUniformLocation(this->texInstanceProgram, "m_location");
 	this->tiData.rotationArray = glGetUniformLocation(this->texInstanceProgram, "m_rotation");
 	this->tiData.scalingArray = glGetUniformLocation(this->texInstanceProgram, "m_scaling");
@@ -876,10 +783,13 @@ void primitives::deinit(){
 }
 
 void primitives::setupViewport(float l, float r, float t, float b){
+	worldMat = glm::ortho(l, r, b,t);
+	
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	glOrtho(l, r, b, t, 1.f, -1.f);
 	glMatrixMode(GL_MODELVIEW);
+	
 }
 float clamp(float in){
 	if (in > 1)
@@ -900,21 +810,26 @@ void primitives::setLineWidth(float w){
 	lineWidth = w;
 }
 
-void primitives::batchSquareTexture(int num,GLuint *texIDs, int numTexs, const GLint *texture, float *location, float* scaling, float* rotation, float *texScale){
+void primitives::batchSquareTexture(int num,GLint *texIDs, int numTexs, const GLint *texture, float *location, float* scaling, float* rotation, float *texScale){
 	glUseProgram(this->texInstanceProgram);
+	glEnable(GL_TEXTURE_2D);
+	/*for (int i = 0; i < numTexs; i++){
+		glActiveTexture(GL_TEXTURE0 + i);
+		glBindTexture(GL_TEXTURE_2D, texIDs[i]);
+	}*/
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, 1);
 	glEnableVertexAttribArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, this->rect_VBO);
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, (GLvoid*)0);
 	glUniform2fv(this->tiData.locationArray, num, location);
 	glUniform2fv(this->tiData.scalingArray, num, scaling);
 	glUniform1fv(this->tiData.rotationArray, num, rotation);
-	glUniform1uiv(this->tiData.texSampler,num,texIDs);
+	//glUniform1iv(this->tiData.texSampler, num, texIDs);
+	glUniform1i(this->tiData.texSampler, 0);
 	glUniform2fv(this->tiData.texScale, num, texScale);
-	glUniform1iv(this->tiData.texID, num, texture);
-	glEnable(GL_TEXTURE_2D);
-	for (int i = 0; i < numTexs; i++){
-		glBindTexture(GL_TEXTURE0 + i, texIDs[numTexs]);
-	}
+	//glUniform1i(this->tiData.texID, 0);
+	glUniformMatrix4fv(this->tiData.worldMat, 1, false, glm::value_ptr(worldMat));
 	glDrawArraysInstanced(GL_TRIANGLE_FAN, 0, 4, num);
 	glDisable(GL_TEXTURE_2D);
 	glDisableVertexAttribArray(0);
@@ -930,6 +845,7 @@ void primitives::batchSquare(int num, float *location, float *scaling, float* ro
 	glUniform2fv(this->riData.scalingArray, num, scaling);
 	glUniform1fv(this->riData.rotationArray, num, rotation);
 	glUniform4fv(this->riData.colorArray, num, color);
+	glUniformMatrix4fv(this->riData.worldMat, 1, false, glm::value_ptr(worldMat));
 	glDrawArraysInstanced(GL_TRIANGLE_FAN, 0, 4, num);
 	glDisableVertexAttribArray(0);
 	glUseProgram(0);
@@ -942,19 +858,22 @@ void primitives::batchCircle(int num, float *location, float *radius, float *col
 	glUniform2fv(this->ciData.locationArray, num, location);
 	glUniform1fv(this->ciData.radiusArray, num, radius);
 	glUniform4fv(this->ciData.color, num, color);
+	glUniformMatrix4fv(this->ciData.worldMat, 1, false, glm::value_ptr(worldMat));
 	glDrawArraysInstanced(GL_TRIANGLE_FAN, 0, CIRCLE_RES + 2,num);
 	glDisableVertexAttribArray(0);
 	glUseProgram(0);
 }
 
 void primitives::drawCircle(float x, float y, float r){
-	glPushMatrix();
-	glLoadIdentity();
-	glTranslatef(x, y, 0);
-	glScalef(r, r, 0);
+	
+	glm::mat4 model = glm::mat4();
+	model=glm::scale(model, glm::vec3(r, r, 0));
+	model=glm::translate(model, glm::vec3(x, y, 0.0f));
 	glEnable(GL_LINE_SMOOTH);
 	glUseProgram(this->simpleProgram);
-	glUniform4f(this->circleProgram_Color, red, green, blue, alpha);
+	glUniform4f(this->spData.color, red, green, blue, alpha);
+	glUniformMatrix4fv(this->spData.wMat, 1, false, glm::value_ptr(worldMat));
+	glUniformMatrix4fv(this->spData.mMat, 1, false, glm::value_ptr(model));
 	glEnableVertexAttribArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, this->circle_VBO);
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, (GLvoid*)0);
@@ -962,30 +881,27 @@ void primitives::drawCircle(float x, float y, float r){
 	glDrawArrays(GL_LINE_LOOP, 2, CIRCLE_RES);
 	glDisableVertexAttribArray(0);
 	glUseProgram(0);
-	glPopMatrix();
+	
 }
 void primitives::drawLine(float x1, float y1, float x2, float y2){
-	glPushMatrix();
-	glLoadIdentity();
 	glEnable(GL_LINE_SMOOTH);
 	glUseProgram(this->simpleProgram);
-	glUniform4f(this->circleProgram_Color, red, green, blue, alpha);
+	glUniform4f(this->spData.color, red, green, blue, alpha);
 	glLineWidth(lineWidth);
 	glBegin(GL_LINES);
 	glVertex2f(x1, y1);
 	glVertex2f(x2, y2);
 	glEnd();
-	glPopMatrix();
 }
 void primitives::drawRect(float x, float y, float w, float h, float rot){
-	glPushMatrix();
-	glLoadIdentity();
-	glTranslatef(x, y, 0);
-	glRotatef(rot, 0, 0, 1);
-	glScalef(w, h, 0);
+	glm::mat4 model = glm::mat4();
+	model=glm::translate(model, glm::vec3(x, y, 0.0f));
+	model=glm::scale(model, glm::vec3(w, h, 0));
 	glEnable(GL_LINE_SMOOTH);
 	glUseProgram(this->simpleProgram);
-	glUniform4f(this->circleProgram_Color, red, green, blue, alpha);
+	glUniform4f(this->spData.color, red, green, blue, alpha);
+	glUniformMatrix4fv(this->spData.wMat, 1, false, glm::value_ptr(worldMat));
+	glUniformMatrix4fv(this->spData.mMat, 1, false, glm::value_ptr(model));
 	glEnableVertexAttribArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, this->rect_VBO);
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, (GLvoid*)0);
@@ -993,12 +909,11 @@ void primitives::drawRect(float x, float y, float w, float h, float rot){
 	glDrawArrays(GL_LINE_LOOP, 0, 4);
 	glDisableVertexAttribArray(0);
 	glUseProgram(0);
-	glPopMatrix();
 }
 
 void primitives::drawStenciledTexture(GLuint texID, draw_square& mask, draw_square& texture, const float texcoords[8], float rot){
 	//draw mask
-
+	/*
 	glPushMatrix();
 	glEnable(GL_STENCIL_TEST);
 	glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
@@ -1055,8 +970,10 @@ void primitives::drawStenciledTexture(GLuint texID, draw_square& mask, draw_squa
 	glPopMatrix();
 	glDisable(GL_TEXTURE_2D);
 	glDisable(GL_STENCIL_TEST);
+	*/
 }
 void primitives::drawTexture(GLuint texID, float x, float y, const float texcoords[8], float w, float h, float rot){
+	/*
 	glEnable(GL_TEXTURE_2D);
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, texID);
@@ -1079,9 +996,11 @@ void primitives::drawTexture(GLuint texID, float x, float y, const float texcoor
 	glUseProgram(0);
 	glPopMatrix();
 	glDisable(GL_TEXTURE_2D);
+	*/
 }
 
 void primitives::fillRect(float x, float y, float w, float h, float rot){
+	/*
 	glPushMatrix();
 	glLoadIdentity();
 	glTranslatef(x, y, 0);
@@ -1096,8 +1015,10 @@ void primitives::fillRect(float x, float y, float w, float h, float rot){
 	glDisableVertexAttribArray(0);
 	glUseProgram(0);
 	glPopMatrix();
+	*/
 }
 void primitives::fillCircle(float x, float y, float r){
+	/*
 	glMatrixMode(GL_MODELVIEW);
 	glPushMatrix();
 	glLoadIdentity();
@@ -1112,6 +1033,7 @@ void primitives::fillCircle(float x, float y, float r){
 	glDisableVertexAttribArray(0);
 	glUseProgram(0);
 	glPopMatrix();
+	*/
 }
 
 #endif

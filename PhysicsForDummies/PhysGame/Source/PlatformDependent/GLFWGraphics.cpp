@@ -57,7 +57,7 @@ void GLFWGraphics::loadImage(unsigned int resID, char* filename){
 	unsigned char* data = stbi_load(filename, &x, &y, &comp, 0);
 	glGenTextures(1, &texID); 
 	glBindTexture(GL_TEXTURE_2D, texID);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, x, y, 0, (comp == 3) ? GL_RGB : GL_RGBA, GL_UNSIGNED_BYTE, data);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, x, y, 0, (comp == 3) ? GL_RGB : GL_RGBA, GL_UNSIGNED_BYTE, data);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -74,7 +74,7 @@ void GLFWGraphics::renderBatchTextureSquare(RenderList* list){
 	float scaling[MAX_BATCH * 2];
 	float rotation[MAX_BATCH];
 	GLint textures[MAX_BATCH];
-	GLuint texIDs[MAX_TEX];
+	GLint texIDs[MAX_TEX];
 	float texScale[MAX_BATCH * 2];
 	int num = 0, numTex = 0;
 	while(list->batchTexSquare.size()){
@@ -82,12 +82,12 @@ void GLFWGraphics::renderBatchTextureSquare(RenderList* list){
 		list->batchTexSquare.pop();
 		location[2 * num] = item->x;
 		location[2 * num + 1] = item->y;
-		scaling[2 * num] = item->square.w;
-		scaling[2 * num + 1] = item->square.h;
+		scaling[2 * num] = item->tex.w;
+		scaling[2 * num + 1] = item->tex.h;
 		rotation[num] = item->rot;
-		GLuint texid = m_resourceMap[item->tex.resID];
-		texScale[2 * num] = 2;
-		texScale[2 * num + 1] = 2;
+		GLint texid = m_resourceMap[item->tex.resID];
+		texScale[2 * num] = 1.f;
+		texScale[2 * num + 1] = 1.f;
 		if (numTex == 0 || texIDs[numTex - 1] != texid){
 			texIDs[numTex] = texid;
 			textures[num] = numTex;
@@ -97,7 +97,7 @@ void GLFWGraphics::renderBatchTextureSquare(RenderList* list){
 			textures[num] = numTex-1;
 		}
 		num++;
-		if (num == MAX_BATCH || numTex ==MAX_TEX){
+		if (num == MAX_BATCH || numTex == MAX_TEX){
 			renderer.batchSquareTexture(num, texIDs, numTex, textures, location, scaling, rotation, texScale);
 			num = numTex = 0;
 		}

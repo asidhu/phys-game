@@ -1,4 +1,7 @@
 #pragma once
+#include <libs\glm\mat4x4.hpp>
+#include <libs\glm\gtc\matrix_transform.hpp>
+#include <libs\glm\gtc\type_ptr.hpp>
 #include "opengl/opengl.h"
 #define MAX_BATCH 256
 #define MAX_TEX 8
@@ -8,6 +11,7 @@ struct draw_square{
 
 class primitives{
 private:
+	glm::mat4 worldMat;
 	GLuint rect_VBO;
 	GLuint circle_VBO;
 	GLuint simpleProgram;
@@ -19,11 +23,13 @@ private:
 		GLuint rotationArray;
 		GLuint colorArray;
 		GLuint locationArray;
+		GLuint worldMat;
 	} riData;
 	struct {
 		GLuint radiusArray;
 		GLuint locationArray;
 		GLuint color;
+		GLuint worldMat;
 	} ciData;
 	struct{
 		GLuint scalingArray;
@@ -32,11 +38,17 @@ private:
 		GLuint texSampler;
 		GLuint texScale;
 		GLuint texID;
+		GLuint worldMat;
 	} tiData;
+	struct{
+		GLuint color;
+		GLuint wMat, mMat;
+	} spData;
+	
 	GLuint textureProgram;
 	GLuint textureProgram_texCoord;
 	GLuint textureProgram_texUnit;
-	GLuint circleProgram_Color;
+	
 	float red, green, blue, alpha;
 	float lineWidth;
 #ifdef EMSCRIPTEN
@@ -55,7 +67,7 @@ public:
 	void drawCircle(float x, float y, float r);
 	void batchCircle(int num, float *location, float *radius, float *color); //x,y,radius,a,r,g,b
 	void batchSquare(int num, float *location, float *scaling,float* rotation, float *color); //x,y,radius,a,r,g,b
-	void batchSquareTexture(int num, GLuint *texIDs, int numTexs, const GLint *texture, float *location, float* scaling, float* rotation, float *texScale);
+	void batchSquareTexture(int num, GLint *texIDs, int numTexs, const GLint *texture, float *location, float* scaling, float* rotation, float *texScale);
 	void fillCircle(float x, float y, float r);
 	void drawTexture(GLuint texID, float x, float y, const float texcoords[8], float w = 1.f, float h = 1.f, float rot = 0.f);
 	void drawStenciledTexture(GLuint texID, draw_square&,draw_square&, const float texcoords[8], float rot = 0.f);

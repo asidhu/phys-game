@@ -42,9 +42,9 @@ void solver::solveContacts(body* head, int velIterations, int posIterations){
 				continue;
 			}
 			if (ptr->AABB.right >= ptr2->AABB.left){
-				if (ptr->AABB.overlap(ptr2->AABB) && shape::detectCollision(ptr, ptr2, (constraints + nContacts))){
+				contactdetails *dets = constraints + nContacts;
+				if (ptr->AABB.overlap(ptr2->AABB) && shape::detectCollision(ptr, ptr2, (dets))){
 					
-					contactdetails *dets = constraints + nContacts;
 					dets->b1 = ptr;
 					dets->b2 = ptr2;
 					dets->normalImpulse = 0;

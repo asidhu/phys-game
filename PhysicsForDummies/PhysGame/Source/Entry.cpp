@@ -107,7 +107,7 @@ int main(int argc, char* argv[])
 		//RANDOM BOXES
 	};
 	arr[6]->getBody()->lockRotation();
-	arr[7]->getBody()->lockRotation();
+	//arr[7]->getBody()->lockRotation();
 	Scene* scene = new Scene(1);
 	for (int i = 0; i < 8; i++){
 		scene->addFixture(arr[i], 0);
@@ -126,13 +126,13 @@ int main(int argc, char* argv[])
 	//b->post_collide = onGroundCheck;
 	engine.addActor(engine.player);
 	
-	for (int i = 0; i < 20; i++){
+	for (int i = 0; i < 0; i++){
 		EnemyCannoneer* ec = new EnemyCannoneer(createBody(engine.getPhysEngine(), 45+rand()%5, 60, 2, 2, 1));
 		ec->m_tex = 3;
 		ec->m_hp = 10;
 		engine.addActor(ec);
 	}
-	for (int i = 0; i < 20; i++){
+	for (int i = 0; i < 0; i++){
 		EnemyRiflesmen* ec = new EnemyRiflesmen(createBody(engine.getPhysEngine(), -60 + 120 * (float)rand() / RAND_MAX, 10, 2, 2, 1));
 		ec->m_tex = 3;
 		ec->m_hp = 10;
