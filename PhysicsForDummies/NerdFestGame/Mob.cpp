@@ -48,6 +48,18 @@ void Mob::render(RenderList* lst){
 	item->rot = b->rotation;
 	lst->addItem(item);
 
+	item = lst->getItem();
+	item->x = b->position.x;
+	item->y = b->position.y;
+	item->myType = hollowsquare;
+	item->rot = b->rotation;
+	item->square.lw = 1;
+	item->square.w = ((box*)b->form)->halfwidth * 2;
+	item->square.h = ((box*)b->form)->halfheight * 2;
+	item->square.a = 1;
+	item->square.r = item->square.g = item->square.b = 1;
+	lst->addItem(item);
+
 	if (dmgfx > 0 && (dmgfx % 8) > 4){
 		RenderItem* item = lst->getItem();
 		item->x = b->position.x;

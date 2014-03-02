@@ -773,7 +773,7 @@ int primitives::init(){
 	this->tiData.rotationArray = glGetUniformLocation(this->texInstanceProgram, "m_rotation");
 	this->tiData.scalingArray = glGetUniformLocation(this->texInstanceProgram, "m_scaling");
 	this->tiData.texSampler = glGetUniformLocation(this->texInstanceProgram, "m_texture");
-	this->tiData.texScale = glGetUniformLocation(this->texInstanceProgram, "m_texS");
+	this->tiData.texScale = glGetUniformLocation(this->texInstanceProgram, "m_texScale");
 	this->tiData.texID = glGetUniformLocation(this->texInstanceProgram, "m_texID");
 	return 1;
 }
@@ -822,14 +822,15 @@ void primitives::batchSquareTexture(int num,GLint *texIDs, int numTexs, const GL
 	glEnableVertexAttribArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, this->rect_VBO);
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, (GLvoid*)0);
+	glUniform2fv(this->tiData.texScale, num, texScale);
 	glUniform2fv(this->tiData.locationArray, num, location);
 	glUniform2fv(this->tiData.scalingArray, num, scaling);
 	glUniform1fv(this->tiData.rotationArray, num, rotation);
 	//glUniform1iv(this->tiData.texSampler, num, texIDs);
 	glUniform1i(this->tiData.texSampler, 0);
-	glUniform2fv(this->tiData.texScale, num, texScale);
-	//glUniform1i(this->tiData.texID, 0);
 	glUniformMatrix4fv(this->tiData.worldMat, 1, false, glm::value_ptr(worldMat));
+	//glUniform1iv(this->tiData.texSampler, numTexs,texIDs);
+	glUniform1iv(this->tiData.texID, num,texture);
 	glDrawArraysInstanced(GL_TRIANGLE_FAN, 0, 4, num);
 	glDisable(GL_TEXTURE_2D);
 	glDisableVertexAttribArray(0);
@@ -896,6 +897,7 @@ void primitives::drawLine(float x1, float y1, float x2, float y2){
 void primitives::drawRect(float x, float y, float w, float h, float rot){
 	glm::mat4 model = glm::mat4();
 	model=glm::translate(model, glm::vec3(x, y, 0.0f));
+	model = glm::rotate(model,rot, glm::vec3(0,0,1));
 	model=glm::scale(model, glm::vec3(w, h, 0));
 	glEnable(GL_LINE_SMOOTH);
 	glUseProgram(this->simpleProgram);

@@ -84,12 +84,12 @@ void GLFWGraphics::renderBatchTextureSquare(RenderList* list){
 		location[2 * num + 1] = item->y;
 		scaling[2 * num] = item->tex.w;
 		scaling[2 * num + 1] = item->tex.h;
-		rotation[num] = item->rot;
+		rotation[num] = -item->rot;
+		texScale[2 * num] = 1.5f;
+		texScale[2 * num + 1] = 1.5f;
 		GLint texid = m_resourceMap[item->tex.resID];
-		texScale[2 * num] = 1.f;
-		texScale[2 * num + 1] = 1.f;
 		if (numTex == 0 || texIDs[numTex - 1] != texid){
-			texIDs[numTex] = texid;
+			texIDs[numTex] =  texid;
 			textures[num] = numTex;
 			numTex++;
 		}
@@ -102,6 +102,7 @@ void GLFWGraphics::renderBatchTextureSquare(RenderList* list){
 			num = numTex = 0;
 		}
 	}
+	for(int i=0;i<10;i++)textures[i] = 0;
 	if (num != 0)
 		renderer.batchSquareTexture(num, texIDs, numTex, textures, location, scaling, rotation, texScale);
 
