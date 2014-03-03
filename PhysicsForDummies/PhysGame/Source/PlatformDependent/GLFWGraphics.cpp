@@ -19,6 +19,7 @@ GLFWGraphics::GLFWGraphics(int w, int h){
 	if (!glfwInit()){
 		return;
 	}
+	
 	//create a window
 	m_window = glfwCreateWindow(w, h, "GLFW", NULL, NULL);
 	glfwMakeContextCurrent(m_window);
@@ -37,7 +38,7 @@ void GLFWGraphics::start(){
 	float viewHeight = m_top - m_bottom;
 	glfwGetFramebufferSize(m_window, &width, &height);
 	glfwGetWindowSize(m_window, &m_win_width, &m_win_height);
-
+	glfwSwapInterval(0);
 	ratio = width / (float)height;
 	glViewport(0, 0, width, height);
 	glClear(GL_COLOR_BUFFER_BIT);
@@ -102,7 +103,7 @@ void GLFWGraphics::renderBatchTextureSquare(RenderList* list){
 			num = numTex = 0;
 		}
 	}
-	for(int i=0;i<10;i++)textures[i] = 0;
+	//for(int i=0;i<10;i++)textures[i] = 0;
 	if (num != 0)
 		renderer.batchSquareTexture(num, texIDs, numTex, textures, location, scaling, rotation, texScale);
 

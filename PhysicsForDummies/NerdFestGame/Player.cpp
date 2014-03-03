@@ -25,8 +25,8 @@ bool Player::tick(GameEngine* e){
 	if(dmgfx>0)dmgfx--;
 	if (m_hp<=0 && m_deathframes++>500)
 	{
-		e->close();
-		return false;
+		//e->close();
+		//return false;
 	}
 	return false;
 }
@@ -57,6 +57,7 @@ void Player::fireMissile(GameEngine* e,float x, float y){
 	dist *= PROJECTILESPEED + max(dist.dot(getBody()->velocity), 0);
 	b->velocity += dist;
 	e->addActor(a);
+	a->launcher = this;
 }
 
 void Player::render(RenderList* lst){

@@ -19,7 +19,7 @@ public:
 		if(dmgfx>0)dmgfx--;
 		if (m_hp<=0 && m_deathframes++>300)
 		{
-			return true;
+		//	return true;
 		}
 		return false;
 	}

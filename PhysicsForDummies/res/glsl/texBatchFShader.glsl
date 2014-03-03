@@ -1,11 +1,11 @@
 #version 330
 layout(location=0) out vec4 colorOut;
-uniform sampler2D m_texture;//[7];
+uniform sampler2D m_texture[7];
 uniform int m_texID[256];
 smooth in vec2 UV;
 flat in int InstanceID;
 void main(){
-	colorOut = texture2D(m_texture,UV);
+	colorOut = texture2D(m_texture[m_texID[InstanceID]],UV);
 	/*
 	if(m_texID<3){
 		if(m_texID==1)

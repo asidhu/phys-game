@@ -26,7 +26,7 @@ bool Missile::tick(GameEngine* e){
 		{
 			float randX = ((float)rand()) / RAND_MAX, randY = ((float)rand()) / RAND_MAX;
 			float randSize = ((float)rand()) / RAND_MAX * .3f + .3f;
-			body* b = createBody9(e->getPhysEngine(), getBody()->position.x, getBody()->position.y, randSize, randSize, randSize / 50);
+			body* b = createBody9(e->getPhysEngine(), getBody()->position.x, getBody()->position.y, randSize, randSize, randSize / 80);
 			b->velocity.x = randX*((float)rand()) / RAND_MAX * 10;
 			b->velocity.y = randY*((float)rand()) / RAND_MAX * 10;
 			Shrapnel* s = new Shrapnel(1, b);
@@ -34,7 +34,7 @@ bool Missile::tick(GameEngine* e){
 			s->r = 1 - ((float)rand()) / RAND_MAX*.2f;
 			s->g = ((float)rand()) / RAND_MAX*.6f;
 			s->b = .01f;
-			s->life += (int)(((float)rand()) / RAND_MAX * 500)+300;
+			s->life += (int)(((float)rand()) / RAND_MAX * 500)+200;
 			e->addActor(s);
 		}
 		return true;
@@ -68,9 +68,16 @@ void Missile::render(RenderList* lst){
 
 bool missile_check_explode(body* b, contactdetails* cd){
 	Missile* m = (Missile*)b->data;
-	if (m->life > 6)
+	
+	if (m->life > 6){
 		return true;
-	return false;
+	}
+	body* other;
+	if (cd->b1 == b)
+		other = cd->b2;
+	else
+		other = cd->b1;
+	return m->launcher->getBody() != other;
 }
 void missile_explode(body* b, contactdetails* cd){
 	Missile* m = (Missile*)b->data;

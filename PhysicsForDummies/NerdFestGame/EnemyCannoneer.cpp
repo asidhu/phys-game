@@ -44,4 +44,5 @@ void EnemyCannoneer::fireMissile(GameEngine* e, float x, float y){
 	dist *= 40 + max(dist.dot(getBody()->velocity), 0);
 	b->velocity += dist;
 	e->addActor(a);
+	a->launcher = this;
 }

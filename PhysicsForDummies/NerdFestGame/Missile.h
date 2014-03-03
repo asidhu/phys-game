@@ -7,6 +7,7 @@ class Missile :public GameObject{
 public:
 	int life;
 	int dmg;
+	GameObject* launcher;
 	Missile(int id, body* b);
 	bool tick(GameEngine*);
 	void render(RenderList*);

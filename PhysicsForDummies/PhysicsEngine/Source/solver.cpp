@@ -37,7 +37,7 @@ void solver::solveContacts(body* head, int velIterations, int posIterations){
 	while (ptr->nextX != 0){
 		body * ptr2 = ptr->nextX;
 		while (ptr2 != 0){
-			if (nContacts >= MAX_CONTACTS || nBodies >= MAX_BODIES){
+			if (nContacts >= MAX_CONTACTS || nBodies-2 >= MAX_BODIES){
 				ptr2 = ptr2->nextX;
 				continue;
 			}

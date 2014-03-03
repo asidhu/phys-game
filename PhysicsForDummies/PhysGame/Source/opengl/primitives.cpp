@@ -813,12 +813,12 @@ void primitives::setLineWidth(float w){
 void primitives::batchSquareTexture(int num,GLint *texIDs, int numTexs, const GLint *texture, float *location, float* scaling, float* rotation, float *texScale){
 	glUseProgram(this->texInstanceProgram);
 	glEnable(GL_TEXTURE_2D);
-	/*for (int i = 0; i < numTexs; i++){
+	for (int i = 0; i < numTexs; i++){
 		glActiveTexture(GL_TEXTURE0 + i);
 		glBindTexture(GL_TEXTURE_2D, texIDs[i]);
-	}*/
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, 1);
+	}
+	//glActiveTexture(GL_TEXTURE0);
+	//glBindTexture(GL_TEXTURE_2D, 1);
 	glEnableVertexAttribArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, this->rect_VBO);
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, (GLvoid*)0);
@@ -827,7 +827,7 @@ void primitives::batchSquareTexture(int num,GLint *texIDs, int numTexs, const GL
 	glUniform2fv(this->tiData.scalingArray, num, scaling);
 	glUniform1fv(this->tiData.rotationArray, num, rotation);
 	//glUniform1iv(this->tiData.texSampler, num, texIDs);
-	glUniform1i(this->tiData.texSampler, 0);
+	glUniform1iv(this->tiData.texSampler,numTexs, texIDs);
 	glUniformMatrix4fv(this->tiData.worldMat, 1, false, glm::value_ptr(worldMat));
 	//glUniform1iv(this->tiData.texSampler, numTexs,texIDs);
 	glUniform1iv(this->tiData.texID, num,texture);

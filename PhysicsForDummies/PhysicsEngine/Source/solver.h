@@ -1,7 +1,7 @@
 #include "Body.h"
 #include "collision.h"
-#define MAX_BODIES 2000
-#define MAX_CONTACTS 3000
+#define MAX_BODIES 5000
+#define MAX_CONTACTS 8000
 class solver{
 public:
 	contactdetails constraints[MAX_CONTACTS];
