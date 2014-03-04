@@ -753,28 +753,19 @@ int primitives::init(){
 	glLinkProgram(this->textureProgram);
 	*/
 	this->circleInstanceProgram = compileProgram(readFile(circleInstanceVShader, vshader, 8192), readFile(circleInstanceFShader, fshader, 8192));
-	
-	this->ciData.locationArray = glGetUniformLocation(this->circleInstanceProgram,"m_location");
-	this->ciData.radiusArray = glGetUniformLocation(this->circleInstanceProgram, "m_radius");
-	this->ciData.color = glGetUniformLocation(this->circleInstanceProgram, "color");
 	this->ciData.worldMat = glGetUniformLocation(this->circleInstanceProgram, "worldMat");
-
+	glGenBuffers(1, &this->ciData.instanceBuffer);
 
 	this->rectInstanceProgram = compileProgram(readFile(rectInstanceVShader, vshader, 8192), readFile(rectInstanceFShader, fshader, 8192));
-	this->riData.locationArray = glGetUniformLocation(this->rectInstanceProgram, "m_location");
-	this->riData.rotationArray = glGetUniformLocation(this->rectInstanceProgram, "m_rotation");
-	this->riData.scalingArray = glGetUniformLocation(this->rectInstanceProgram, "m_scaling");
-	this->riData.colorArray = glGetUniformLocation(this->rectInstanceProgram, "m_color");
 	this->riData.worldMat = glGetUniformLocation(this->rectInstanceProgram, "worldMat");
+	glGenBuffers(1, &this->riData.instanceBuffer);
+
 
 	this->texInstanceProgram = compileProgram(readFile(texBatchVShader, vshader, 8192), readFile(texBatchFShader, fshader, 8192));
 	this->tiData.worldMat = glGetUniformLocation(this->texInstanceProgram, "worldMat");
-	this->tiData.locationArray = glGetUniformLocation(this->texInstanceProgram, "m_location");
-	this->tiData.rotationArray = glGetUniformLocation(this->texInstanceProgram, "m_rotation");
-	this->tiData.scalingArray = glGetUniformLocation(this->texInstanceProgram, "m_scaling");
-	this->tiData.texSampler = glGetUniformLocation(this->texInstanceProgram, "m_texture");
-	this->tiData.texScale = glGetUniformLocation(this->texInstanceProgram, "m_texScale");
-	this->tiData.texID = glGetUniformLocation(this->texInstanceProgram, "m_texID");
+	this->tiData.texID = glGetUniformLocation(this->texInstanceProgram, "m_texture");
+	glGenBuffers(1, &this->tiData.instanceBuffer); 
+	
 	return 1;
 }
 
@@ -810,58 +801,133 @@ void primitives::setLineWidth(float w){
 	lineWidth = w;
 }
 
-void primitives::batchSquareTexture(int num,GLint *texIDs, int numTexs, const GLint *texture, float *location, float* scaling, float* rotation, float *texScale){
+void primitives::setAttribDivisor(GLint index, GLint target){
+	glVertexAttribDivisor(index, target);
+	vAttribDivisor[index] = target;
+}
+void primitives::batchSquareTexture(int num,GLint *texIDs, int numTexs, void* data){
+	GLint indicies[] = { 0, 1, 2, 3, 4, 5, 6, 7 };
 	glUseProgram(this->texInstanceProgram);
-	glEnable(GL_TEXTURE_2D);
 	for (int i = 0; i < numTexs; i++){
 		glActiveTexture(GL_TEXTURE0 + i);
 		glBindTexture(GL_TEXTURE_2D, texIDs[i]);
 	}
-	//glActiveTexture(GL_TEXTURE0);
-	//glBindTexture(GL_TEXTURE_2D, 1);
-	glEnableVertexAttribArray(0);
+	for (int i = 0; i < 6; i++)
+		glEnableVertexAttribArray(i);
 	glBindBuffer(GL_ARRAY_BUFFER, this->rect_VBO);
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, (GLvoid*)0);
-	glUniform2fv(this->tiData.texScale, num, texScale);
-	glUniform2fv(this->tiData.locationArray, num, location);
-	glUniform2fv(this->tiData.scalingArray, num, scaling);
-	glUniform1fv(this->tiData.rotationArray, num, rotation);
-	//glUniform1iv(this->tiData.texSampler, num, texIDs);
-	glUniform1iv(this->tiData.texSampler,numTexs, texIDs);
+	if (vAttribDivisor[0] != 0)setAttribDivisor(0, 0);
+	glBindBuffer(GL_ARRAY_BUFFER, this->tiData.instanceBuffer);
+	glBufferData(GL_ARRAY_BUFFER, num*(sizeof(GLfloat)* 7+sizeof(GLint)), data, GL_DYNAMIC_DRAW);
+	int structsize = sizeof(GLfloat)* 7 + sizeof(GLint);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, structsize, (const GLvoid*)0);
+	if (vAttribDivisor[1] != 1)setAttribDivisor(1, 1);
+	glVertexAttribPointer(2, 1, GL_FLOAT, GL_FALSE, structsize, (const GLvoid*)(sizeof(GLfloat)* 2));
+	if (vAttribDivisor[2] != 1)setAttribDivisor(2, 1);
+	glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, structsize, (const GLvoid*)(sizeof(GLfloat)* 3));
+	if (vAttribDivisor[3] != 1)setAttribDivisor(3, 1);
+	glVertexAttribPointer(4, 2, GL_FLOAT, GL_FALSE, structsize, (const GLvoid*)(sizeof(GLfloat)* 5));
+	if (vAttribDivisor[4] != 1)setAttribDivisor(4, 1);
+	glVertexAttribIPointer(5, 1, GL_INT, structsize, (const GLvoid*)(sizeof(GLfloat)* 7));
+	if (vAttribDivisor[5] != 1)setAttribDivisor(5, 1);
 	glUniformMatrix4fv(this->tiData.worldMat, 1, false, glm::value_ptr(worldMat));
-	//glUniform1iv(this->tiData.texSampler, numTexs,texIDs);
-	glUniform1iv(this->tiData.texID, num,texture);
+	glUniform1iv(this->tiData.texID, numTexs, indicies);
 	glDrawArraysInstanced(GL_TRIANGLE_FAN, 0, 4, num);
-	glDisable(GL_TEXTURE_2D);
-	glDisableVertexAttribArray(0);
+	for (int i = 0; i < 6; i++)
+		glDisableVertexAttribArray(i);
 	glUseProgram(0);
 
 }
-void primitives::batchSquare(int num, float *location, float *scaling, float* rotation, float *color){
+void primitives::batchSquare(int num, void* data){
 	glUseProgram(this->rectInstanceProgram);
-	glEnableVertexAttribArray(0);
+	for (int i = 0; i < 5; i++)
+		glEnableVertexAttribArray(i);
 	glBindBuffer(GL_ARRAY_BUFFER, this->rect_VBO);
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, (GLvoid*)0);
-	glUniform2fv(this->riData.locationArray, num, location);
-	glUniform2fv(this->riData.scalingArray, num, scaling);
-	glUniform1fv(this->riData.rotationArray, num, rotation);
-	glUniform4fv(this->riData.colorArray, num, color);
+	if (vAttribDivisor[0] != 0)setAttribDivisor(0, 0);
+	glBindBuffer(GL_ARRAY_BUFFER, this->riData.instanceBuffer);
+	glBufferData(GL_ARRAY_BUFFER, num*(sizeof(GLfloat)* 9), data, GL_DYNAMIC_DRAW);
+	int structsize = sizeof(GLfloat)* 9 ;
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, structsize, (const GLvoid*)0);
+	if (vAttribDivisor[1] != 1)setAttribDivisor(1, 1);
+	glVertexAttribPointer(2, 1, GL_FLOAT, GL_FALSE, structsize, (const GLvoid*)(sizeof(GLfloat)* 2));
+	if (vAttribDivisor[2] != 1)setAttribDivisor(2, 1);
+	glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, structsize, (const GLvoid*)(sizeof(GLfloat)* 3));
+	if (vAttribDivisor[3] != 1)setAttribDivisor(3, 1);
+	glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, structsize, (const GLvoid*)(sizeof(GLfloat)* 5));
+	if (vAttribDivisor[4] != 1)setAttribDivisor(4, 1);
 	glUniformMatrix4fv(this->riData.worldMat, 1, false, glm::value_ptr(worldMat));
 	glDrawArraysInstanced(GL_TRIANGLE_FAN, 0, 4, num);
-	glDisableVertexAttribArray(0);
+	for (int i = 0; i < 5; i++)
+		glDisableVertexAttribArray(i);
 	glUseProgram(0);
 }
-void primitives::batchCircle(int num, float *location, float *radius, float *color){
+void primitives::batchCircle(int num, void* data){
 	glUseProgram(this->circleInstanceProgram);
-	glEnableVertexAttribArray(0);
+	for (int i = 0; i < 4; i++)
+		glEnableVertexAttribArray(i);
 	glBindBuffer(GL_ARRAY_BUFFER, this->circle_VBO);
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, (GLvoid*)0);
-	glUniform2fv(this->ciData.locationArray, num, location);
-	glUniform1fv(this->ciData.radiusArray, num, radius);
-	glUniform4fv(this->ciData.color, num, color);
+	if (vAttribDivisor[0] != 0)setAttribDivisor(0, 0);
+	glBindBuffer(GL_ARRAY_BUFFER, this->ciData.instanceBuffer);
+	glBufferData(GL_ARRAY_BUFFER, num*(sizeof(GLfloat)* 7), data, GL_DYNAMIC_DRAW);
+	int structsize = sizeof(GLfloat)* 7;
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, structsize, (const GLvoid*)0);
+	if (vAttribDivisor[1] != 1)setAttribDivisor(1, 1);
+	glVertexAttribPointer(2, 1, GL_FLOAT, GL_FALSE, structsize, (const GLvoid*)(sizeof(GLfloat)* 2));
+	if (vAttribDivisor[2] != 1)setAttribDivisor(2, 1);
+	glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, structsize, (const GLvoid*)(sizeof(GLfloat)* 3));
+	if (vAttribDivisor[3] != 1)setAttribDivisor(3, 1);
 	glUniformMatrix4fv(this->ciData.worldMat, 1, false, glm::value_ptr(worldMat));
 	glDrawArraysInstanced(GL_TRIANGLE_FAN, 0, CIRCLE_RES + 2,num);
-	glDisableVertexAttribArray(0);
+	for (int i = 0; i < 4; i++)
+		glDisableVertexAttribArray(i);
+	glUseProgram(0);
+}
+void primitives::batchDrawSquare(int num, void* data){
+	glUseProgram(this->rectInstanceProgram);
+	for (int i = 0; i < 5; i++)
+		glEnableVertexAttribArray(i);
+	glBindBuffer(GL_ARRAY_BUFFER, this->rect_VBO);
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, (GLvoid*)0);
+	if (vAttribDivisor[0] != 0)setAttribDivisor(0, 0);
+	glBindBuffer(GL_ARRAY_BUFFER, this->riData.instanceBuffer);
+	glBufferData(GL_ARRAY_BUFFER, num*(sizeof(GLfloat)* 9), data, GL_DYNAMIC_DRAW);
+	int structsize = sizeof(GLfloat)* 9;
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, structsize, (const GLvoid*)0);
+	if (vAttribDivisor[1] != 1)setAttribDivisor(1, 1);
+	glVertexAttribPointer(2, 1, GL_FLOAT, GL_FALSE, structsize, (const GLvoid*)(sizeof(GLfloat)* 2));
+	if (vAttribDivisor[2] != 1)setAttribDivisor(2, 1);
+	glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, structsize, (const GLvoid*)(sizeof(GLfloat)* 3));
+	if (vAttribDivisor[3] != 1)setAttribDivisor(3, 1);
+	glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, structsize, (const GLvoid*)(sizeof(GLfloat)* 5));
+	if (vAttribDivisor[4] != 1)setAttribDivisor(4, 1);
+	glUniformMatrix4fv(this->riData.worldMat, 1, false, glm::value_ptr(worldMat));
+	glDrawArraysInstanced(GL_LINE_LOOP, 0, 4, num);
+	for (int i = 0; i < 5; i++)
+		glDisableVertexAttribArray(i);
+	glUseProgram(0);
+}
+void primitives::batchDrawCircle(int num, void* data){
+	glUseProgram(this->circleInstanceProgram);
+	for (int i = 0; i < 4; i++)
+		glEnableVertexAttribArray(i);
+	glBindBuffer(GL_ARRAY_BUFFER, this->circle_VBO);
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, (GLvoid*)0);
+	if (vAttribDivisor[0] != 0)setAttribDivisor(0, 0);
+	glBindBuffer(GL_ARRAY_BUFFER, this->ciData.instanceBuffer);
+	glBufferData(GL_ARRAY_BUFFER, num*(sizeof(GLfloat)* 7), data, GL_DYNAMIC_DRAW);
+	int structsize = sizeof(GLfloat)* 7;
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, structsize, (const GLvoid*)0);
+	if (vAttribDivisor[1] != 1)setAttribDivisor(1, 1);
+	glVertexAttribPointer(2, 1, GL_FLOAT, GL_FALSE, structsize, (const GLvoid*)(sizeof(GLfloat)* 2));
+	if (vAttribDivisor[2] != 1)setAttribDivisor(2, 1);
+	glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, structsize, (const GLvoid*)(sizeof(GLfloat)* 3));
+	if (vAttribDivisor[3] != 1)setAttribDivisor(3, 1);
+	glUniformMatrix4fv(this->ciData.worldMat, 1, false, glm::value_ptr(worldMat));
+	glDrawArraysInstanced(GL_LINE_LOOP, 2, CIRCLE_RES, num);
+	for (int i = 0; i < 4; i++)
+		glDisableVertexAttribArray(i);
 	glUseProgram(0);
 }
 

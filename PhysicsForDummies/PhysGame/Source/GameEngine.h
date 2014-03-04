@@ -39,7 +39,8 @@ public:
 	void render();
 	void addActor(Actor*);
 	PhysEngine* getPhysEngine(){ return m_physEngine; } //THIS IS A HACK. GET RID OF LATER.
-
+	int getNumActors(){ return m_actors.size(); }
+	int getNumEffects(){ return m_effects.size(); }
 	//these are hacks - make input manager!
 	void handleKey(int key, int state);
 	void handleMouse(float x, float y,int button, int state);

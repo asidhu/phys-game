@@ -31,23 +31,29 @@ GLFWGraphics::GLFWGraphics(int w, int h){
 	m_initialized = true;
 	m_win_width = w;
 	m_win_height = h;
+	m_fb_width = m_fb_height = 0;
 }
 void GLFWGraphics::start(){
 	float  ratio;
 	int width, height;
+	int nW, nH;
 	float viewHeight = m_top - m_bottom;
 	glfwGetFramebufferSize(m_window, &width, &height);
 	glfwGetWindowSize(m_window, &m_win_width, &m_win_height);
 	glfwSwapInterval(0);
 	ratio = width / (float)height;
-	glViewport(0, 0, width, height);
+	if (width != m_fb_width || height != m_fb_height){
+		glViewport(0, 0, width, height);
+		m_fb_width = width;
+		m_fb_height = height;
+	}
 	glClear(GL_COLOR_BUFFER_BIT);
-
-
-	renderer.setupViewport(m_left, m_right, m_top, m_bottom );
 
 	m_left = m_centerX - viewHeight / 2 * ratio;
 	m_right = m_centerX + viewHeight / 2 * ratio;
+
+
+	renderer.setupViewport(m_left, m_right, m_top, m_bottom );
 	
 
 }
@@ -71,97 +77,117 @@ void GLFWGraphics::close(){
 	glfwSwapBuffers(m_window);
 }
 void GLFWGraphics::renderBatchTextureSquare(RenderList* list){
-	float location[MAX_BATCH * 2];
-	float scaling[MAX_BATCH * 2];
-	float rotation[MAX_BATCH];
 	GLint textures[MAX_BATCH];
 	GLint texIDs[MAX_TEX];
-	float texScale[MAX_BATCH * 2];
+	struct{
+		GLfloat x, y;
+		GLfloat rotation;
+		GLfloat sx, sy;
+		GLfloat tx, ty;
+		GLint texID;
+	}instanceAttributes[MAX_BATCH];
+
+
 	int num = 0, numTex = 0;
 	while(list->batchTexSquare.size()){
 		RenderItem* item = list->batchTexSquare.top();
 		list->batchTexSquare.pop();
-		location[2 * num] = item->x;
-		location[2 * num + 1] = item->y;
-		scaling[2 * num] = item->tex.w;
-		scaling[2 * num + 1] = item->tex.h;
-		rotation[num] = -item->rot;
-		texScale[2 * num] = 1.5f;
-		texScale[2 * num + 1] = 1.5f;
+		instanceAttributes[num].x = item->x;
+		instanceAttributes[num].y = item->y;
+		instanceAttributes[num].rotation = item->rot;
+		instanceAttributes[num].sx = item->tex.w;
+		instanceAttributes[num].sy = item->tex.h;
+		instanceAttributes[num].tx = 1.f;// 1.5f;
+		instanceAttributes[num].ty = 1.f;// 1.5f;
 		GLint texid = m_resourceMap[item->tex.resID];
 		if (numTex == 0 || texIDs[numTex - 1] != texid){
 			texIDs[numTex] =  texid;
-			textures[num] = numTex;
+			instanceAttributes[num].texID = numTex;
 			numTex++;
+
 		}
 		else{
-			textures[num] = numTex-1;
+			instanceAttributes[num].texID = numTex - 1;
 		}
 		num++;
 		if (num == MAX_BATCH || numTex == MAX_TEX){
-			renderer.batchSquareTexture(num, texIDs, numTex, textures, location, scaling, rotation, texScale);
+			renderer.batchSquareTexture(num, texIDs, numTex, instanceAttributes);
 			num = numTex = 0;
 		}
 	}
-	//for(int i=0;i<10;i++)textures[i] = 0;
 	if (num != 0)
-		renderer.batchSquareTexture(num, texIDs, numTex, textures, location, scaling, rotation, texScale);
+		renderer.batchSquareTexture(num, texIDs, numTex, instanceAttributes);
 
 }
-void GLFWGraphics::renderBatchCircle(RenderList* list){
-	float location[MAX_BATCH * 2];
-	float radius[MAX_BATCH];
-	float color[MAX_BATCH * 4];
+void GLFWGraphics::renderBatchCircle(bool hollow, std::list<RenderItem*> &list){
+	struct{
+		GLfloat x, y, radius, red, green, blue, alpha;
+	}instanceAttributes[MAX_BATCH];
 	int num = 0;
-	for (std::list<RenderItem*>::iterator it = list->batchFillCircle.begin(); it != list->batchFillCircle.end(); ++it){
+	for (std::list<RenderItem*>::iterator it = list.begin(); it != list.end(); ++it){
 		RenderItem* item = *it;
-		location[2 * num] = item->x;
-		location[2 * num + 1] = item->y;
-		radius[num] = item->circle.radius;
-		color[4 * num] = item->circle.r;
-		color[4 * num + 1] = item->circle.g;
-		color[4 * num + 2] = item->circle.b;
-		color[4 * num + 3] = item->circle.a;
+		instanceAttributes[num].x = item->x;
+		instanceAttributes[num].y = item->y;
+		instanceAttributes[num].radius = item->circle.radius;
+		instanceAttributes[num].red = item->circle.r;
+		instanceAttributes[num].green = item->circle.g;
+		instanceAttributes[num].blue = item->circle.b;
+		instanceAttributes[num].alpha = item->circle.a;
 		num++;
 		if (num == MAX_BATCH){
-			renderer.batchCircle(num, location, radius, color);
+			if (hollow)
+				renderer.batchDrawCircle(num, instanceAttributes);
+			else
+				renderer.batchCircle(num, instanceAttributes);
 			num = 0;
 		}
 	}
-	if (num != 0)
-		renderer.batchCircle(num, location, radius, color);
+	if (num != 0){
+		if (hollow)
+			renderer.batchDrawCircle(num, instanceAttributes);
+		else
+			renderer.batchCircle(num, instanceAttributes);
+	}
 
 }
-void GLFWGraphics::renderBatchSquare(RenderList* list){
-	float location[MAX_BATCH * 2];
-	float scaling[MAX_BATCH*2];
-	float rotation[MAX_BATCH];
-	float color[MAX_BATCH * 4];
+void GLFWGraphics::renderBatchSquare(bool hollow, std::list<RenderItem*> &list){
+	struct{
+		GLfloat x, y, rot, sx, sy, red, green, blue, alpha;
+	}instanceAttributes[MAX_BATCH];
 	int num = 0;
-	for (std::list<RenderItem*>::iterator it = list->batchFillSquare.begin(); it != list->batchFillSquare.end(); ++it){
+	for (std::list<RenderItem*>::iterator it = list.begin(); it != list.end(); ++it){
 		RenderItem* item = *it;
-		location[2 * num] = item->x;
-		location[2 * num + 1] = item->y;
-		scaling[2 * num] = item->square.w;
-		scaling[2 * num + 1] = item->square.h;
-		rotation[num] = item->rot;
-		color[4 * num] = item->circle.r;
-		color[4 * num + 1] = item->circle.g;
-		color[4 * num + 2] = item->circle.b;
-		color[4 * num + 3] = item->circle.a;
+		instanceAttributes[num].x = item->x;
+		instanceAttributes[num].y = item->y;
+		instanceAttributes[num].rot = item->rot;
+		instanceAttributes[num].sx = item->square.w;
+		instanceAttributes[num].sy = item->square.h;
+		instanceAttributes[num].red = item->square.r;
+		instanceAttributes[num].green = item->square.g;
+		instanceAttributes[num].blue = item->square.b;
+		instanceAttributes[num].alpha = item->square.a;
 		num++;
 		if (num == MAX_BATCH){
-			renderer.batchSquare(num, location, scaling, rotation, color);
+			if (hollow)
+				renderer.batchDrawSquare(num, instanceAttributes);
+			else
+				renderer.batchSquare(num, instanceAttributes);
 			num = 0;
 		}
 	}
-	if (num != 0)
-		renderer.batchSquare(num, location, scaling, rotation, color);
+	if (num != 0){
+		if (hollow)
+			renderer.batchDrawSquare(num, instanceAttributes);
+		else
+			renderer.batchSquare(num, instanceAttributes);
+	}	
 
 }
 void GLFWGraphics::drawList(RenderList* list){
-	renderBatchCircle(list);
-	renderBatchSquare(list);
+	renderBatchCircle(true,list->batchDrawCircle);
+	renderBatchCircle(false,list->batchFillCircle);
+	renderBatchSquare(true,list->batchDrawSquare);
+	renderBatchSquare(false,list->batchFillSquare);
 	renderBatchTextureSquare(list);
 	for (std::list<RenderItem*>::iterator it = list->renderItems.begin(); it != list->renderItems.end(); ++it){
 		RenderItem* item = *it;

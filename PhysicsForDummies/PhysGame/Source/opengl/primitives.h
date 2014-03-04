@@ -4,13 +4,16 @@
 #include <libs\glm\gtc\type_ptr.hpp>
 #include "opengl/opengl.h"
 #define MAX_BATCH 256
-#define MAX_TEX 8
+#define MAX_TEX 7
 struct draw_square{
 	float x, y, w, h;
 } ;
 
 class primitives{
 private:
+
+	GLint vAttribsEnabled[10];
+	GLint vAttribDivisor[10];
 	glm::mat4 worldMat;
 	GLuint rect_VBO;
 	GLuint circle_VBO;
@@ -19,26 +22,17 @@ private:
 	GLuint rectInstanceProgram;
 	GLuint texInstanceProgram;
 	struct{
-		GLuint scalingArray;
-		GLuint rotationArray;
-		GLuint colorArray;
-		GLuint locationArray;
+		GLuint instanceBuffer;
 		GLuint worldMat;
 	} riData;
 	struct {
-		GLuint radiusArray;
-		GLuint locationArray;
-		GLuint color;
+		GLuint instanceBuffer;
 		GLuint worldMat;
 	} ciData;
 	struct{
-		GLuint scalingArray;
-		GLuint rotationArray;
-		GLuint locationArray;
-		GLuint texSampler;
-		GLuint texScale;
 		GLuint texID;
 		GLuint worldMat;
+		GLuint instanceBuffer;
 	} tiData;
 	struct{
 		GLuint color;
@@ -61,13 +55,16 @@ public:
 	void setupViewport(float l, float r, float t, float b);
 	void setColor(float r, float g, float b, float a);
 	void setLineWidth(float w);
+	void setAttribDivisor(GLint index, GLint target);
 	void drawRect(float x, float y, float w, float h, float rot = 0);
 	void drawLine(float x, float y, float w, float h);
 	void fillRect(float x, float y, float w, float h, float rot=0);
 	void drawCircle(float x, float y, float r);
-	void batchCircle(int num, float *location, float *radius, float *color); //x,y,radius,a,r,g,b
-	void batchSquare(int num, float *location, float *scaling,float* rotation, float *color); //x,y,radius,a,r,g,b
-	void batchSquareTexture(int num, GLint *texIDs, int numTexs, const GLint *texture, float *location, float* scaling, float* rotation, float *texScale);
+	void batchDrawCircle(int num, void* data);//x,y,radius,r,g,b,a
+	void batchDrawSquare(int num, void* data);//x,y,rot,w,h,r,g,b,a
+	void batchCircle(int num, void* data); //x,y,radius,r,g,b,a
+	void batchSquare(int num, void* data); //x,y,rot,w,h,r,g,b,a
+	void batchSquareTexture(int num, GLint *texIDs, int numTexs, void* data);//x,y,rot,sx,sy,tx,ty,texid
 	void fillCircle(float x, float y, float r);
 	void drawTexture(GLuint texID, float x, float y, const float texcoords[8], float w = 1.f, float h = 1.f, float rot = 0.f);
 	void drawStenciledTexture(GLuint texID, draw_square&,draw_square&, const float texcoords[8], float rot = 0.f);

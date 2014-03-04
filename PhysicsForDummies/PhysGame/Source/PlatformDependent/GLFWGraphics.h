@@ -8,12 +8,13 @@ class GLFWGraphics :public PlatformGraphics{
 private:
 	float m_left, m_right;
 	std::map<unsigned int, unsigned int> m_resourceMap;
-	void renderBatchCircle(RenderList*);
-	void renderBatchSquare(RenderList*);
+	void renderBatchCircle(bool hollow, std::list<RenderItem*> &list);
+	void renderBatchSquare(bool hollow, std::list<RenderItem*> &list);
 	void renderBatchTextureSquare(RenderList*);
 public:
 	GLFWwindow* m_window;
 	bool m_initialized;
+	int m_fb_width, m_fb_height;
 	int m_win_width, m_win_height;
 	GLFWGraphics(int w, int h);
 	void drawList(RenderList*);

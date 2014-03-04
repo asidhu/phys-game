@@ -39,12 +39,18 @@ public:
 	}
 	std::list<RenderItem*> renderItems;
 	std::list<RenderItem*> batchFillCircle, batchFillSquare;
+	std::list<RenderItem*> batchDrawCircle, batchDrawSquare;
+	
 	std::priority_queue<RenderItem*> batchTexSquare;
 	void addItem(RenderItem* i){
 		if (i->myType == solidcircle)
 			batchFillCircle.push_back(i);
 		else if (i->myType == solidsquare)
 			batchFillSquare.push_back(i);
+		else if (i->myType == hollowcircle)
+			batchDrawCircle.push_back(i);
+		else if (i->myType == hollowsquare)
+			batchDrawSquare.push_back(i);
 		else if (i->myType == texture || i->myType == stenciltexture)
 			batchTexSquare.push(i);
 		else
@@ -63,6 +69,8 @@ public:
 	void clear(){
 		batchFillSquare.clear();
 		batchFillCircle.clear();
+		batchDrawCircle.clear();
+		batchDrawSquare.clear();
 		batchTexSquare.empty();
 		renderItems.clear();
 		size = 0;

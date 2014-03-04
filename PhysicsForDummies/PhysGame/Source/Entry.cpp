@@ -174,7 +174,10 @@ int main(int argc, char* argv[])
 			if (time<waittime)Sleep((DWORD)(waittime - time));
 			totTime += time;
 			if (frames++ > 100){
-				std::cout << "time:" << totTime / frames << " tick:"<< tick << " render:"<<render<< " bodies:"<< engine.getPhysEngine()->getNumBodies() <<  std::endl;
+				std::cout << "time:" << totTime / frames << " tick:" << tick << " render:" << render;
+				std::cout << " actors:" << engine.getNumActors();
+				std::cout << " effects:" << engine.getNumEffects();
+				std::cout << " bodies:" << engine.getPhysEngine()->getNumBodies() << std::endl;
 				frames = 0;
 				totTime = 0;
 
