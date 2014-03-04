@@ -774,7 +774,7 @@ void primitives::deinit(){
 }
 
 void primitives::setupViewport(float l, float r, float t, float b){
-	worldMat = glm::ortho(l, r, b,t);
+	worldMat = glm::ortho(l, r, b,t,100.f,-100.f);
 	
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
@@ -812,14 +812,14 @@ void primitives::batchSquareTexture(int num,GLint *texIDs, int numTexs, void* da
 		glActiveTexture(GL_TEXTURE0 + i);
 		glBindTexture(GL_TEXTURE_2D, texIDs[i]);
 	}
-	for (int i = 0; i < 6; i++)
+	for (int i = 0; i < 7; i++)
 		glEnableVertexAttribArray(i);
 	glBindBuffer(GL_ARRAY_BUFFER, this->rect_VBO);
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, (GLvoid*)0);
 	if (vAttribDivisor[0] != 0)setAttribDivisor(0, 0);
 	glBindBuffer(GL_ARRAY_BUFFER, this->tiData.instanceBuffer);
-	glBufferData(GL_ARRAY_BUFFER, num*(sizeof(GLfloat)* 7+sizeof(GLint)), data, GL_DYNAMIC_DRAW);
-	int structsize = sizeof(GLfloat)* 7 + sizeof(GLint);
+	int structsize = sizeof(GLfloat)* 8 + sizeof(GLint);
+	glBufferData(GL_ARRAY_BUFFER, num*structsize, data, GL_DYNAMIC_DRAW);
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, structsize, (const GLvoid*)0);
 	if (vAttribDivisor[1] != 1)setAttribDivisor(1, 1);
 	glVertexAttribPointer(2, 1, GL_FLOAT, GL_FALSE, structsize, (const GLvoid*)(sizeof(GLfloat)* 2));
@@ -830,10 +830,12 @@ void primitives::batchSquareTexture(int num,GLint *texIDs, int numTexs, void* da
 	if (vAttribDivisor[4] != 1)setAttribDivisor(4, 1);
 	glVertexAttribIPointer(5, 1, GL_INT, structsize, (const GLvoid*)(sizeof(GLfloat)* 7));
 	if (vAttribDivisor[5] != 1)setAttribDivisor(5, 1);
+	glVertexAttribPointer(6, 1, GL_FLOAT,GL_TRUE, structsize, (const GLvoid*)(sizeof(GLfloat)* 7 + sizeof(GLint)));
+	if (vAttribDivisor[6] != 1)setAttribDivisor(6, 1);
 	glUniformMatrix4fv(this->tiData.worldMat, 1, false, glm::value_ptr(worldMat));
 	glUniform1iv(this->tiData.texID, numTexs, indicies);
 	glDrawArraysInstanced(GL_TRIANGLE_FAN, 0, 4, num);
-	for (int i = 0; i < 6; i++)
+	for (int i = 0; i < 7; i++)
 		glDisableVertexAttribArray(i);
 	glUseProgram(0);
 

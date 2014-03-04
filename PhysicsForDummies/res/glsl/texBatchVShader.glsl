@@ -5,6 +5,7 @@ layout(location=2) in float m_rotation;
 layout(location=3) in vec2 m_scaling;
 layout(location=4) in vec2 m_texS;
 layout(location=5) in int m_texID;
+layout(location=6) in float m_zindex;
 uniform mat4 worldMat;
 
 smooth out vec2 UV;
@@ -21,6 +22,7 @@ void main(){
 	vec4 textmp = tmp;
 	tmp = RotationMatrix*tmp;
 	tmp.xy += m_location;
+	tmp.z=m_zindex;
 	gl_Position = (worldMat * tmp);
 	textmp.xy*=m_texS;
 	textmp = RotationMatrix*textmp;

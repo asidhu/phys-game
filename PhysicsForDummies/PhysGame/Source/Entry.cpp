@@ -55,6 +55,7 @@ public:
 		item->tex.t1 = item->x*.4f;
 		item->tex.s2 = item->y*.4f - item->tex.h;
 		item->tex.t2 = item->x*.4f - item->tex.w;
+		item->zIndex = .1f;
 		//item->tex.s1 = item->tex.t1 = 0;
 		//item->tex.s2 = item->tex.t2 = 1;
 		item->tex.resID = resID;

@@ -1,4 +1,4 @@
-#include "PhysGame\Source\PlatformDependent\GLFWGraphics.h"
+﻿#include "PhysGame\Source\PlatformDependent\GLFWGraphics.h"
 #define GLEW_STATIC
 #include "opengl\opengl.h"
 #include "opengl\primitives.h"
@@ -32,6 +32,8 @@ GLFWGraphics::GLFWGraphics(int w, int h){
 	m_win_width = w;
 	m_win_height = h;
 	m_fb_width = m_fb_height = 0;
+	glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_LEQUAL);
 }
 void GLFWGraphics::start(){
 	float  ratio;
@@ -48,7 +50,7 @@ void GLFWGraphics::start(){
 		m_fb_height = height;
 	}
 	glClear(GL_COLOR_BUFFER_BIT);
-
+	glClear(GL_DEPTH_BUFFER_BIT);
 	m_left = m_centerX - viewHeight / 2 * ratio;
 	m_right = m_centerX + viewHeight / 2 * ratio;
 
@@ -85,6 +87,7 @@ void GLFWGraphics::renderBatchTextureSquare(RenderList* list){
 		GLfloat sx, sy;
 		GLfloat tx, ty;
 		GLint texID;
+		GLfloat z;
 	}instanceAttributes[MAX_BATCH];
 
 
@@ -94,6 +97,7 @@ void GLFWGraphics::renderBatchTextureSquare(RenderList* list){
 		list->batchTexSquare.pop();
 		instanceAttributes[num].x = item->x;
 		instanceAttributes[num].y = item->y;
+		instanceAttributes[num].z = item->zIndex;
 		instanceAttributes[num].rotation = item->rot;
 		instanceAttributes[num].sx = item->tex.w;
 		instanceAttributes[num].sy = item->tex.h;

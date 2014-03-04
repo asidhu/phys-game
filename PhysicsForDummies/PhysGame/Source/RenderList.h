@@ -13,6 +13,7 @@ public:
 	float x, y;
 	float rot;
 	DrawType myType;
+	float zIndex;
 	union{
 		struct{
 			float a, r, g, b, w, h,lw;
@@ -27,6 +28,7 @@ public:
 	};
 	RenderItem(){
 		myType = hollowsquare;
+		zIndex = 0;
 		
 	}
 };

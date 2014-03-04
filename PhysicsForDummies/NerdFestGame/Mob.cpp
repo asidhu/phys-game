@@ -34,6 +34,7 @@ void Mob::render(RenderList* lst){
 	item->tex.h = ((box*)b->form)->halfheight * 2;
 	item->tex.s1 = item->y*.4f;
 	item->tex.t1 = item->x*.4f;
+	item->zIndex = -90.f;
 	if (item->tex.h > item->tex.w){
 		item->tex.s2 = item->y*.4f - item->tex.h * 2;
 		item->tex.t2 = item->x*.4f - item->tex.h * 2;
