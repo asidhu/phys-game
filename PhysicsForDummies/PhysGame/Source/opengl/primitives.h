@@ -60,10 +60,10 @@ public:
 	void drawLine(float x, float y, float w, float h);
 	void fillRect(float x, float y, float w, float h, float rot=0);
 	void drawCircle(float x, float y, float r);
-	void batchDrawCircle(int num, void* data);//x,y,radius,r,g,b,a
-	void batchDrawSquare(int num, void* data);//x,y,rot,w,h,r,g,b,a
-	void batchCircle(int num, void* data); //x,y,radius,r,g,b,a
-	void batchSquare(int num, void* data); //x,y,rot,w,h,r,g,b,a
+	void batchDrawCircle(int num, void* data);//x,y,radius,r,g,b,a,z
+	void batchDrawSquare(int num, void* data);//x,y,rot,w,h,r,g,b,a,z
+	void batchCircle(int num, void* data); //x,y,radius,r,g,b,a,z
+	void batchSquare(int num, void* data); //x,y,rot,w,h,r,g,b,a,z
 	void batchSquareTexture(int num, GLint *texIDs, int numTexs, void* data);//x,y,rot,sx,sy,tx,ty,texid,z
 	void fillCircle(float x, float y, float r);
 	void drawTexture(GLuint texID, float x, float y, const float texcoords[8], float w = 1.f, float h = 1.f, float rot = 0.f);

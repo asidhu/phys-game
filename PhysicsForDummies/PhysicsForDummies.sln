@@ -15,14 +15,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NerdFestGame", "PhysGame\Ne
 		{E852800E-024C-46EB-9EAF-73306903E10A} = {E852800E-024C-46EB-9EAF-73306903E10A}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PhysicsForDummies", "..\..\Honors Thesis Project\trunk\PhysicsForDummies\PhysicsForDummies\PhysicsForDummies.vcxproj", "{970F1143-873B-4B19-AD9E-F82D8A6581AF}"
-	ProjectSection(ProjectDependencies) = postProject
-		{E852800E-024C-46EB-9EAF-73306903E10A} = {E852800E-024C-46EB-9EAF-73306903E10A}
-	EndProjectSection
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{CA63ED85-6CC9-43E2-976B-87A01A710434}"
 	ProjectSection(SolutionItems) = preProject
 		Performance1.psess = Performance1.psess
+		Performance2.psess = Performance2.psess
 	EndProjectSection
 EndProject
 Global
@@ -179,48 +175,6 @@ Global
 		{73FA1D65-7F4F-4A59-81CD-563DC0C29879}.Release64|Win32.Build.0 = Release64|Win32
 		{73FA1D65-7F4F-4A59-81CD-563DC0C29879}.Release64|x64.ActiveCfg = Release64|x64
 		{73FA1D65-7F4F-4A59-81CD-563DC0C29879}.Release64|x64.Build.0 = Release64|x64
-		{970F1143-873B-4B19-AD9E-F82D8A6581AF}.Debug|Emscripten.ActiveCfg = Debug|Win32
-		{970F1143-873B-4B19-AD9E-F82D8A6581AF}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
-		{970F1143-873B-4B19-AD9E-F82D8A6581AF}.Debug|Mixed Platforms.Build.0 = Debug|Win32
-		{970F1143-873B-4B19-AD9E-F82D8A6581AF}.Debug|Win32.ActiveCfg = Debug|Win32
-		{970F1143-873B-4B19-AD9E-F82D8A6581AF}.Debug|Win32.Build.0 = Debug|Win32
-		{970F1143-873B-4B19-AD9E-F82D8A6581AF}.Debug|x64.ActiveCfg = Debug|x64
-		{970F1143-873B-4B19-AD9E-F82D8A6581AF}.Debug|x64.Build.0 = Debug|x64
-		{970F1143-873B-4B19-AD9E-F82D8A6581AF}.Debug32|Emscripten.ActiveCfg = Debug|Win32
-		{970F1143-873B-4B19-AD9E-F82D8A6581AF}.Debug32|Mixed Platforms.ActiveCfg = Debug|Win32
-		{970F1143-873B-4B19-AD9E-F82D8A6581AF}.Debug32|Mixed Platforms.Build.0 = Debug|Win32
-		{970F1143-873B-4B19-AD9E-F82D8A6581AF}.Debug32|Win32.ActiveCfg = Debug|Win32
-		{970F1143-873B-4B19-AD9E-F82D8A6581AF}.Debug32|Win32.Build.0 = Debug|Win32
-		{970F1143-873B-4B19-AD9E-F82D8A6581AF}.Debug32|x64.ActiveCfg = Debug|x64
-		{970F1143-873B-4B19-AD9E-F82D8A6581AF}.Debug32|x64.Build.0 = Debug|x64
-		{970F1143-873B-4B19-AD9E-F82D8A6581AF}.Debug64|Emscripten.ActiveCfg = Debug64|Win32
-		{970F1143-873B-4B19-AD9E-F82D8A6581AF}.Debug64|Mixed Platforms.ActiveCfg = Debug64|Win32
-		{970F1143-873B-4B19-AD9E-F82D8A6581AF}.Debug64|Mixed Platforms.Build.0 = Debug64|Win32
-		{970F1143-873B-4B19-AD9E-F82D8A6581AF}.Debug64|Win32.ActiveCfg = Debug64|Win32
-		{970F1143-873B-4B19-AD9E-F82D8A6581AF}.Debug64|Win32.Build.0 = Debug64|Win32
-		{970F1143-873B-4B19-AD9E-F82D8A6581AF}.Debug64|x64.ActiveCfg = Debug64|x64
-		{970F1143-873B-4B19-AD9E-F82D8A6581AF}.Debug64|x64.Build.0 = Debug64|x64
-		{970F1143-873B-4B19-AD9E-F82D8A6581AF}.Release|Emscripten.ActiveCfg = Release|Win32
-		{970F1143-873B-4B19-AD9E-F82D8A6581AF}.Release|Mixed Platforms.ActiveCfg = Release|Win32
-		{970F1143-873B-4B19-AD9E-F82D8A6581AF}.Release|Mixed Platforms.Build.0 = Release|Win32
-		{970F1143-873B-4B19-AD9E-F82D8A6581AF}.Release|Win32.ActiveCfg = Release|Win32
-		{970F1143-873B-4B19-AD9E-F82D8A6581AF}.Release|Win32.Build.0 = Release|Win32
-		{970F1143-873B-4B19-AD9E-F82D8A6581AF}.Release|x64.ActiveCfg = Release|x64
-		{970F1143-873B-4B19-AD9E-F82D8A6581AF}.Release|x64.Build.0 = Release|x64
-		{970F1143-873B-4B19-AD9E-F82D8A6581AF}.Release32|Emscripten.ActiveCfg = Release64|Win32
-		{970F1143-873B-4B19-AD9E-F82D8A6581AF}.Release32|Mixed Platforms.ActiveCfg = Release64|Win32
-		{970F1143-873B-4B19-AD9E-F82D8A6581AF}.Release32|Mixed Platforms.Build.0 = Release64|Win32
-		{970F1143-873B-4B19-AD9E-F82D8A6581AF}.Release32|Win32.ActiveCfg = Release64|Win32
-		{970F1143-873B-4B19-AD9E-F82D8A6581AF}.Release32|Win32.Build.0 = Release64|Win32
-		{970F1143-873B-4B19-AD9E-F82D8A6581AF}.Release32|x64.ActiveCfg = Release64|x64
-		{970F1143-873B-4B19-AD9E-F82D8A6581AF}.Release32|x64.Build.0 = Release64|x64
-		{970F1143-873B-4B19-AD9E-F82D8A6581AF}.Release64|Emscripten.ActiveCfg = Release64|Win32
-		{970F1143-873B-4B19-AD9E-F82D8A6581AF}.Release64|Mixed Platforms.ActiveCfg = Release64|Win32
-		{970F1143-873B-4B19-AD9E-F82D8A6581AF}.Release64|Mixed Platforms.Build.0 = Release64|Win32
-		{970F1143-873B-4B19-AD9E-F82D8A6581AF}.Release64|Win32.ActiveCfg = Release64|Win32
-		{970F1143-873B-4B19-AD9E-F82D8A6581AF}.Release64|Win32.Build.0 = Release64|Win32
-		{970F1143-873B-4B19-AD9E-F82D8A6581AF}.Release64|x64.ActiveCfg = Release64|x64
-		{970F1143-873B-4B19-AD9E-F82D8A6581AF}.Release64|x64.Build.0 = Release64|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

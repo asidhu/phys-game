@@ -125,13 +125,14 @@ void GLFWGraphics::renderBatchTextureSquare(RenderList* list){
 }
 void GLFWGraphics::renderBatchCircle(bool hollow, std::list<RenderItem*> &list){
 	struct{
-		GLfloat x, y, radius, red, green, blue, alpha;
+		GLfloat x, y, radius, red, green, blue, alpha,z;
 	}instanceAttributes[MAX_BATCH];
 	int num = 0;
 	for (std::list<RenderItem*>::iterator it = list.begin(); it != list.end(); ++it){
 		RenderItem* item = *it;
 		instanceAttributes[num].x = item->x;
 		instanceAttributes[num].y = item->y;
+		instanceAttributes[num].z = item->zIndex;
 		instanceAttributes[num].radius = item->circle.radius;
 		instanceAttributes[num].red = item->circle.r;
 		instanceAttributes[num].green = item->circle.g;
@@ -156,13 +157,14 @@ void GLFWGraphics::renderBatchCircle(bool hollow, std::list<RenderItem*> &list){
 }
 void GLFWGraphics::renderBatchSquare(bool hollow, std::list<RenderItem*> &list){
 	struct{
-		GLfloat x, y, rot, sx, sy, red, green, blue, alpha;
+		GLfloat x, y, rot, sx, sy, red, green, blue, alpha,z;
 	}instanceAttributes[MAX_BATCH];
 	int num = 0;
 	for (std::list<RenderItem*>::iterator it = list.begin(); it != list.end(); ++it){
 		RenderItem* item = *it;
 		instanceAttributes[num].x = item->x;
 		instanceAttributes[num].y = item->y;
+		instanceAttributes[num].z = item->zIndex;
 		instanceAttributes[num].rot = item->rot;
 		instanceAttributes[num].sx = item->square.w;
 		instanceAttributes[num].sy = item->square.h;

@@ -4,6 +4,7 @@ layout(location=1) in vec2 m_location;
 layout(location=2) in float m_rotation;
 layout(location=3) in vec2 m_scaling;
 layout(location=4) in vec4 m_color;
+layout(location=5) in float zIndex;
 uniform mat4 worldMat;
 flat out vec4 color;
 void main(){
@@ -17,6 +18,7 @@ void main(){
 	tmp.xy*=m_scaling;
 	tmp = RotationMatrix*tmp;
 	tmp.xy+=m_location;
+	tmp.z = zIndex;
 	gl_Position = (worldMat * tmp);
 	color=m_color;
 }

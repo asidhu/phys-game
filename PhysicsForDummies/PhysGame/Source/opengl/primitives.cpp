@@ -842,14 +842,14 @@ void primitives::batchSquareTexture(int num,GLint *texIDs, int numTexs, void* da
 }
 void primitives::batchSquare(int num, void* data){
 	glUseProgram(this->rectInstanceProgram);
-	for (int i = 0; i < 5; i++)
+	for (int i = 0; i < 6; i++)
 		glEnableVertexAttribArray(i);
 	glBindBuffer(GL_ARRAY_BUFFER, this->rect_VBO);
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, (GLvoid*)0);
 	if (vAttribDivisor[0] != 0)setAttribDivisor(0, 0);
 	glBindBuffer(GL_ARRAY_BUFFER, this->riData.instanceBuffer);
-	glBufferData(GL_ARRAY_BUFFER, num*(sizeof(GLfloat)* 9), data, GL_DYNAMIC_DRAW);
-	int structsize = sizeof(GLfloat)* 9 ;
+	glBufferData(GL_ARRAY_BUFFER, num*(sizeof(GLfloat)* 10), data, GL_DYNAMIC_DRAW);
+	int structsize = sizeof(GLfloat)* 10 ;
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, structsize, (const GLvoid*)0);
 	if (vAttribDivisor[1] != 1)setAttribDivisor(1, 1);
 	glVertexAttribPointer(2, 1, GL_FLOAT, GL_FALSE, structsize, (const GLvoid*)(sizeof(GLfloat)* 2));
@@ -858,44 +858,48 @@ void primitives::batchSquare(int num, void* data){
 	if (vAttribDivisor[3] != 1)setAttribDivisor(3, 1);
 	glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, structsize, (const GLvoid*)(sizeof(GLfloat)* 5));
 	if (vAttribDivisor[4] != 1)setAttribDivisor(4, 1);
+	glVertexAttribPointer(5, 1, GL_FLOAT, GL_FALSE, structsize, (const GLvoid*)(sizeof(GLfloat)* 9));
+	if (vAttribDivisor[5] != 1)setAttribDivisor(5, 1);
 	glUniformMatrix4fv(this->riData.worldMat, 1, false, glm::value_ptr(worldMat));
 	glDrawArraysInstanced(GL_TRIANGLE_FAN, 0, 4, num);
-	for (int i = 0; i < 5; i++)
+	for (int i = 0; i < 6; i++)
 		glDisableVertexAttribArray(i);
 	glUseProgram(0);
 }
 void primitives::batchCircle(int num, void* data){
 	glUseProgram(this->circleInstanceProgram);
-	for (int i = 0; i < 4; i++)
+	for (int i = 0; i < 5; i++)
 		glEnableVertexAttribArray(i);
 	glBindBuffer(GL_ARRAY_BUFFER, this->circle_VBO);
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, (GLvoid*)0);
 	if (vAttribDivisor[0] != 0)setAttribDivisor(0, 0);
 	glBindBuffer(GL_ARRAY_BUFFER, this->ciData.instanceBuffer);
-	glBufferData(GL_ARRAY_BUFFER, num*(sizeof(GLfloat)* 7), data, GL_DYNAMIC_DRAW);
-	int structsize = sizeof(GLfloat)* 7;
+	glBufferData(GL_ARRAY_BUFFER, num*(sizeof(GLfloat)* 8), data, GL_DYNAMIC_DRAW);
+	int structsize = sizeof(GLfloat)* 8;
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, structsize, (const GLvoid*)0);
 	if (vAttribDivisor[1] != 1)setAttribDivisor(1, 1);
 	glVertexAttribPointer(2, 1, GL_FLOAT, GL_FALSE, structsize, (const GLvoid*)(sizeof(GLfloat)* 2));
 	if (vAttribDivisor[2] != 1)setAttribDivisor(2, 1);
 	glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, structsize, (const GLvoid*)(sizeof(GLfloat)* 3));
 	if (vAttribDivisor[3] != 1)setAttribDivisor(3, 1);
+	glVertexAttribPointer(4, 1, GL_FLOAT, GL_FALSE, structsize, (const GLvoid*)(sizeof(GLfloat)* 7));
+	if (vAttribDivisor[4] != 1)setAttribDivisor(4, 1);
 	glUniformMatrix4fv(this->ciData.worldMat, 1, false, glm::value_ptr(worldMat));
 	glDrawArraysInstanced(GL_TRIANGLE_FAN, 0, CIRCLE_RES + 2,num);
-	for (int i = 0; i < 4; i++)
+	for (int i = 0; i < 5; i++)
 		glDisableVertexAttribArray(i);
 	glUseProgram(0);
 }
 void primitives::batchDrawSquare(int num, void* data){
 	glUseProgram(this->rectInstanceProgram);
-	for (int i = 0; i < 5; i++)
+	for (int i = 0; i < 6; i++)
 		glEnableVertexAttribArray(i);
 	glBindBuffer(GL_ARRAY_BUFFER, this->rect_VBO);
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, (GLvoid*)0);
 	if (vAttribDivisor[0] != 0)setAttribDivisor(0, 0);
 	glBindBuffer(GL_ARRAY_BUFFER, this->riData.instanceBuffer);
-	glBufferData(GL_ARRAY_BUFFER, num*(sizeof(GLfloat)* 9), data, GL_DYNAMIC_DRAW);
-	int structsize = sizeof(GLfloat)* 9;
+	glBufferData(GL_ARRAY_BUFFER, num*(sizeof(GLfloat)* 10), data, GL_DYNAMIC_DRAW);
+	int structsize = sizeof(GLfloat)* 10;
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, structsize, (const GLvoid*)0);
 	if (vAttribDivisor[1] != 1)setAttribDivisor(1, 1);
 	glVertexAttribPointer(2, 1, GL_FLOAT, GL_FALSE, structsize, (const GLvoid*)(sizeof(GLfloat)* 2));
@@ -904,31 +908,35 @@ void primitives::batchDrawSquare(int num, void* data){
 	if (vAttribDivisor[3] != 1)setAttribDivisor(3, 1);
 	glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, structsize, (const GLvoid*)(sizeof(GLfloat)* 5));
 	if (vAttribDivisor[4] != 1)setAttribDivisor(4, 1);
+	glVertexAttribPointer(5, 1, GL_FLOAT, GL_FALSE, structsize, (const GLvoid*)(sizeof(GLfloat)* 9));
+	if (vAttribDivisor[5] != 1)setAttribDivisor(5, 1);
 	glUniformMatrix4fv(this->riData.worldMat, 1, false, glm::value_ptr(worldMat));
 	glDrawArraysInstanced(GL_LINE_LOOP, 0, 4, num);
-	for (int i = 0; i < 5; i++)
+	for (int i = 0; i < 6; i++)
 		glDisableVertexAttribArray(i);
 	glUseProgram(0);
 }
 void primitives::batchDrawCircle(int num, void* data){
 	glUseProgram(this->circleInstanceProgram);
-	for (int i = 0; i < 4; i++)
+	for (int i = 0; i < 5; i++)
 		glEnableVertexAttribArray(i);
 	glBindBuffer(GL_ARRAY_BUFFER, this->circle_VBO);
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, (GLvoid*)0);
 	if (vAttribDivisor[0] != 0)setAttribDivisor(0, 0);
 	glBindBuffer(GL_ARRAY_BUFFER, this->ciData.instanceBuffer);
-	glBufferData(GL_ARRAY_BUFFER, num*(sizeof(GLfloat)* 7), data, GL_DYNAMIC_DRAW);
-	int structsize = sizeof(GLfloat)* 7;
+	glBufferData(GL_ARRAY_BUFFER, num*(sizeof(GLfloat)* 8), data, GL_DYNAMIC_DRAW);
+	int structsize = sizeof(GLfloat)* 8;
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, structsize, (const GLvoid*)0);
 	if (vAttribDivisor[1] != 1)setAttribDivisor(1, 1);
 	glVertexAttribPointer(2, 1, GL_FLOAT, GL_FALSE, structsize, (const GLvoid*)(sizeof(GLfloat)* 2));
 	if (vAttribDivisor[2] != 1)setAttribDivisor(2, 1);
 	glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, structsize, (const GLvoid*)(sizeof(GLfloat)* 3));
 	if (vAttribDivisor[3] != 1)setAttribDivisor(3, 1);
+	glVertexAttribPointer(4, 1, GL_FLOAT, GL_FALSE, structsize, (const GLvoid*)(sizeof(GLfloat)* 7));
+	if (vAttribDivisor[4] != 1)setAttribDivisor(4, 1);
 	glUniformMatrix4fv(this->ciData.worldMat, 1, false, glm::value_ptr(worldMat));
 	glDrawArraysInstanced(GL_LINE_LOOP, 2, CIRCLE_RES, num);
-	for (int i = 0; i < 4; i++)
+	for (int i = 0; i < 5; i++)
 		glDisableVertexAttribArray(i);
 	glUseProgram(0);
 }
