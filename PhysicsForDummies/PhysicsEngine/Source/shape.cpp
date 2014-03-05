@@ -35,7 +35,7 @@ inline vec2 extent2point(const unsigned char a,const box* b){
 	return avg;
 }
 inline bool floatEqualToBias(const float a, const float b){
-	const float bias = .001f;
+	const float bias = .0001f;
 	return fabs(a - b) < bias;
 }
 void circle::calcAABB(body* b, rect* aabb){

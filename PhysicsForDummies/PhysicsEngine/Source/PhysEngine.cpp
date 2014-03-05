@@ -135,3 +135,12 @@ void PhysEngine::step(float time){
 	
 
 }
+
+
+contactdetails* PhysEngine::debug_getCollisions(){
+	return contacts->constraints;
+}
+
+int PhysEngine::debug_getNumCollisions(){
+	return contacts->nContacts;
+}

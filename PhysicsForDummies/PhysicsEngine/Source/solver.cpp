@@ -69,22 +69,26 @@ void solver::solveContacts(body* head, int velIterations, int posIterations){
 					{
 						ptr->idx = nBodies;
 						pos[nBodies] = ptr->position;
-						vel[nBodies] = ptr->velocity;
-						rot[nBodies] = ptr->rotation;
-						angV[nBodies] = ptr->angularVelocity;
+						vel[nBodies] = ptr->velocity+ ptr->impulse*ptr->invMass;
+						rot[nBodies] = ptr->rotation ;
+						angV[nBodies] = ptr->angularVelocity + ptr->instantTorque *ptr->invMomentInertia;
 						iMass[nBodies] = ptr->invMass;
 						iMom[nBodies] = ptr->invMomentInertia;
+						ptr->impulse *= 0;
+						ptr->instantTorque = 0;
 						nBodies++;
 					}
 					if (ptr2->idx == -1)
 					{
 						ptr2->idx = nBodies;
 						pos[nBodies] = ptr2->position;
-						vel[nBodies] = ptr2->velocity;
+						vel[nBodies] = ptr2->velocity + ptr2->impulse*ptr2->invMass;
 						rot[nBodies] = ptr2->rotation;
-						angV[nBodies] = ptr2->angularVelocity;
+						angV[nBodies] = ptr2->angularVelocity + ptr2->instantTorque *ptr2->invMomentInertia;
 						iMass[nBodies] = ptr2->invMass;
 						iMom[nBodies] = ptr2->invMomentInertia;
+						ptr2->impulse *= 0;
+						ptr2->instantTorque = 0;
 						nBodies++;
 					}
 					dets->id1 = ptr->idx;
@@ -126,8 +130,8 @@ void solver::solveContacts(body* head, int velIterations, int posIterations){
 			angV[bid1] = w1;
 			vel[bid2] = v2;
 			angV[bid2] = w2;
-			if ((iMass[bid1] == 0 || iMass[bid2] == 0) && vel[bid1].lengthSq()!=0 && vel[bid2].lengthSq()!=0)
-				test = test;
+			//if ((iMass[bid1] == 0 || iMass[bid2] == 0) && vel[bid1].lengthSq()!=0 && vel[bid2].lengthSq()!=0)
+			//	test = test;
 			//const float slop = .002f;
 			//const float percent = .1f;
 			//vec2 correction = max(abs(cd->penetration) - slop, 0.0f)*percent* cd->contactNormal *(1.0f / cd->effectiveMass);
@@ -141,13 +145,13 @@ void solver::solveContacts(body* head, int velIterations, int posIterations){
 			contactdetails* cd = constraints + j;
 			int bid1 = cd->id1, bid2 = cd->id2;
 			//if (shape::detectCollision(ptr, ptr2, cd)){
-			const float slop = .01f;
-			const float percent = .4f;
+			const float slop = .02f;
+			const float percent =  .2f;
 			float impulse = max(fabs(cd->penetration) - slop, 0.0f)*percent * cd->effectiveMass;
 			//vec2 correction = impulse*cd->contactNormal;
 			float crossA = cd->contactPoint[0].crossZ(cd->contactNormal), crossB = cd->contactPoint[1].crossZ(cd->contactNormal);
-			const float maxdist = .01f;
-			const float maxtheta = .001f;
+			const float maxdist = .1f;
+			const float maxtheta = .0001f;
 			pos[bid1] -= cd->contactNormal*min(maxdist, max(-maxdist, impulse*iMass[bid1]));
 			rot[bid1] -= crossA*min(maxtheta, max(-maxtheta, impulse*iMom[bid1]));
 			pos[bid2] += cd->contactNormal*min(maxdist, max(-maxdist, impulse*iMass[bid2]));
