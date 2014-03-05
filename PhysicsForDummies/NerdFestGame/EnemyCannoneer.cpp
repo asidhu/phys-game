@@ -22,7 +22,7 @@ EnemyCannoneer::EnemyCannoneer(body* b):Mob(0,b){
 	jump = 0;
 }
 bool EnemyCannoneer::tick(GameEngine* e){
-	if ((fire++ % 50)==0){
+	if ((fire++ % 200)==0){
 		Player* p = (Player*)e->player;
 		float dx = p->getBody()->position.x - getBody()->position.x;
 		if (fabs(dx) > 30){
@@ -39,7 +39,7 @@ bool EnemyCannoneer::tick(GameEngine* e){
 void EnemyCannoneer::fireMissile(GameEngine* e, float x, float y){
 	vec2 dist = (vec2(x, y) - getBody()->position);
 	dist.normalize();
-	body* b = createBody64(e->getPhysEngine(), getBody()->position.x, getBody()->position.y, 1.f, 1.f, 1.f, atan2(dist.y, dist.x) * 180 / 3.14159f);
+	body* b = createBody64(e->getPhysEngine(), getBody()->position.x, getBody()->position.y, 1.f, 1.f, 100.f, atan2(dist.y, dist.x) * 180 / 3.14159f);
 	Missile *a = new Missile(0, b);
 	dist *= 40 + max(dist.dot(getBody()->velocity), 0);
 	b->velocity += dist;

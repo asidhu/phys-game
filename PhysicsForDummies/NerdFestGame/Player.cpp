@@ -22,11 +22,15 @@ Player::Player(int id, body* b) :Mob(id, b){
 	dmgfx = 0;
 }
 bool Player::tick(GameEngine* e){
+	if (this->getBody()->position.y<-30){
+		e->close();
+		return false;
+	}
 	if(dmgfx>0)dmgfx--;
-	if (m_hp<=0 && m_deathframes++>500)
+	if (m_hp<=0 && m_deathframes++>100)
 	{
-		//e->close();
-		//return false;
+		e->close();
+		return false;
 	}
 	return false;
 }
@@ -97,8 +101,8 @@ void Player::fireGrappleHook(float x, float y){
 		body* b = createBody3(engine->getPhysEngine(), getBody()->position.x, getBody()->position.y, 1.3f,1.3f,.1f,0);
 		grappleHook = new Grapple(0, b);
 		grappleHook->player = this;
-		grappleHook->force = 2.f;
-		grappleHook->speed = PROJECTILESPEED-1;
+		grappleHook->force = 1.5f;
+		grappleHook->speed = PROJECTILESPEED*3;
 		dist *= grappleHook->speed + max(dist.dot(getBody()->velocity),0);
 		b->velocity += dist;
 		b->data = grappleHook;

@@ -1,6 +1,6 @@
 #pragma once
 #include "PhysGame\Source\Effects.h"
-#define SMOKELENGTH 300
+#define SMOKELENGTH 30
 class SmokeEffect :public Effect{
 	float x, y;
 	int dur;

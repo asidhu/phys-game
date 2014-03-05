@@ -20,6 +20,7 @@ body* createBody9(PhysEngine* engine, float x, float y, float w, float h, float 
 	return engine->buildBody(bdef);
 }
 bool Missile::tick(GameEngine* e){
+	if (this->getBody()->position.y<-30)return true;
 	if (life == -1){
 		int numGen = (int)(((float)rand()) / RAND_MAX * 4) + 2;
 		for (int i = 0; i < numGen; i++)

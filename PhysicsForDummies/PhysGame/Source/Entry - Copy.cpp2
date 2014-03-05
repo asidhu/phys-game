@@ -36,21 +36,7 @@ body* createBody(PhysEngine* engine, float x, float y, float w, float h, float m
 	return engine->buildBody(bdef);
 }
 
-class spawn : public GameObject{
-public:
-	spawn(body* b, bool g, bool m):GameObject(b, g, m) {
-		count = 0;
-	}
-	int count;
-	bool tick(GameEngine* ng){
-		if (count-- <= 0){
-			
-			count = rand() % 50 + 50;
-			//ng->addActor(new bgimage(createBody(engine.getPhysEngine(), rand() % 50 - 25, 20, 6, 8, 15), 2));
-		}
-	}
 
-};
 
 class bgimage :public GameObject{
 public:
@@ -93,28 +79,27 @@ public:
 
 int main(int argc, char* argv[])
 {
-	int maxY = 200, minY = 0;
 	GLFWGraphics *graphics = new GLFWGraphics(1366, 700);
 	if (!graphics->m_initialized)
 		return -1;
 	GLFWInput *input = new GLFWInput(graphics->m_window);
 	graphics->m_centerX = 0;
-	graphics->m_top = maxY;
+	graphics->m_top = 150;
 	//graphics->m_top = 1;
-	graphics->m_bottom = minY;
+	graphics->m_bottom = -1;
 	engine.setup(graphics,input);
 	input->m_engine = &engine;
 	//create random physics object and add as test...
 	Actor* arr[] = {
-		//new bgimage(createBody(engine.getPhysEngine(), 0, 0, 300, 16, 0), 2),
-		//new bgimage(createBody(engine.getPhysEngine(), -150, 100, 16,600, 0),	2),
-		//new bgimage(createBody(engine.getPhysEngine(), 150, 100, 16, 600, 0), 2),
-		//new bgimage(createBody(engine.getPhysEngine(), 0, 400, 300, 16, 0), 2),
+		new bgimage(createBody(engine.getPhysEngine(), 0, 0, 300, 16, 0), 2),
+		new bgimage(createBody(engine.getPhysEngine(), -150, 100, 16,600, 0),	2),
+		new bgimage(createBody(engine.getPhysEngine(), 150, 100, 16, 600, 0), 2),
+		new bgimage(createBody(engine.getPhysEngine(), 0, 400, 300, 16, 0), 2),
 		//WALLS
 
 
-		//new bgimage(createBody(engine.getPhysEngine(), 60, 40, 60, 4, 0), 2),
-		//new bgimage(createBody(engine.getPhysEngine(), 40, 50, 4, 20, 0), 2),
+		new bgimage(createBody(engine.getPhysEngine(), 60, 40, 60, 4, 0), 2),
+		new bgimage(createBody(engine.getPhysEngine(), 40, 50, 4, 20, 0), 2),
 		//WEIRD SHOOING PLATFORM
 
 
@@ -128,16 +113,16 @@ int main(int argc, char* argv[])
 		new bgimage(createBody(engine.getPhysEngine(), -50, 80, 15, 5, 15), 2),
 		//RANDOM BOXES
 	};
-	//arr[6]->getBody()->lockRotation();
+	arr[6]->getBody()->lockRotation();
 	//arr[7]->getBody()->lockRotation();
 	Scene* scene = new Scene(1);
-	for (int i = 0; i < 6; i++){
+	for (int i = 0; i < 12; i++){
 		scene->addFixture(arr[i], 0);
 	}
 	engine.setupScene(scene);
-	body* b = createBody(engine.getPhysEngine(), 0, 150, 2, 2, 1);
+	body* b = createBody(engine.getPhysEngine(), -50, 10, 2, 2, 1);
 	Player *m = new Player(0,b);
-	m->m_hp = 5;
+	m->m_hp = 10;
 	m->m_tex = 1;
 	m->engine = &engine;
 	graphics->loadImage(1, "./reddiamond.png");
@@ -149,7 +134,7 @@ int main(int argc, char* argv[])
 	engine.addActor(engine.player);
 	
 	for (int i = 0; i < 0; i++){
-		EnemyCannoneer* ec = new EnemyCannoneer(createBody(engine.getPhysEngine(), 45+rand()%5, 6, 2, 2, 1));
+		EnemyCannoneer* ec = new EnemyCannoneer(createBody(engine.getPhysEngine(), 45+rand()%5, 60, 2, 2, 1));
 		ec->m_tex = 3;
 		ec->m_hp = 10;
 		engine.addActor(ec);
@@ -168,7 +153,6 @@ int main(int argc, char* argv[])
 	QueryPerformanceFrequency(&freq);
 	int frames = 0;
 	double totTime = 0;
-	int count = 0, count2 = 0;
 	while (!engine.shouldClose())
 	{
 		LARGE_INTEGER start, stop;
@@ -189,21 +173,7 @@ int main(int argc, char* argv[])
 			QueryPerformanceCounter(&start);
 			engine.tick();
 			QueryPerformanceCounter(&stop);
-			if (count-- <= 0){
-				engine.addActor(new bgimage(createBody(engine.getPhysEngine(), rand() % 300 - 150, maxY + 20, rand() % 14 + 6, rand() % 10 + 4, rand()%100+5,rand()%60/2.0f), 2));
-				count = rand() % 20 + 10;
 
-			}
-			if (count2-- <= 0){
-
-				EnemyRiflesmen* ec = new EnemyRiflesmen(createBody(engine.getPhysEngine(), rand() % 300 - 150, maxY, 2, 2, 100));
-				ec->m_tex = 3;
-				ec->m_hp = 10;
-				engine.addActor(ec);
-				
-				count2 = rand() % 40 + 30;
-
-			}
 			stop.QuadPart = stop.QuadPart - start.QuadPart;
 			double tick = (double)stop.QuadPart / freq.QuadPart * 1000;
 			double time = render + tick;
