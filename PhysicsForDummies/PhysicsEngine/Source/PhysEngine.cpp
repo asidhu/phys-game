@@ -106,19 +106,28 @@ void PhysEngine::removeBody(body* b){
 }
 
 void PhysEngine::step(float time){
-
-	int numContacts = 0;
-
-	sortByPos(&root);
+	if (debug_enabled && debug_onCollisionStop && debug_collidedState == 0){
+		sortByPos(&root);
+		contacts->generateContacts(root.nextX);
+		if (contacts->nContacts > 0)
+			debug_collidedState = 1;
+	}
+		
+	if (debug_collidedState == 1)
+		return;
+	if (debug_collidedState == 2)
+		debug_collidedState = 0;
 	//O(n) algorithm
-	
+	sortByPos(&root);
+
+
 	//solve contacts
 	contacts->solveContacts(root.nextX, velocityIterations, positionIterations);
+	if (debug_enabled && contacts->nContacts > 0){
+		debug_collidedState = 0;
+	}
 
-	body *ptr;
-
-	//it = bodies.begin();
-	ptr = root.nextX;
+	body *ptr = root.nextX;
 	while (ptr!=NULL){
 		body* b = ptr;
 		b->applyImpulse();
@@ -131,9 +140,6 @@ void PhysEngine::step(float time){
 		ptr = ptr->nextX;
 	}
 	//contact solver
-	
-	
-
 }
 
 

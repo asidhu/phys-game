@@ -11,13 +11,13 @@
 #include "PhysGame\Source\PlatformDependent\GLFWGraphics.h"
 #include "PhysGame\Source\PlatformDependent\GLFWInput.h"
 #include "PhysGame\Source\Scene.h"
-#include "GameEngine.h"
-#include "Actor.h"
-#include "NerdFestGame\Mob.h"
-#include "NerdFestGame\Player.h"
-#include "NerdFestGame\GameObjects.h"
-#include "NerdFestGame\EnemyCannoneer.h"
-#include "NerdFestGame\EnemyRiflesmen.h"
+#include "PhysGame\Source\GameEngine.h"
+#include "PhysGame\Source\Actor.h"
+#include "Mob.h"
+#include "Player.h"
+#include "GameObjects.h"
+#include "EnemyCannoneer.h"
+#include "EnemyRiflesmen.h"
 GameEngine engine;
 
 #define random() (float)rand()/RAND_MAX
@@ -76,6 +76,39 @@ public:
 	}
 };
 
+void renderDebug(PhysEngine* eng, RenderList* list){
+	int numCollisions = eng->debug_getNumCollisions();
+	contactdetails* dets = eng->debug_getCollisions();
+	for (int i = 0; i < numCollisions; i++){
+		contactdetails *cd = dets + i;
+		RenderItem* itm = list->getItem();
+		itm->myType = solidcircle;
+		itm->x = cd->b1->position.x + cd->contactPoint[0].x;
+		itm->y = cd->b1->position.y + cd->contactPoint[0].y;
+		itm->circle.radius = .4f;
+		itm->circle.a = itm->circle.g = 1;
+		itm->circle.r = itm->circle.b = 0;
+		list->addItem(itm);
+		itm = list->getItem();
+		itm->myType = solidcircle;
+		itm->x = cd->b2->position.x + cd->contactPoint[1].x;
+		itm->y = cd->b2->position.y + cd->contactPoint[1].y;
+		itm->circle.radius = .4f;
+		itm->circle.a = itm->circle.g = 1;
+		itm->circle.r = itm->circle.b = 0;
+		list->addItem(itm);
+		itm = list->getItem();
+		/*
+		itm->myType = hollowsquare;
+		itm->x = cd->b2->position.x + cd->contactPoint[1].x;
+		itm->y = cd->b2->position.y + cd->contactPoint[1].y;
+		itm->circle.radius = .1f;
+		itm->circle.a = itm->circle.g = 1;
+		itm->circle.r = itm->circle.b = 0;
+		list->addItem(itm);
+		*/
+	}
+}
 
 int main(int argc, char* argv[])
 {
@@ -141,7 +174,7 @@ int main(int argc, char* argv[])
 	}
 	//b->angularDamping = .9998f;
 	//b->lockRotation();
-
+	engine.getPhysEngine()->enableDebugger(false);
 #ifndef EMSCRIPTEN
 	LARGE_INTEGER freq;
 	QueryPerformanceFrequency(&freq);
@@ -154,7 +187,7 @@ int main(int argc, char* argv[])
 
 		if (step || go){
 
-
+			renderDebug(engine.getPhysEngine(), engine.getDebugList());
 
 
 			QueryPerformanceCounter(&start);

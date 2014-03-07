@@ -11,6 +11,7 @@ public:
 	float iMom[MAX_BODIES];
 	int nContacts,
 		nBodies;
+	void generateContacts(body* head);
 	void solveContacts(body* head, int velIterations, int posIterations);
 	void test(body*);
 };

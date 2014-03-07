@@ -18,7 +18,7 @@ private:
 	int velocityIterations, positionIterations;
 	bool debug_enabled;
 	bool debug_onCollisionStop;
-	bool debug_collidedState;
+	int debug_collidedState;
 
 public:
 	PhysEngine() :velocityIterations(15), positionIterations(4){ debug_enabled = false; }
@@ -33,7 +33,7 @@ public:
 	void removeBody(body*);
 	void enableDebugger(bool stopOnCollision){ debug_enabled = true; debug_onCollisionStop = stopOnCollision; debug_collidedState = false; }
 	void disableDebugger(){ debug_enabled = false; }
-	void debug_collisionAdvance(){ debug_collidedState = false; }
+	void debug_collisionAdvance(){ debug_collidedState = 2; }
 	contactdetails* debug_getCollisions();
 	int	debug_getNumCollisions();
 };

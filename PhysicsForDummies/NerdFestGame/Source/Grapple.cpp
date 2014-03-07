@@ -4,7 +4,7 @@
 #include "PhysicsEngine\Source\shape.h"
 #include "PhysGame\Source\GameEngine.h"
 #include "PhysicsEngine\Source\PhysEngine.h"
-#include "NerdFestGame\Player.h"
+#include "Player.h"
 #include "Missile.h"
 
 

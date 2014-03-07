@@ -138,6 +138,7 @@
   <ItemGroup>
     <ClInclude Include="Source\Body.h" />
     <ClInclude Include="Source\BodyDef.h" />
+    <ClInclude Include="Source\collider.h" />
     <ClInclude Include="Source\collision.h" />
     <ClInclude Include="Source\math.h" />
     <ClInclude Include="Source\PhysEngine.h" />
@@ -147,6 +148,7 @@
     <ClInclude Include="Source\sort.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\collider.cpp" />
     <ClCompile Include="Source\math.cpp" />
     <ClCompile Include="Source\PhysEngine.cpp" />
     <ClCompile Include="Source\shape.cpp" />

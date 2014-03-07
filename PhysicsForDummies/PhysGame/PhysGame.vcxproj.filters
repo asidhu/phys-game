@@ -15,9 +15,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Source\Entry.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
     <ClCompile Include="Source\opengl\primitives.cpp">
       <Filter>Source\opengl</Filter>
     </ClCompile>
@@ -88,6 +85,9 @@
     </ClInclude>
     <ClInclude Include="Source\PlatformDependent\WebGLWrapper.h">
       <Filter>Source\PlatformDependent\Crossplatform</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameInputHandler.h">
+      <Filter>Source</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

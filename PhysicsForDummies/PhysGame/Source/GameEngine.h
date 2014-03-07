@@ -7,21 +7,24 @@ class Actor;
 class RenderList;
 class Scene;
 class Effect;
+class GameInputHandler;
 class GameEngine{
 private:
 	PhysEngine* m_physEngine;
 	PlatformGraphics* m_graphics;
 	PlatformInput* m_input;
+	GameInputHandler* m_inputHandler;
 	std::list<Effect*> m_effects;
 	std::list<Actor*> m_actors;
-	RenderList* m_list;
+	RenderList* m_list, *m_debug_list;
 	Scene* m_scene;
 	bool m_exit;
 public:
 	GameEngine();
-	void setup(PlatformGraphics* g, PlatformInput* i){
+	void setup(PlatformGraphics* g, PlatformInput* i, GameInputHandler* handler){
 		m_graphics = g;
 		m_input = i;
+		m_inputHandler = handler;
 	}
 	void close(){
 		m_exit = true;
@@ -41,23 +44,11 @@ public:
 	PhysEngine* getPhysEngine(){ return m_physEngine; } //THIS IS A HACK. GET RID OF LATER.
 	int getNumActors(){ return m_actors.size(); }
 	int getNumEffects(){ return m_effects.size(); }
-	//these are hacks - make input manager!
-	void handleKey(int key, int state);
-	void handleMouse(float x, float y,int button, int state);
-	void handleMouseMove(float x, float y);
-	void inputTick();
-
-	
-	bool W_Down;
-	bool A_Down;
-	bool S_Down;
-	bool D_Down;
-	bool RIGHT_Down;
+	RenderList* getDebugList(){
+		return m_debug_list;
+	}
 
 
-	//hacksss
-	Actor* player;
-	//void render();
 	friend class PlatformInput;
 	friend class PlatformGraphics;
 };

@@ -1,5 +1,6 @@
 #include "solver.h"
 #include "shape.h"
+#include "collider.h"
 
 
 #define max(a,b) ((a>b)?a:b)
@@ -30,6 +31,43 @@ void solver::test(body* head){
 	}
 
 }
+
+
+void solver::generateContacts(body* head){
+	nContacts = 0;
+	nBodies = 0;
+	body * ptr = head;
+	while (ptr->nextX != 0){
+		body * ptr2 = ptr->nextX;
+		while (ptr2 != 0){
+			if (nContacts >= MAX_CONTACTS || nBodies - 2 >= MAX_BODIES){
+				ptr2 = ptr2->nextX;
+				continue;
+			}
+			if (ptr->AABB.right >= ptr2->AABB.left){
+				contactdetails *dets = constraints + nContacts;
+				if (ptr->AABB.overlap(ptr2->AABB) && collider::detectCollision(ptr, ptr2, (dets))){
+
+					dets->b1 = ptr;
+					dets->b2 = ptr2;
+					dets->normalImpulse = 0;
+					float crossA = dets->contactPoint[0].crossZ(dets->contactNormal), crossB = dets->contactPoint[1].crossZ(dets->contactNormal);
+					float momInertiaA = crossA*crossA*ptr->invMomentInertia,
+						momInertiaB = crossB*crossB*ptr2->invMomentInertia;
+					dets->effectiveMass = (ptr->invMass + ptr2->invMass + momInertiaA + momInertiaB);
+					if (dets->effectiveMass != 0)
+						dets->effectiveMass = 1 / dets->effectiveMass;
+					nContacts++;
+				}
+			}
+			else
+				break;
+			ptr2 = ptr2->nextX;
+		}
+		ptr = ptr->nextX;
+	}
+
+}
 void solver::solveContacts(body* head, int velIterations, int posIterations){
 	nContacts = 0;
 	nBodies = 0;
@@ -43,7 +81,7 @@ void solver::solveContacts(body* head, int velIterations, int posIterations){
 			}
 			if (ptr->AABB.right >= ptr2->AABB.left){
 				contactdetails *dets = constraints + nContacts;
-				if (ptr->AABB.overlap(ptr2->AABB) && shape::detectCollision(ptr, ptr2, (dets))){
+				if (ptr->AABB.overlap(ptr2->AABB) && collider::detectCollision(ptr, ptr2, (dets))){
 					
 					dets->b1 = ptr;
 					dets->b2 = ptr2;

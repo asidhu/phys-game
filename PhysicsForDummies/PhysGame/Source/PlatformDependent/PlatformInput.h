@@ -12,6 +12,7 @@ class PlatformGraphics;
 class PlatformInput{
 public:
 	GameEngine* m_engine; ///this is a hack. 
+	GameInputHandler* getInputHandler(){ return m_engine->m_inputHandler; }
 	PlatformGraphics* getGraphics(){ return m_engine->m_graphics; }
 	virtual void pollInput()=0;
 };
