@@ -23,14 +23,16 @@ static void mouse_callback(GLFWwindow* win, int button, int action, int mods){
 	else if (button == GLFW_MOUSE_BUTTON_RIGHT){
 		outbtn = MOUSE_RIGHT;
 	}
-	current_input->getInputHandler()->handleMouse(worldX, worldY, outbtn, out);
+	if (current_input->getInputHandler() != NULL)
+		current_input->getInputHandler()->handleMouse(worldX, worldY, outbtn, out);
 }
 static void mousepos_callback(GLFWwindow* win, double x, double y){
 	GLFWGraphics* gfx = (GLFWGraphics*)current_input->getGraphics();
 	y = gfx->m_win_height - y;
 	float worldX = ((float)x / gfx->m_win_width*(gfx->getWidth()) + gfx->getLeft());
 	float worldY = ((float)y / gfx->m_win_height*(gfx->m_top - gfx->m_bottom) + gfx->m_bottom);
-	current_input->getInputHandler()->handleMouseMove(worldX, worldY);
+	if(current_input->getInputHandler()!=NULL)
+		current_input->getInputHandler()->handleMouseMove(worldX, worldY);
 }
 static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
@@ -39,7 +41,7 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 		out = KEY_DOWN;
 	else if (action == GLFW_RELEASE)
 		out = KEY_UP;
-	if(out!=0)
+	if(current_input->getInputHandler()!=NULL && out!=0)
 		current_input->getInputHandler()->handleKey(key, out);
 }
 

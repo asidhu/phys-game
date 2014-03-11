@@ -21,7 +21,7 @@ EnemyRiflesmen::EnemyRiflesmen(body* b) :Mob(0, b){
 	jump = 0;
 }
 bool EnemyRiflesmen::tick(GameEngine* e){
-	if ((fire++ % 50) == 0){
+	/*if ((fire++ % 50) == 0){
 		Player* p = (Player*)e->player;
 		float dx = p->getBody()->position.x - getBody()->position.x;
 		float nxtY = getBody()->position.y + (float)rand() / RAND_MAX*abs(dx)*2.f;

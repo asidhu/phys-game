@@ -120,7 +120,7 @@ int main(int argc, char* argv[])
 	graphics->m_top = 70;
 	//graphics->m_top = 1;
 	graphics->m_bottom = -1;
-	engine.setup(graphics,input);
+	engine.setup(graphics,input,NULL);
 	input->m_engine = &engine;
 	//create random physics object and add as test...
 	Actor* arr[] = {
@@ -155,10 +155,10 @@ int main(int argc, char* argv[])
 	graphics->loadImage(1, "./reddiamond.png");
 	graphics->loadImage(2, "./orangediamond.png");
 	graphics->loadImage(3, "./bluediamond.png");
-	engine.player = m;
-	b->data = engine.player;
+	//engine.player = m;
+	//b->data = engine.player;
 	//b->post_collide = onGroundCheck;
-	engine.addActor(engine.player);
+	//engine.addActor(engine.player);
 	
 	for (int i = 0; i < 0; i++){
 		EnemyCannoneer* ec = new EnemyCannoneer(createBody(engine.getPhysEngine(), 45+rand()%5, 60, 2, 2, 1));

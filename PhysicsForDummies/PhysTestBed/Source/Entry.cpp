@@ -73,6 +73,8 @@ public:
 	}
 };
 
+
+
 class bgimage :public Actor{
 public:
 	unsigned int resID;
@@ -111,6 +113,19 @@ public:
 	}
 };
 
+void createBoxs(GameEngine* eng, PhysEngine* phys){
+	Scene* scene = new Scene(1);
+	engine.setupScene(scene);
+
+	engine.addActor(new bgimage(createBody(engine.getPhysEngine(), -5, 5, 10, 3, 0, -45.f / 180.f * 3.14159f), 2));
+	engine.addActor(new bgimage(createBody(engine.getPhysEngine(), 5, 5, 10, 3, 0, 45.f / 180.f * 3.14159f), 2));
+	for (int i = 0; i < 50; i++)
+		engine.addActor(new bgimage(createBody(engine.getPhysEngine(), rand() % 6 - 3, rand() %50 + 5, 1, 1, 1), 2));
+	engine.getPhysEngine()->enableDebugger(false);
+}
+
+
+
 void renderDebug(PhysEngine* eng, RenderList* list){
 	int numCollisions = eng->debug_getNumCollisions();
 	contactdetails* dets = eng->debug_getCollisions();
@@ -133,15 +148,17 @@ void renderDebug(PhysEngine* eng, RenderList* list){
 		itm->circle.r = itm->circle.b = 0;
 		list->addItem(itm);
 		itm = list->getItem();
-		/*
+		
 		itm->myType = hollowsquare;
-		itm->x = cd->b2->position.x + cd->contactPoint[1].x;
-		itm->y = cd->b2->position.y + cd->contactPoint[1].y;
-		itm->circle.radius = .1f;
-		itm->circle.a = itm->circle.g = 1;
-		itm->circle.r = itm->circle.b = 0;
+		itm->rot = atan2(cd->contactNormal.y, cd->contactNormal.x);
+		itm->x = cd->b1->position.x+cd->contactPoint[0].x+.5f*cos(itm->rot);
+		itm->y = cd->b1->position.y + cd->contactPoint[0].y+.5f*sin(itm->rot);
+		itm->square.w = 1;
+		itm->square.h = .1;
+		itm->square.a = itm->square.g = 1;
+		itm->square.r = itm->square.b = 0;
 		list->addItem(itm);
-		*/
+		
 	}
 }
 
@@ -158,11 +175,14 @@ int main(int argc, char* argv[])
 	engine.setup(graphics,input,&h);
 	physng = engine.getPhysEngine();
 	input->m_engine = &engine;
+	/*
 	Scene* scene = new Scene(1);
 	engine.setupScene(scene);
-	engine.addActor(new bgimage(createBody(engine.getPhysEngine(), 0, 0, 10, 3, 0), 2));
-	engine.addActor(new bgimage(createBody(engine.getPhysEngine(), 6, 10, 3, 3, 1), 2));
-	engine.getPhysEngine()->enableDebugger(true);
+	engine.addActor(new bgimage(createBody(engine.getPhysEngine(), 0, 0, 15, 3, 0, -45.f / 180.f * 3.14159f), 2));
+	engine.addActor(new bgimage(createBody(engine.getPhysEngine(), -6, 10, 3, 3, 1,-45.f/180.f*3.14159f), 2));
+	engine.getPhysEngine()->enableDebugger(false);
+	*/
+	createBoxs(&engine, physng);
 #ifndef EMSCRIPTEN
 	LARGE_INTEGER freq;
 	QueryPerformanceFrequency(&freq);
