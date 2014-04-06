@@ -129,10 +129,13 @@ bool collider::collideBoxBox(body* a, body* b, contactdetails* cd){
 	if (penX < penY && penX < pen1 && penX < pen2){
 		cd->penetration = penX;
 		axisx.rotate(-cs, sn);
-		if (a_axisx.min > b_axisx.min)
+		cd->contactPoint[0] = extent2point(a_axisx.min_point, c1);
+		if (a_axisx.min > b_axisx.min){
 			cd->contactNormal = axisx;
-		else
+		}
+		else{
 			cd->contactNormal = -1 * axisx;
+		}
 	}
 	else if (penY < pen1 && penY < pen2){
 		cd->penetration = penY;
