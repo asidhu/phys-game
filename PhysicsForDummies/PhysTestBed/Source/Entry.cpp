@@ -121,7 +121,7 @@ void createBoxs(GameEngine* eng, PhysEngine* phys){
 	engine.addActor(new bgimage(createBody(engine.getPhysEngine(), 5, 5, 10, 3, 0, 45.f / 180.f * 3.14159f), 2));
 	for (int i = 0; i < 1; i++)
 		engine.addActor(new bgimage(createBody(engine.getPhysEngine(), rand() % 6 - 3, rand() %50 + 5, 1, 1, 1), 2));
-	engine.getPhysEngine()->enableDebugger(true);
+	engine.getPhysEngine()->enableDebugger(false);
 }
 
 

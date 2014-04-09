@@ -17,6 +17,7 @@ inline float halfextent(const extent& a){
 	return (a.max - a.min) / 2;
 }
 inline void extent2point(vec2& out, const unsigned char a, const box* b){
+	out.x = out.y = 0;
 	int num = 4;
 	if ((a & 1) != 0)
 		out += b->a;
@@ -99,7 +100,7 @@ bool collider::collideBoxBox(body* a, body* b, contactdetails* cd){
 	b2.rotate(cs, sn);
 	b3.rotate(cs, sn);
 	b4.rotate(cs, sn);
-	orientedRelPos.rotate(cs, sn);
+	orientedRelPos.rotate(-cs, -sn);
 	vec2 axis1 = vec2(cs2, sn2), axis2 = vec2(-sn2, cs2),
 		axisx = vec2(1, 0), axisy = vec2(0, 1);
 	const vec2 a1 = vec2(-c1->halfwidth, c1->halfheight),
@@ -130,48 +131,56 @@ bool collider::collideBoxBox(body* a, body* b, contactdetails* cd){
 		pen1 = penetration(a_axis1,b_axis1),
 		pen2 = penetration(a_axis2,b_axis2);
 
-	if (penY < penX){
+	if (penY < penX && penY< pen1 && penY < pen2){
 		cd->penetration = penY;
+		axisy.rotate(cs, -sn);
 		if (relPos.y <0){
 			cd->contactNormal = axisy;
 			extent2point(cd->contactPoint[1], b_axisy.min_point, c2);
+			cd->contactPoint[0] = relPos+cd->contactPoint[1];
 		}
 		else{
 			cd->contactNormal = -1*axisy;
 			extent2point(cd->contactPoint[1], b_axisy.max_point, c2);
+			cd->contactPoint[0] = relPos+cd->contactPoint[1];
 		}
 	}
-	else{
+	else if (penX< pen1 && penX<pen2){
 		cd->penetration = penX;
+		axisx.rotate(cs, -sn);
 		if (relPos.x<0){
 			cd->contactNormal = axisx;
-			extent2point(cd->contactPoint[1], b_axisx.min_point, c2);
+			extent2point(cd->contactPoint[1], b_axisx.max_point, c2);
+			cd->contactPoint[0] = relPos+cd->contactPoint[1];
 		}
 		else{
 			cd->contactNormal = -1*axisx;
-			extent2point(cd->contactPoint[1], b_axisx.max_point, c2);
+			extent2point(cd->contactPoint[1], b_axisx.min_point, c2);
+			cd->contactPoint[0] = relPos+cd->contactPoint[1];
 		}
 	}
-	if (pen1 < pen2){
-		cd->penetration = pen1;
-		if (orientedRelPos.y <0){
+	else if (pen1 < pen2){
+		if (orientedRelPos.x <0){
 			cd->contactNormal = axis1;
-			extent2point(cd->contactPoint[0], a_axis1.min_point, c2);
+			extent2point(cd->contactPoint[0], a_axis1.min_point, c1);
+			cd->contactPoint[1] = relPos+cd->contactPoint[0];
 		}
 		else{
 			cd->contactNormal = -1 * axis1;
-			extent2point(cd->contactPoint[0], a_axis1.max_point, c2);
+			extent2point(cd->contactPoint[0], a_axis1.max_point, c1);
+			cd->contactPoint[1] = relPos+cd->contactPoint[0];
 		}
 	}
 	else{
-		cd->penetration = pen2;
-		if (orientedRelPos.x<0){
+		if (orientedRelPos.y<0){
 			cd->contactNormal = axis2;
-			extent2point(cd->contactPoint[0], a_axis2.min_point, c2);
+			extent2point(cd->contactPoint[0], a_axis2.min_point, c1);
+			cd->contactPoint[1] = orientedRelPos+cd->contactPoint[0];
 		}
 		else{
 			cd->contactNormal = -1 * axis2;
-			extent2point(cd->contactPoint[0], a_axis2.max_point, c2);
+			extent2point(cd->contactPoint[0], a_axis2.max_point, c1);
+			cd->contactPoint[1] = orientedRelPos+cd->contactPoint[0];
 		}
 	}
 	cd->penetration = min(min(pen1, pen2), min(penX, penY));
