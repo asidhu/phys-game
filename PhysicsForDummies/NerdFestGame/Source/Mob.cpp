@@ -25,7 +25,6 @@ void Mob::checkExtremeCollision(Mob* m, contactdetails* cd){
 void Mob::render(RenderList* lst){
 	RenderItem* item = lst->getItem();
 	//FIX THIS USE ACCESSOR :OOOO
-	//feed me a big fat penis
 	body* b = getBody();
 	item->x = b->position.x;
 	item->y = b->position.y;

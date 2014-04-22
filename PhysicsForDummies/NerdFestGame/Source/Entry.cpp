@@ -144,7 +144,7 @@ int main(int argc, char* argv[])
 	//arr[7]->getBody()->lockRotation();
 	Scene* scene = new Scene(1);
 	for (int i = 0; i < 8; i++){
-		scene->addFixture(arr[i], 0);
+		//scene->addFixture(arr[i], 0);
 	}
 	engine.setupScene(scene);
 	body* b = createBody(engine.getPhysEngine(), 10, 10,8, 2, 1);
@@ -155,10 +155,7 @@ int main(int argc, char* argv[])
 	graphics->loadImage(1, "./reddiamond.png");
 	graphics->loadImage(2, "./orangediamond.png");
 	graphics->loadImage(3, "./bluediamond.png");
-	//engine.player = m;
-	//b->data = engine.player;
-	//b->post_collide = onGroundCheck;
-	//engine.addActor(engine.player);
+	engine.addActor(m);
 	
 	for (int i = 0; i < 0; i++){
 		EnemyCannoneer* ec = new EnemyCannoneer(createBody(engine.getPhysEngine(), 45+rand()%5, 60, 2, 2, 1));

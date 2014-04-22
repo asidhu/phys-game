@@ -37,6 +37,8 @@
     <ClInclude Include="Source\Grappleable.h" />
     <ClInclude Include="Source\Missile.h" />
     <ClInclude Include="Source\Mob.h" />
+    <ClInclude Include="Source\MyEngine.h" />
+    <ClInclude Include="Source\MyInputHandler.h" />
     <ClInclude Include="Source\Player.h" />
     <ClInclude Include="Source\Shrapnel.h" />
   </ItemGroup>
@@ -50,6 +52,7 @@
     <ClCompile Include="Source\Grapple.cpp" />
     <ClCompile Include="Source\Missile.cpp" />
     <ClCompile Include="Source\Mob.cpp" />
+    <ClCompile Include="Source\MyInputHandler.cpp" />
     <ClCompile Include="Source\Player.cpp" />
     <ClCompile Include="Source\Shrapnel.cpp" />
   </ItemGroup>

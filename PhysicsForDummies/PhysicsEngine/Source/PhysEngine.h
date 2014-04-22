@@ -14,16 +14,14 @@ private:
 	body root;
 	solver* contacts;
 	int m_numBodies;
-	//std::vector<body*> bodies;
 	int velocityIterations, positionIterations;
 	bool debug_enabled;
 	bool debug_onCollisionStop;
 	int debug_collidedState;
 
 public:
-	PhysEngine() :velocityIterations(15), positionIterations(4){ debug_enabled = false; }
+	PhysEngine() :velocityIterations(25), positionIterations(4){ debug_enabled = false; }
 	body* getBodyList(){ return root.nextX; }
-	//std::vector<body*>& getBodies(){ return bodies; }
 	void setup(float g = -9.81f, float minX = 0.f, float minY = 0.f, float maxX = 1.f, float maxY = 1.f);
 	body* buildBody(bodydef& def);
 	int getNumBodies(){return m_numBodies;}

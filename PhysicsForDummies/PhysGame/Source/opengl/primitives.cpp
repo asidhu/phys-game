@@ -573,6 +573,7 @@ void primitives::drawLine(float x1,float y1, float x2, float y2){
 
 
 #include "opengl/primitives.h"
+#include <cassert>
 #include <cmath>
 #include <vector>
 #include <cstring>
@@ -733,25 +734,8 @@ int primitives::init(){
 	this->spData.color = glGetUniformLocation(this->simpleProgram, "color");
 	this->spData.wMat = glGetUniformLocation(this->simpleProgram, "worldMat");
 	this->spData.mMat = glGetUniformLocation(this->simpleProgram, "modelMat");
-	/*
-	//create a texture shader program
-	this->textureProgram = compileProgram(readFile(textureVertexShader, vshader, 8192), readFile(textureFragmentShader, fshader, 8192));
-	this->textureProgram_texUnit = glGetUniformLocation(this->textureProgram, "myTexture");
-	textureProgram_texCoord = glGetAttribLocation(this->textureProgram, "texture_coord");
-	*/
 
-	/*
-	this->textureProgram = glCreateProgram();
-	vertexShaderObj = glCreateShader(GL_VERTEX_SHADER);
-	fragmentShaderObj = glCreateShader(GL_FRAGMENT_SHADER);
-	glShaderSource(vertexShaderObj, 1, &textureVertexShader, NULL);
-	glShaderSource(fragmentShaderObj, 1, &textureFragmentShader, NULL);
-	glCompileShader(vertexShaderObj);
-	glCompileShader(fragmentShaderObj);
-	glAttachShader(this->textureProgram, vertexShaderObj);
-	glAttachShader(this->textureProgram, fragmentShaderObj);
-	glLinkProgram(this->textureProgram);
-	*/
+
 	this->circleInstanceProgram = compileProgram(readFile(circleInstanceVShader, vshader, 8192), readFile(circleInstanceFShader, fshader, 8192));
 	this->ciData.worldMat = glGetUniformLocation(this->circleInstanceProgram, "worldMat");
 	glGenBuffers(1, &this->ciData.instanceBuffer);

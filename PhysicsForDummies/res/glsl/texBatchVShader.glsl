@@ -19,13 +19,16 @@ void main(){
 		0.0, 0.0, 0.0, 1.0 ); 
 	vec4 tmp = vPosition;
 	tmp.xy*=m_scaling;
+	/*
 	vec4 textmp = tmp;
+	*/
 	tmp = RotationMatrix*tmp;
 	tmp.xy += m_location;
 	tmp.z=m_zindex;
 	gl_Position = (worldMat * tmp);
-	textmp.xy*=m_texS;
-	textmp = RotationMatrix*textmp;
-	UV = textmp.xy+ m_location.xy;
+	UV = (vPosition.xy+ vec2(.5f,.5f))*m_texS;
+	//textmp.xy*=m_texS;
+	//textmp = RotationMatrix*textmp;
+	//UV = textmp.xy+ m_location.xy;
 	texID=m_texID;
 }

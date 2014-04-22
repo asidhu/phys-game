@@ -42,6 +42,12 @@
     <ClInclude Include="Source\Shrapnel.h">
       <Filter>Source</Filter>
     </ClInclude>
+    <ClInclude Include="Source\MyEngine.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\MyInputHandler.h">
+      <Filter>Source</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\EnemyCannoneer.cpp">
@@ -75,6 +81,9 @@
       <Filter>Source</Filter>
     </ClCompile>
     <ClCompile Include="Source\Entry.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\MyInputHandler.cpp">
       <Filter>Source</Filter>
     </ClCompile>
   </ItemGroup>

@@ -53,8 +53,6 @@ void GLFWGraphics::start(){
 	glClear(GL_DEPTH_BUFFER_BIT);
 	m_left = m_centerX - viewHeight / 2 * ratio;
 	m_right = m_centerX + viewHeight / 2 * ratio;
-
-
 	renderer.setupViewport(m_left, m_right, m_top, m_bottom );
 	
 
@@ -101,8 +99,8 @@ void GLFWGraphics::renderBatchTextureSquare(RenderList* list){
 		instanceAttributes[num].rotation = item->rot;
 		instanceAttributes[num].sx = item->tex.w;
 		instanceAttributes[num].sy = item->tex.h;
-		instanceAttributes[num].tx = 1.f;// 1.5f;
-		instanceAttributes[num].ty = 1.f;// 1.5f;
+		instanceAttributes[num].tx = item->tex.s1;// 1.5f;
+		instanceAttributes[num].ty = item->tex.s2;// 1.5f;
 		GLint texid = m_resourceMap[item->tex.resID];
 		if (numTex == 0 || texIDs[numTex - 1] != texid){
 			texIDs[numTex] =  texid;

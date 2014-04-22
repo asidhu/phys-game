@@ -57,7 +57,7 @@ void GameEngine::render(){
 	}
 
 	m_graphics->start();
-	m_graphics->drawList(m_scene->render(0));
+	//m_graphics->drawList(m_scene->render(0));
 	m_graphics->drawList(m_list);
 	m_graphics->drawList(m_debug_list);
 	m_graphics->close();

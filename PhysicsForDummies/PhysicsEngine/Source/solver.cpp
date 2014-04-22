@@ -46,7 +46,7 @@ void solver::generateContacts(body* head){
 			}
 			if (ptr->AABB.right >= ptr2->AABB.left){
 				contactdetails *dets = constraints + nContacts;
-				if (ptr->AABB.overlap(ptr2->AABB) && collider::detectCollision(ptr, ptr2, (dets))){
+				if (ptr->AABB.overlap(ptr2->AABB) && shape::detectCollision(ptr, ptr2, (dets))){
 
 					dets->b1 = ptr;
 					dets->b2 = ptr2;
@@ -81,7 +81,7 @@ void solver::solveContacts(body* head, int velIterations, int posIterations){
 			}
 			if (ptr->AABB.right >= ptr2->AABB.left){
 				contactdetails *dets = constraints + nContacts;
-				if (ptr->AABB.overlap(ptr2->AABB) && collider::detectCollision(ptr, ptr2, (dets))){
+				if (ptr->AABB.overlap(ptr2->AABB) && shape::detectCollision(ptr, ptr2, (dets))){
 					
 					dets->b1 = ptr;
 					dets->b2 = ptr2;

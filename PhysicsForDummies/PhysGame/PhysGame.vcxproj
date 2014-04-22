@@ -29,6 +29,9 @@
   <ItemGroup>
     <ClCompile Include="Source\Actor.cpp" />
     <ClCompile Include="Source\GameEngine.cpp" />
+    <ClCompile Include="Source\Layer.cpp" />
+    <ClCompile Include="Source\LayerButton.cpp" />
+    <ClCompile Include="Source\LayerTexture.cpp" />
     <ClCompile Include="Source\opengl\primitives.cpp" />
     <ClCompile Include="Source\opengl\stb_image.cpp" />
     <ClCompile Include="Source\PlatformDependent\GLFWGraphics.cpp" />
@@ -39,8 +42,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Actor.h" />
+    <ClInclude Include="Source\ActorManager.h" />
+    <ClInclude Include="Source\Camera.h" />
     <ClInclude Include="Source\GameEngine.h" />
     <ClInclude Include="Source\GameInputHandler.h" />
+    <ClInclude Include="Source\GameWorld.h" />
+    <ClInclude Include="Source\Layer.h" />
+    <ClInclude Include="Source\LayerButton.h" />
+    <ClInclude Include="Source\LayerTexture.h" />
     <ClInclude Include="Source\opengl\opengl.h" />
     <ClInclude Include="Source\opengl\primitives.h" />
     <ClInclude Include="Source\opengl\stb_image.h" />
@@ -52,6 +61,7 @@
     <ClInclude Include="Source\PlatformDependent\WebGLWrapper.h" />
     <ClInclude Include="Source\RenderList.h" />
     <ClInclude Include="Source\Scene.h" />
+    <ClInclude Include="Source\SceneManager.h" />
     <ClInclude Include="Source\StaticFixture.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

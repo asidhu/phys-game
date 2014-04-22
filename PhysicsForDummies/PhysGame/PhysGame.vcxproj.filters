@@ -42,6 +42,15 @@
     <ClCompile Include="Source\PlatformDependent\GLFWWrapper.cpp">
       <Filter>Source\PlatformDependent\Crossplatform</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Layer.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\LayerButton.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\LayerTexture.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\opengl\primitives.h">
@@ -89,5 +98,24 @@
     <ClInclude Include="Source\GameInputHandler.h">
       <Filter>Source</Filter>
     </ClInclude>
+    <ClInclude Include="Source\ActorManager.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Layer.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\SceneManager.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\LayerButton.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Camera.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\LayerTexture.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameWorld.h" />
   </ItemGroup>
 </Project>

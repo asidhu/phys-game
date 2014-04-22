@@ -8,6 +8,7 @@ class contactdetails;
 class shape{
 public:
 	int type;
+	static bool detectCollision(body* a, body* b,contactdetails*);
 	virtual void calcAABB(body* b, rect* aabb)= 0;
 };
 
