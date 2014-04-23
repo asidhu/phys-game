@@ -28,8 +28,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\autoptr.h" />
-    <ClInclude Include="Source\EnemyCannoneer.h" />
-    <ClInclude Include="Source\EnemyDriller.h" />
     <ClInclude Include="Source\EnemyRiflesmen.h" />
     <ClInclude Include="Source\GameEffects.h" />
     <ClInclude Include="Source\GameObjects.h" />
@@ -43,8 +41,6 @@
     <ClInclude Include="Source\Shrapnel.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Source\EnemyCannoneer.cpp" />
-    <ClCompile Include="Source\EnemyDriller.cpp" />
     <ClCompile Include="Source\EnemyRiflesmen.cpp" />
     <ClCompile Include="Source\Entry.cpp" />
     <ClCompile Include="Source\GameEffects.cpp" />

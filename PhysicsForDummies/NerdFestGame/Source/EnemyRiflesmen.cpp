@@ -20,7 +20,7 @@ EnemyRiflesmen::EnemyRiflesmen(body* b) :Mob(0, b){
 	fire = 0;
 	jump = 0;
 }
-bool EnemyRiflesmen::tick(GameEngine* e){
+bool EnemyRiflesmen::tick(GameWorld* e){
 	/*if ((fire++ % 50) == 0){
 		Player* p = (Player*)e->player;
 		float dx = p->getBody()->position.x - getBody()->position.x;
@@ -33,7 +33,8 @@ bool EnemyRiflesmen::tick(GameEngine* e){
 	}*/
 	return Mob::tick(e);
 }
-void EnemyRiflesmen::fireMissile(GameEngine* e, float x, float y){
+void EnemyRiflesmen::fireMissile(GameWorld* e, float x, float y){
+	/*
 	vec2 dist = (vec2(x, y) - getBody()->position);
 	dist.normalize();
 	body* b = createBody68(e->getPhysEngine(), getBody()->position.x, getBody()->position.y, 1.f, 1.f, 1.f, atan2(dist.y, dist.x) * 180 / 3.14159f);
@@ -42,4 +43,5 @@ void EnemyRiflesmen::fireMissile(GameEngine* e, float x, float y){
 	b->velocity += dist;
 	e->addActor(a);
 	a->launcher = this;
+	*/
 }

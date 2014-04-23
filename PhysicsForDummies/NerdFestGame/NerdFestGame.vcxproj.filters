@@ -9,12 +9,6 @@
     <ClInclude Include="Source\autoptr.h">
       <Filter>Source</Filter>
     </ClInclude>
-    <ClInclude Include="Source\EnemyCannoneer.h">
-      <Filter>Source</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\EnemyDriller.h">
-      <Filter>Source</Filter>
-    </ClInclude>
     <ClInclude Include="Source\EnemyRiflesmen.h">
       <Filter>Source</Filter>
     </ClInclude>
@@ -50,12 +44,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Source\EnemyCannoneer.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\EnemyDriller.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
     <ClCompile Include="Source\EnemyRiflesmen.cpp">
       <Filter>Source</Filter>
     </ClCompile>

@@ -72,6 +72,8 @@ void solver::solveContacts(body* head, int velIterations, int posIterations){
 	nContacts = 0;
 	nBodies = 0;
 	body * ptr = head;
+	if (!ptr)
+		return;
 	while (ptr->nextX != 0){
 		body * ptr2 = ptr->nextX;
 		while (ptr2 != 0){

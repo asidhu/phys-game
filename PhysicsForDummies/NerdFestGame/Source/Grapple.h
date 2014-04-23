@@ -18,11 +18,11 @@ public:
 	float maxdist;
 	float speed;
 	Grapple(int id, body* b);
-	bool tick(GameEngine*);
-	void erase(GameEngine*);
+	bool tick(GameWorld*);
+	void erase(GameWorld*);
 	void createOtherHook(body*);
-	bool oneHookOut(GameEngine*);
-	bool twoHookOut(GameEngine*);
+	bool oneHookOut(GameWorld*);
+	bool twoHookOut(GameWorld*);
 	void render(RenderList*);
 	void release();
 };

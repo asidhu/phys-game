@@ -33,9 +33,6 @@
     <ClCompile Include="Source\Actor.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="Source\StaticFixture.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Scene.cpp">
       <Filter>Source</Filter>
     </ClCompile>
@@ -49,6 +46,12 @@
       <Filter>Source</Filter>
     </ClCompile>
     <ClCompile Include="Source\LayerTexture.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GameWorld.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\LayerWorldViewport.cpp">
       <Filter>Source</Filter>
     </ClCompile>
   </ItemGroup>
@@ -86,9 +89,6 @@
     <ClInclude Include="Source\RenderList.h">
       <Filter>Source</Filter>
     </ClInclude>
-    <ClInclude Include="Source\StaticFixture.h">
-      <Filter>Source</Filter>
-    </ClInclude>
     <ClInclude Include="Source\PlatformDependent\GLFWWrapper.h">
       <Filter>Source\PlatformDependent\Crossplatform</Filter>
     </ClInclude>
@@ -116,6 +116,11 @@
     <ClInclude Include="Source\LayerTexture.h">
       <Filter>Source</Filter>
     </ClInclude>
-    <ClInclude Include="Source\GameWorld.h" />
+    <ClInclude Include="Source\GameWorld.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\LayerWorldViewport.h">
+      <Filter>Source</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

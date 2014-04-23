@@ -50,6 +50,7 @@ body* createBody2(PhysEngine* engine, float x, float y, float w, float h, float 
 	return engine->buildBody(bdef);
 }
 void Player::fireMissile(GameEngine* e,float x, float y){
+	/*
 	vec2 dist = (vec2(x, y) - getBody()->position);
 	dist.normalize();
 	body* b = createBody2(e->getPhysEngine(), getBody()->position.x, getBody()->position.y, 1.f, 1.f, 1.f, atan2(dist.y, dist.x) * 180 / 3.14159f);
@@ -58,6 +59,7 @@ void Player::fireMissile(GameEngine* e,float x, float y){
 	b->velocity += dist;
 	e->addActor(a);
 	a->launcher = this;
+	*/
 }
 
 void Player::render(RenderList* lst){
@@ -91,6 +93,7 @@ body* createBody3(PhysEngine* engine, float x, float y, float w, float h, float 
 }
 
 void Player::fireGrappleHook(float x, float y){
+	/*
 	if (grappleHook == NULL){
 		vec2 dist = (vec2(x, y) - getBody()->position);
 		dist.normalize();
@@ -104,9 +107,11 @@ void Player::fireGrappleHook(float x, float y){
 		b->data = grappleHook;
 		engine->addActor(grappleHook);
 	}
+	*/
 }
 
 void Player::fireSecondHook(float x, float y){
+	/*
 	if (grappleHook == NULL || grappleHook->otherHook!=NULL)
 		return;
 	vec2 dist = (vec2(x, y) - getBody()->position);
@@ -117,6 +122,7 @@ void Player::fireSecondHook(float x, float y){
 	b->velocity += dist;
 	grappleHook->createOtherHook(b);
 	grappleHook = NULL;
+	*/
 }
 
 void Player::releaseGrappleHook(){

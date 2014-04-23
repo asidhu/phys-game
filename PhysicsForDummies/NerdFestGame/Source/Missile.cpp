@@ -19,7 +19,8 @@ body* createBody9(PhysEngine* engine, float x, float y, float w, float h, float 
 	bdef.rotation = rot;
 	return engine->buildBody(bdef);
 }
-bool Missile::tick(GameEngine* e){
+bool Missile::tick(GameWorld* e){
+	/*
 	if (life == -1){
 		int numGen = (int)(((float)rand()) / RAND_MAX * 4) + 2;
 		for (int i = 0; i < numGen; i++)
@@ -42,6 +43,7 @@ bool Missile::tick(GameEngine* e){
 	if (life %3==0)
 		e->addEffect(new SmokeEffect(getBody()->position.x, getBody()->position.y));
 	life++;
+	*/
 	return false;
 }
 void Missile::render(RenderList* lst){

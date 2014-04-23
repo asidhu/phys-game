@@ -1,64 +1,45 @@
 #include "GameEngine.h"
 #include "Actor.h"
-#include <PhysicsEngine\Source\PhysEngine.h>
 #include "PlatformDependent\GLFWInput.h"
 #include "PlatformDependent\GLFWGraphics.h"
 #include "PhysGame\Source\RenderList.h"
 #include "PhysGame\Source\Scene.h"
 #include "Effects.h"
-
+#include "GameWorld.h"
+#include "SceneManager.h"
 
 GameEngine::GameEngine(){
-	//setup physics engine
-	m_physEngine = new PhysEngine();
-	m_physEngine->setup(-9.81f);// no magic constants... oh well
 	m_list = new RenderList();
 	m_debug_list = new RenderList();
 	m_exit = false;
+	m_scene_manager = new SceneManager();
+	m_world = new GameWorld();
 }	
 
 void GameEngine::tick(){
-	m_physEngine->step(1.0f / 60.0f);//no magic constants!!! :(
-	m_scene->tick();
-	for (std::list<Actor*>::iterator it = m_actors.begin(); it != m_actors.end();){
-		Actor* actor = *it;
-		if (actor->tick(this)){
-			m_physEngine->removeBody(actor->getBody());
-			it = m_actors.erase(it);
-			delete actor;
-		}
-		else
-			++it;
-	}
-	for (std::list<Effect*>::iterator it = m_effects.begin(); it != m_effects.end();){
-		Effect* actor = *it;
-		if (actor->tick()){
-			it = m_effects.erase(it);
-			delete actor;
-		}
-		else
-			++it;
-	}
+	m_world->tick(m_timestep);
+	m_scene_manager->currentScene->tick();
+	/*
+
+	*/
 	m_input->pollInput();
 }
 
-void GameEngine::addActor(Actor* actor){
-	m_actors.push_back(actor);
-}
 
 void GameEngine::render(){
-	for (std::list<Effect*>::iterator it = m_effects.begin(); it != m_effects.end();it++){
-		Effect* actor = *it;
-		actor->render(m_list);
-	}
-	for (std::list<Actor*>::iterator it = m_actors.begin(); it != m_actors.end(); it++){
-		Actor* actor = *it;
-		actor->render(m_list);
-	}
+	Camera bounds;
+	bounds.l = m_graphics->getLeft();
+	bounds.r = m_graphics->getRight();
+	bounds.t = m_graphics->m_top;
+	bounds.b = m_graphics->m_bottom;
 
 	m_graphics->start();
-	//m_graphics->drawList(m_scene->render(0));
-	m_graphics->drawList(m_list);
+	Scene* scene = m_scene_manager->currentScene;
+	for (int i = 0; i < scene->getNumLayers(); i++){
+		RenderList* list = scene->render(i, &bounds);
+		m_graphics->drawList(list);
+	}
+	//m_graphics->drawList(m_list);
 	m_graphics->drawList(m_debug_list);
 	m_graphics->close();
 	m_list->clear();

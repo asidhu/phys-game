@@ -29,16 +29,17 @@
   <ItemGroup>
     <ClCompile Include="Source\Actor.cpp" />
     <ClCompile Include="Source\GameEngine.cpp" />
+    <ClCompile Include="Source\GameWorld.cpp" />
     <ClCompile Include="Source\Layer.cpp" />
     <ClCompile Include="Source\LayerButton.cpp" />
     <ClCompile Include="Source\LayerTexture.cpp" />
+    <ClCompile Include="Source\LayerWorldViewport.cpp" />
     <ClCompile Include="Source\opengl\primitives.cpp" />
     <ClCompile Include="Source\opengl\stb_image.cpp" />
     <ClCompile Include="Source\PlatformDependent\GLFWGraphics.cpp" />
     <ClCompile Include="Source\PlatformDependent\GLFWInput.cpp" />
     <ClCompile Include="Source\PlatformDependent\GLFWWrapper.cpp" />
     <ClCompile Include="Source\Scene.cpp" />
-    <ClCompile Include="Source\StaticFixture.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Actor.h" />
@@ -50,6 +51,7 @@
     <ClInclude Include="Source\Layer.h" />
     <ClInclude Include="Source\LayerButton.h" />
     <ClInclude Include="Source\LayerTexture.h" />
+    <ClInclude Include="Source\LayerWorldViewport.h" />
     <ClInclude Include="Source\opengl\opengl.h" />
     <ClInclude Include="Source\opengl\primitives.h" />
     <ClInclude Include="Source\opengl\stb_image.h" />
@@ -62,7 +64,6 @@
     <ClInclude Include="Source\RenderList.h" />
     <ClInclude Include="Source\Scene.h" />
     <ClInclude Include="Source\SceneManager.h" />
-    <ClInclude Include="Source\StaticFixture.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{F20A13A8-DCDB-4588-BF31-A1937929057B}</ProjectGuid>

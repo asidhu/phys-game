@@ -70,15 +70,15 @@ Grapple::Grapple(int id, body* b) :GameObject(b,false,false){
 	b->post_collide = grapplehookhit;
 }
 
-void Grapple::erase(GameEngine* e){
+void Grapple::erase(GameWorld* e){
 	if(player!=NULL && player->grappleHook==this)
 		player->grappleHook = NULL;
 	if (attach != NULL)
 		attach->free();
 	if (otherattach != NULL)
 		otherattach->free();
-	if (otherHook != NULL)
-		e->getPhysEngine()->removeBody(otherHook);
+	//if (otherHook != NULL)
+	//	e->getPhysEngine()->removeBody(otherHook);
 }
 
 void Grapple::createOtherHook(body* b){
@@ -88,7 +88,7 @@ void Grapple::createOtherHook(body* b){
 	b->post_collide = grapplehookhit;
 }
 
-bool Grapple::oneHookOut(GameEngine* e){
+bool Grapple::oneHookOut(GameWorld* e){
 	vec2 dist = player->getBody()->position - getBody()->position;
 	float d = dist.lengthSq();
 	if (d > maxdist)
@@ -128,7 +128,7 @@ bool Grapple::oneHookOut(GameEngine* e){
 	
 	return false;
 }
-bool Grapple::twoHookOut(GameEngine* e){
+bool Grapple::twoHookOut(GameWorld* e){
 	if (attach != NULL){
 		getBody()->angularVelocity = 1.5f;
 		this->getBody()->position = attach->getdata()->getBody()->position + relativeAttach;
@@ -157,7 +157,7 @@ bool Grapple::twoHookOut(GameEngine* e){
 	}
 	return false;
 }
-bool Grapple::tick(GameEngine* e){
+bool Grapple::tick(GameWorld* e){
 	if (attach != NULL && !attach->isAlive())
 		destroy = true;
 	if (otherattach != NULL && !otherattach->isAlive())

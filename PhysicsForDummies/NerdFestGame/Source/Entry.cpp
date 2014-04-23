@@ -9,15 +9,19 @@
 #include <time.h>
 #include <PhysicsEngine\Source\PhysEngine.h>
 #include "PhysGame\Source\PlatformDependent\GLFWGraphics.h"
+#include "PhysGame\Source\SceneManager.h"
 #include "PhysGame\Source\PlatformDependent\GLFWInput.h"
 #include "PhysGame\Source\Scene.h"
 #include "PhysGame\Source\GameEngine.h"
 #include "PhysGame\Source\Actor.h"
+#include "PhysGame\Source\LayerTexture.h"
+#include "PhysGame\Source\GameWorld.h"
+#include "PhysGame\Source\LayerWorldViewport.h"
 #include "Mob.h"
 #include "Player.h"
 #include "GameObjects.h"
-#include "EnemyCannoneer.h"
 #include "EnemyRiflesmen.h"
+#include "MyInputHandler.h"
 GameEngine engine;
 
 #define random() (float)rand()/RAND_MAX
@@ -120,9 +124,13 @@ int main(int argc, char* argv[])
 	graphics->m_top = 70;
 	//graphics->m_top = 1;
 	graphics->m_bottom = -1;
-	engine.setup(graphics,input,NULL);
+	MyEngine gamespecific;
+	gamespecific.game_engine = &engine;
+	MyInputHandler *handler = new MyInputHandler(&gamespecific);
+	engine.setup(graphics,input,handler);
 	input->m_engine = &engine;
 	//create random physics object and add as test...
+	/*
 	Actor* arr[] = {
 		new bgimage(createBody(engine.getPhysEngine(), 0, 0, 300, 16, 0), 2),
 		new bgimage(createBody(engine.getPhysEngine(), -150, 100, 16,600, 0),	2),
@@ -140,21 +148,57 @@ int main(int argc, char* argv[])
 		new bgimage(createBody(engine.getPhysEngine(), rand() % 50 - 25, 20, 15, 5, 15), 2),
 		//RANDOM BOXES
 	};
+	*/
 	//arr[6]->getBody()->lockRotation();
 	//arr[7]->getBody()->lockRotation();
-	Scene* scene = new Scene(1);
-	for (int i = 0; i < 8; i++){
-		//scene->addFixture(arr[i], 0);
-	}
-	engine.setupScene(scene);
+	graphics->loadImage(1, "./reddiamond.png");
+	graphics->loadImage(2, "./orangediamond.png");
+	graphics->loadImage(3, "./bluediamond.png");
+	Scene* scene = new Scene(2);
+	engine.getSceneManager()->currentScene = scene;//hack
+	Camera* bounds = scene->getBounds();
+	Camera* cam = scene->getCamera();
+	bounds->l = -1;
+	bounds->r = 1;
+	bounds->t = 1;
+	bounds->b = -1;
+	cam->l = cam->b = -1;
+	cam->r = cam->t = 1;
+	Layer* first = scene->getLayer(0);
+	first->width = 2.f;
+	first->height = 2.f;
+	LayerTexture* t = new LayerTexture(5,5,10,10,1);
+	first->addComponent(t);
+	Layer* second = scene->getLayer(1);
+	LayerWorldViewport* vp = new LayerWorldViewport();
+	second->width = 2.f;
+	second->height = 2.f;
+	vp->viewport = scene->getCamera();
+	vp->world = engine.getGameWorld();
+	vp->mX = 0;
+	vp->mY = 0;
+	vp->mW = 10;
+	vp->mH = 10;
+	second->addComponent(vp);
+	body* b = createBody(engine.getGameWorld()->m_physEngine, 10, 10, 8, 2, 1);
+	Player *m = new Player(0, b);
+	m->m_hp = 10;
+	m->m_tex = 1;
+	m->engine = &engine;
+	engine.getGameWorld()->m_actors.push_back(m);
+
+	b = createBody(engine.getGameWorld()->m_physEngine, 60, 10, 8, 2, 1);
+	m = new Player(0, b);
+	m->m_hp = 10;
+	m->m_tex = 2;
+	m->engine = &engine;
+	engine.getGameWorld()->m_actors.push_back(m);
+	/*
 	body* b = createBody(engine.getPhysEngine(), 10, 10,8, 2, 1);
 	Player *m = new Player(0,b);
 	m->m_hp = 10;
 	m->m_tex = 1;
 	m->engine = &engine;
-	graphics->loadImage(1, "./reddiamond.png");
-	graphics->loadImage(2, "./orangediamond.png");
-	graphics->loadImage(3, "./bluediamond.png");
 	engine.addActor(m);
 	
 	for (int i = 0; i < 0; i++){
@@ -169,9 +213,10 @@ int main(int argc, char* argv[])
 		ec->m_hp = 10;
 		engine.addActor(ec);
 	}
+	*/
 	//b->angularDamping = .9998f;
 	//b->lockRotation();
-	engine.getPhysEngine()->enableDebugger(false);
+	//engine.getPhysEngine()->enableDebugger(false);
 #ifndef EMSCRIPTEN
 	LARGE_INTEGER freq;
 	QueryPerformanceFrequency(&freq);
@@ -184,7 +229,7 @@ int main(int argc, char* argv[])
 
 		if (step || go){
 
-			renderDebug(engine.getPhysEngine(), engine.getDebugList());
+			//renderDebug(engine.getPhysEngine(), engine.getDebugList());
 
 
 			QueryPerformanceCounter(&start);
@@ -206,9 +251,9 @@ int main(int argc, char* argv[])
 			totTime += time;
 			if (frames++ > 100){
 				std::cout << "time:" << totTime / frames << " tick:" << tick << " render:" << render;
-				std::cout << " actors:" << engine.getNumActors();
-				std::cout << " effects:" << engine.getNumEffects();
-				std::cout << " bodies:" << engine.getPhysEngine()->getNumBodies() << std::endl;
+				//std::cout << " actors:" << engine.getNumActors();
+				//std::cout << " effects:" << engine.getNumEffects();
+				//std::cout << " bodies:" << engine.getPhysEngine()->getNumBodies() << std::endl;
 				frames = 0;
 				totTime = 0;
 

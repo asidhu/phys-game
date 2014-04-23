@@ -8,18 +8,22 @@ class RenderList;
 class Scene;
 class Effect;
 class GameInputHandler;
+class GameWorld;
+class SceneManager;
 class GameEngine{
 private:
-	PhysEngine* m_physEngine;
 	PlatformGraphics* m_graphics;
 	PlatformInput* m_input;
+	GameWorld* m_world;
+	SceneManager* m_scene_manager;
 	GameInputHandler* m_inputHandler;
-	std::list<Effect*> m_effects;
-	std::list<Actor*> m_actors;
 	RenderList* m_list, *m_debug_list;
-	Scene* m_scene;
 	bool m_exit;
+	float m_timestep;
 public:
+	SceneManager* getSceneManager(){	return m_scene_manager;			}
+	GameWorld* getGameWorld(){			return m_world;					}
+
 	GameEngine();
 	void setup(PlatformGraphics* g, PlatformInput* i, GameInputHandler* handler){
 		m_graphics = g;
@@ -32,18 +36,8 @@ public:
 	bool shouldClose(){
 		return m_exit;
 	}
-	void setupScene(Scene* s){
-		m_scene = s;
-	}
-	void addEffect(Effect* e){
-		m_effects.push_back(e);
-	}
 	void tick();
 	void render();
-	void addActor(Actor*);
-	PhysEngine* getPhysEngine(){ return m_physEngine; } //THIS IS A HACK. GET RID OF LATER.
-	int getNumActors(){ return m_actors.size(); }
-	int getNumEffects(){ return m_effects.size(); }
 	RenderList* getDebugList(){
 		return m_debug_list;
 	}

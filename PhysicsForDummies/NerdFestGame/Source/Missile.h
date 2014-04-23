@@ -9,6 +9,6 @@ public:
 	int dmg;
 	GameObject* launcher;
 	Missile(int id, body* b);
-	bool tick(GameEngine*);
+	bool tick(GameWorld*);
 	void render(RenderList*);
 };

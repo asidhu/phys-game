@@ -6,6 +6,6 @@ class EnemyRiflesmen : public Mob{
 	int jump;
 public:
 	EnemyRiflesmen(body*);
-	void fireMissile(GameEngine* e, float x, float y);
-	bool tick(GameEngine*);
+	void fireMissile(GameWorld* e, float x, float y);
+	bool tick(GameWorld*);
 };

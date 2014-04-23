@@ -1,18 +1,19 @@
 #pragma once
 class body;
 class RenderList;
-class GameEngine;
+class GameWorld;
+class Camera;
 class Actor{
 private:
 	int m_actorID;
 	body* m_body;
 public:
 	//hack?
-	Actor(int actorID, body* body){
+	Actor(int actorID, body* body=0L){
 		m_actorID = actorID;
 		m_body = body;
 	}
-
+	bool cullActor(Camera* cam);
 	virtual ~Actor(){}
 	body* getBody(){
 		return m_body;
@@ -20,7 +21,7 @@ public:
 
 	virtual void render(RenderList*);
 
-	virtual bool tick(GameEngine*){
+	virtual bool tick(GameWorld*){
 		return false;
 	}
 	
