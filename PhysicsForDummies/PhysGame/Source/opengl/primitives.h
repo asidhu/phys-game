@@ -21,6 +21,7 @@ private:
 	GLuint circleInstanceProgram;
 	GLuint rectInstanceProgram;
 	GLuint texInstanceProgram;
+	GLuint uberShaderProgram;
 	struct{
 		GLuint instanceBuffer;
 		GLuint worldMat;
@@ -65,6 +66,7 @@ public:
 	void batchCircle(int num, void* data); //x,y,radius,r,g,b,a,z
 	void batchSquare(int num, void* data); //x,y,rot,w,h,r,g,b,a,z
 	void batchSquareTexture(int num, GLint *texIDs, int numTexs, void* data);//x,y,rot,sx,sy,tx,ty,texid,z
+
 	void fillCircle(float x, float y, float r);
 	void drawTexture(GLuint texID, float x, float y, const float texcoords[8], float w = 1.f, float h = 1.f, float rot = 0.f);
 	void drawStenciledTexture(GLuint texID, draw_square&,draw_square&, const float texcoords[8], float rot = 0.f);

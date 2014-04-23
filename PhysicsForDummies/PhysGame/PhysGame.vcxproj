@@ -34,11 +34,13 @@
     <ClCompile Include="Source\LayerButton.cpp" />
     <ClCompile Include="Source\LayerTexture.cpp" />
     <ClCompile Include="Source\LayerWorldViewport.cpp" />
+    <ClCompile Include="Source\LuaEngine.cpp" />
     <ClCompile Include="Source\opengl\primitives.cpp" />
     <ClCompile Include="Source\opengl\stb_image.cpp" />
     <ClCompile Include="Source\PlatformDependent\GLFWGraphics.cpp" />
     <ClCompile Include="Source\PlatformDependent\GLFWInput.cpp" />
     <ClCompile Include="Source\PlatformDependent\GLFWWrapper.cpp" />
+    <ClCompile Include="Source\ResourceManager.cpp" />
     <ClCompile Include="Source\Scene.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -52,6 +54,7 @@
     <ClInclude Include="Source\LayerButton.h" />
     <ClInclude Include="Source\LayerTexture.h" />
     <ClInclude Include="Source\LayerWorldViewport.h" />
+    <ClInclude Include="Source\LuaEngine.h" />
     <ClInclude Include="Source\opengl\opengl.h" />
     <ClInclude Include="Source\opengl\primitives.h" />
     <ClInclude Include="Source\opengl\stb_image.h" />
@@ -62,6 +65,7 @@
     <ClInclude Include="Source\PlatformDependent\PlatformInput.h" />
     <ClInclude Include="Source\PlatformDependent\WebGLWrapper.h" />
     <ClInclude Include="Source\RenderList.h" />
+    <ClInclude Include="Source\ResourceManager.h" />
     <ClInclude Include="Source\Scene.h" />
     <ClInclude Include="Source\SceneManager.h" />
   </ItemGroup>
@@ -181,8 +185,8 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(SolutionDir);</AdditionalIncludeDirectories>
+      <SDLCheck>false</SDLCheck>
+      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)lua/include;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -258,7 +262,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(SolutionDir);</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir);$(SolutionDir)lua/include;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

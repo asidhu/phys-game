@@ -7,6 +7,8 @@
 #include "Effects.h"
 #include "GameWorld.h"
 #include "SceneManager.h"
+#include "LuaEngine.h"
+#include "ResourceManager.h"
 
 GameEngine::GameEngine(){
 	m_list = new RenderList();
@@ -14,6 +16,8 @@ GameEngine::GameEngine(){
 	m_exit = false;
 	m_scene_manager = new SceneManager();
 	m_world = new GameWorld();
+	m_lua_engine = new LuaEngine();
+	m_resource_manager = new ResourceManager();
 }	
 
 void GameEngine::tick(){
@@ -25,7 +29,18 @@ void GameEngine::tick(){
 	m_input->pollInput();
 }
 
+void GameEngine::setup(PlatformGraphics* g, PlatformInput* i,
+	GameInputHandler* handler,
+	ActorManager* actor_manager){
+	m_graphics = g;
+	m_input = i;
+	m_inputHandler = handler;
+	m_actor_manager = actor_manager;
 
+	m_resource_manager->setupManager(g);
+
+
+}
 void GameEngine::render(){
 	Camera bounds;
 	bounds.l = m_graphics->getLeft();

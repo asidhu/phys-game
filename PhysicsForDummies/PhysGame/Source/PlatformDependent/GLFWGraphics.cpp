@@ -73,6 +73,12 @@ void GLFWGraphics::loadImage(unsigned int resID, char* filename){
 	m_resourceMap[resID] = texID;
 
 }
+void GLFWGraphics::freeImage(unsigned int id){
+	assert(m_resourceMap.find(id) != m_resourceMap.end());
+	GLuint texID = m_resourceMap[id];
+	glDeleteTextures(1,&texID);
+	m_resourceMap.erase(id);
+}
 void GLFWGraphics::close(){
 	glfwSwapBuffers(m_window);
 }

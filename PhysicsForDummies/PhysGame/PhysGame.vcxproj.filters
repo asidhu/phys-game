@@ -54,6 +54,12 @@
     <ClCompile Include="Source\LayerWorldViewport.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="Source\LuaEngine.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ResourceManager.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\opengl\primitives.h">
@@ -120,6 +126,12 @@
       <Filter>Source</Filter>
     </ClInclude>
     <ClInclude Include="Source\LayerWorldViewport.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\LuaEngine.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ResourceManager.h">
       <Filter>Source</Filter>
     </ClInclude>
   </ItemGroup>

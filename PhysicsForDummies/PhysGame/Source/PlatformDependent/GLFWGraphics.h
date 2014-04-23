@@ -21,6 +21,7 @@ public:
 	void start();
 	void close();
 	void loadImage(unsigned int resID, char* filename);
+	void freeImage(unsigned int id);
 	float getLeft(){
 		return m_left;
 	}

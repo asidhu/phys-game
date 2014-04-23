@@ -21,6 +21,7 @@
 #include "Player.h"
 #include "GameObjects.h"
 #include "EnemyRiflesmen.h"
+#include "PhysGame\Source\ResourceManager.h"
 #include "MyInputHandler.h"
 GameEngine engine;
 
@@ -127,7 +128,8 @@ int main(int argc, char* argv[])
 	MyEngine gamespecific;
 	gamespecific.game_engine = &engine;
 	MyInputHandler *handler = new MyInputHandler(&gamespecific);
-	engine.setup(graphics,input,handler);
+	engine.setup(graphics,input,handler,NULL);
+
 	input->m_engine = &engine;
 	//create random physics object and add as test...
 	/*
@@ -151,9 +153,14 @@ int main(int argc, char* argv[])
 	*/
 	//arr[6]->getBody()->lockRotation();
 	//arr[7]->getBody()->lockRotation();
-	graphics->loadImage(1, "./reddiamond.png");
-	graphics->loadImage(2, "./orangediamond.png");
-	graphics->loadImage(3, "./bluediamond.png");
+	//graphics->loadImage(1, "./reddiamond.png");
+	//graphics->loadImage(2, "./orangediamond.png");
+	//graphics->loadImage(3, "./bluediamond.png");
+	ResourceManager* res = engine.getResourceManager();
+	res->registerTexture(1, "./reddiamond.png");
+	res->registerTexture(2, "./orangediamond.png");
+	res->registerTexture(3, "./bluediamond.png");
+	
 	Scene* scene = new Scene(2);
 	engine.getSceneManager()->currentScene = scene;//hack
 	Camera* bounds = scene->getBounds();
