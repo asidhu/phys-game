@@ -20,7 +20,11 @@ public:
 	std::vector<LayerComponent * > m_components;
 	void render(RenderList*, Camera*);
 	void addComponent(LayerComponent* comp);
+	void addButtonComponent(int regularID, int mouseID, float x, float y, float w, float h, int btnEvent);
+	void addTextureComponent(int regularID, float x, float y, float w, float h);
+	void addGameWorld();
 	void updateScroll(float offx, float offy,Camera* main_cam);
 	void handleMouseUpdate(float x, float y);
 	bool handleMouseClick(int type, float x, float y);
+
 };

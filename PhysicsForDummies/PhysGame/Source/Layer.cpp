@@ -1,6 +1,8 @@
 #include "Layer.h"
 #include "Camera.h"
-
+#include "LayerButton.h"
+#include "LayerTexture.h"
+#include "LayerWorldViewport.h"
 
 Layer::Layer(){
 	this->x = this->y = 0;
@@ -59,4 +61,16 @@ bool Layer::handleMouseClick(int type, float x, float y){
 	}
 	return false;
 
+}
+
+void Layer::addButtonComponent(int regularID, int mouseID, float x, float y, float w, float h, int btnEvent){
+	LayerButton * btn = new LayerButton(x, y, w, h, regularID, mouseID);
+	addComponent(btn);
+}
+void Layer::addTextureComponent(int regularID, float x, float y, float w, float h){
+	LayerTexture * tex = new LayerTexture(x, y, w, h, regularID);
+	addComponent(tex);
+}
+void Layer::addGameWorld(){
+	addComponent(new LayerWorldViewport());
 }

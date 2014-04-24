@@ -9,6 +9,7 @@
 #include "SceneManager.h"
 #include "LuaEngine.h"
 #include "ResourceManager.h"
+#include "Layer.h"
 
 GameEngine::GameEngine(){
 	m_list = new RenderList();
@@ -51,8 +52,10 @@ void GameEngine::render(){
 	m_graphics->start();
 	Scene* scene = m_scene_manager->currentScene;
 	for (int i = 0; i < scene->getNumLayers(); i++){
-		RenderList* list = scene->render(i, &bounds);
-		m_graphics->drawList(list);
+		if (scene->getLayer(i)->enabled){
+			RenderList* list = scene->render(i, &bounds);
+			m_graphics->drawList(list);
+		}
 	}
 	//m_graphics->drawList(m_list);
 	m_graphics->drawList(m_debug_list);
