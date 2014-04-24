@@ -17,6 +17,7 @@
 #include "PhysGame\Source\LayerTexture.h"
 #include "PhysGame\Source\GameWorld.h"
 #include "PhysGame\Source\LayerWorldViewport.h"
+#include "PhysGame\Source\LayerButton.h"
 #include "Mob.h"
 #include "Player.h"
 #include "GameObjects.h"
@@ -176,6 +177,7 @@ int main(int argc, char* argv[])
 	first->height = 2.f;
 	LayerTexture* t = new LayerTexture(5,5,10,10,1);
 	first->addComponent(t);
+	first->addComponent(new LayerButton(15, 5, 10, 10, 2, 3));
 	Layer* second = scene->getLayer(1);
 	LayerWorldViewport* vp = new LayerWorldViewport();
 	second->width = 2.f;

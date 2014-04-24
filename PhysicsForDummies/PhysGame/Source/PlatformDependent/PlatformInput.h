@@ -14,5 +14,6 @@ public:
 	GameEngine* m_engine; ///this is a hack. 
 	GameInputHandler* getInputHandler(){ return m_engine->m_inputHandler; }
 	PlatformGraphics* getGraphics(){ return m_engine->m_graphics; }
+	SceneManager*	  getSceneManager(){	return m_engine->m_scene_manager;	}
 	virtual void pollInput()=0;
 };

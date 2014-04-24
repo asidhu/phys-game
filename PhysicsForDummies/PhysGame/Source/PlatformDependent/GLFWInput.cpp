@@ -4,6 +4,7 @@
 #include "PhysGame\Source\PlatformDependent\GLFWGraphics.h"
 #include <iostream>
 #include "PhysGame\Source\GameInputHandler.h"
+#include "PhysGame\Source\SceneManager.h"
 GLFWInput *current_input;
 static void mouse_callback(GLFWwindow* win, int button, int action, int mods){
 	double x, y;
@@ -23,14 +24,16 @@ static void mouse_callback(GLFWwindow* win, int button, int action, int mods){
 	else if (button == GLFW_MOUSE_BUTTON_RIGHT){
 		outbtn = MOUSE_RIGHT;
 	}
-	if (current_input->getInputHandler() != NULL)
-		current_input->getInputHandler()->handleMouse(worldX, worldY, outbtn, out);
+	if (!current_input->getSceneManager()->handleMouseClick(outbtn, worldX - gfx->getLeft(), gfx->m_top - worldY))
+		if (current_input->getInputHandler() != NULL)
+			current_input->getInputHandler()->handleMouse(worldX, worldY, outbtn, out);
 }
 static void mousepos_callback(GLFWwindow* win, double x, double y){
 	GLFWGraphics* gfx = (GLFWGraphics*)current_input->getGraphics();
 	y = gfx->m_win_height - y;
 	float worldX = ((float)x / gfx->m_win_width*(gfx->getWidth()) + gfx->getLeft());
 	float worldY = ((float)y / gfx->m_win_height*(gfx->m_top - gfx->m_bottom) + gfx->m_bottom);
+	current_input->getSceneManager()->handleMouseUpdate(worldX - gfx->getLeft(), gfx->m_top-worldY);
 	if(current_input->getInputHandler()!=NULL)
 		current_input->getInputHandler()->handleMouseMove(worldX, worldY);
 }
