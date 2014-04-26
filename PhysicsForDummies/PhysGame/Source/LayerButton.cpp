@@ -15,7 +15,7 @@ LayerButton::LayerButton(float x, float y, float w, float h, int texid, int over
 	mousedOver = false;
 }
 void LayerButton::render(RenderList* list,Camera* cam, float x, float y){
-	float displayX = cam->l + mX - x,
+	float displayX = cam->l + mX + x,
 		displayY = cam->t - mY + y;
 	RenderItem* item = list->getItem();
 	item->myType = DrawType::texture;

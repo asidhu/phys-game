@@ -1,12 +1,22 @@
 #include "SceneManager.h"
 #include "Scene.h"
 #include "Layer.h"
-void SceneManager::loadScenes(char* files){
+#include "LuaEngine.h"
+#include "ResourceManager.h"
 
-}
 
 Scene* SceneManager::setupScene(int scene_id){
-	return NULL;
+	if (currentScene != NULL)
+		delete currentScene;
+	currentScene = m_res_manager->getScene(scene_id);
+	currentScene->setGameWorld(m_game_world);
+	m_lua_engine->initializeLua(currentScene);
+	return currentScene;
+}
+
+void SceneManager::tick(float timestep){
+	m_lua_engine->tick(timestep);
+	currentScene->tick();
 }
 
 void SceneManager::handleMouseUpdate(float x, float y){
@@ -24,4 +34,9 @@ bool SceneManager::handleMouseClick(int type, float x, float y){
 			return true;
 	}
 	return false;
+}
+
+SceneManager::SceneManager(){
+	currentScene = NULL;
+	m_lua_engine = new LuaEngine();
 }

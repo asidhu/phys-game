@@ -32,8 +32,8 @@ GLFWGraphics::GLFWGraphics(int w, int h){
 	m_win_width = w;
 	m_win_height = h;
 	m_fb_width = m_fb_height = 0;
-	glEnable(GL_DEPTH_TEST);
-	glDepthFunc(GL_LEQUAL);
+	//glEnable(GL_DEPTH_TEST);
+	//glDepthFunc(GL_LEQUAL);
 }
 void GLFWGraphics::start(){
 	float  ratio;
@@ -58,7 +58,7 @@ void GLFWGraphics::start(){
 
 }
 
-void GLFWGraphics::loadImage(unsigned int resID, char* filename){
+void GLFWGraphics::loadImage(unsigned int resID, const char* filename){
 	int x, y, comp;
 	GLuint texID;
 	unsigned char* data = stbi_load(filename, &x, &y, &comp, 0);

@@ -3,6 +3,7 @@
 
 class RenderList;
 class Camera;
+class Scene;
 class LayerComponent{
 public:
 	virtual void render(RenderList*,Camera*, float x, float y)=0;
@@ -22,7 +23,8 @@ public:
 	void addComponent(LayerComponent* comp);
 	void addButtonComponent(int regularID, int mouseID, float x, float y, float w, float h, int btnEvent);
 	void addTextureComponent(int regularID, float x, float y, float w, float h);
-	void addGameWorld();
+	void addGameWorld(Scene*);
+	void setScroll(bool s){ scrolling = s; }
 	void updateScroll(float offx, float offy,Camera* main_cam);
 	void handleMouseUpdate(float x, float y);
 	bool handleMouseClick(int type, float x, float y);

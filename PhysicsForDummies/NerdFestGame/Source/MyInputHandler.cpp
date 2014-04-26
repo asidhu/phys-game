@@ -16,9 +16,10 @@ void MyInputHandler::handleKey(int key, int state){
 			scroll = -1.f;
 		}
 		GameEngine* e = engine->game_engine;
-		Scene *s = e->getSceneManager()->currentScene;
+		/*Scene *s = e->getSceneManager()->currentScene;
 		Camera* cam = s->getCamera();
  		cam->l += scroll;
 		cam->r += scroll;
+		*/
 	}
 }

@@ -17,13 +17,15 @@ GameEngine::GameEngine(){
 	m_exit = false;
 	m_scene_manager = new SceneManager();
 	m_world = new GameWorld();
-	m_lua_engine = new LuaEngine();
 	m_resource_manager = new ResourceManager();
+	m_scene_manager->setupResources(m_resource_manager);
+	m_scene_manager->setGameWorld(m_world);
+	m_scene_manager->getLuaEngine()->initiializeEngine(this);
 }	
 
 void GameEngine::tick(){
 	m_world->tick(m_timestep);
-	m_scene_manager->currentScene->tick();
+	m_scene_manager->tick(m_timestep);
 	/*
 
 	*/
@@ -31,16 +33,18 @@ void GameEngine::tick(){
 }
 
 void GameEngine::setup(PlatformGraphics* g, PlatformInput* i,
-	GameInputHandler* handler,
-	ActorManager* actor_manager){
+	GameInputHandler* handler, ActorManager* actor_manager){
 	m_graphics = g;
 	m_input = i;
 	m_inputHandler = handler;
 	m_actor_manager = actor_manager;
-
 	m_resource_manager->setupManager(g);
+}
 
 
+void GameEngine::start(char* sceneFile){
+	m_resource_manager->loadScenes(sceneFile);
+	m_scene_manager->setupScene(0);
 }
 void GameEngine::render(){
 	Camera bounds;
@@ -50,7 +54,7 @@ void GameEngine::render(){
 	bounds.b = m_graphics->m_bottom;
 
 	m_graphics->start();
-	Scene* scene = m_scene_manager->currentScene;
+	Scene* scene = m_scene_manager->getCurrentScene();
 	for (int i = 0; i < scene->getNumLayers(); i++){
 		if (scene->getLayer(i)->enabled){
 			RenderList* list = scene->render(i, &bounds);

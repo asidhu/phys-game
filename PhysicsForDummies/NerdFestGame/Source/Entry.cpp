@@ -24,6 +24,7 @@
 #include "EnemyRiflesmen.h"
 #include "PhysGame\Source\ResourceManager.h"
 #include "MyInputHandler.h"
+#include "PhysGame\Source\LuaEngine.h"
 GameEngine engine;
 
 #define random() (float)rand()/RAND_MAX
@@ -157,13 +158,15 @@ int main(int argc, char* argv[])
 	//graphics->loadImage(1, "./reddiamond.png");
 	//graphics->loadImage(2, "./orangediamond.png");
 	//graphics->loadImage(3, "./bluediamond.png");
-	ResourceManager* res = engine.getResourceManager();
-	res->registerTexture(1, "./reddiamond.png");
-	res->registerTexture(2, "./orangediamond.png");
-	res->registerTexture(3, "./bluediamond.png");
-	
-	Scene* scene = new Scene(2);
-	engine.getSceneManager()->currentScene = scene;//hack
+	//ResourceManager* res = engine.getResourceManager();
+	//res->registerTexture(1, "./reddiamond.png");
+	//res->registerTexture(2, "./orangediamond.png");
+	//res->registerTexture(3, "./bluediamond.png");
+	//Scene* scene = new Scene(1,2);
+	//engine.getSceneManager()->currentScene = scene;//hack
+	//LuaEngine* lua_engine = engine.getLuaEngine();
+	//lua_engine->initializeLua(scene);
+	/*
 	Camera* bounds = scene->getBounds();
 	Camera* cam = scene->getCamera();
 	bounds->l = -1;
@@ -189,6 +192,7 @@ int main(int argc, char* argv[])
 	vp->mW = 10;
 	vp->mH = 10;
 	second->addComponent(vp);
+	*/
 	body* b = createBody(engine.getGameWorld()->m_physEngine, 10, 10, 8, 2, 1);
 	Player *m = new Player(0, b);
 	m->m_hp = 10;
@@ -202,6 +206,7 @@ int main(int argc, char* argv[])
 	m->m_tex = 2;
 	m->engine = &engine;
 	engine.getGameWorld()->m_actors.push_back(m);
+	engine.start("scenes.dat");
 	/*
 	body* b = createBody(engine.getPhysEngine(), 10, 10,8, 2, 1);
 	Player *m = new Player(0,b);

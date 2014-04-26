@@ -10,6 +10,6 @@ public:
 	virtual void start() = 0;
 	virtual void close() = 0;
 	virtual void drawList(RenderList*) = 0;
-	virtual void loadImage(unsigned int resID,char* filename)=0;
+	virtual void loadImage(unsigned int resID, const char* filename)=0;
 	virtual void freeImage(unsigned int id) = 0;
 };

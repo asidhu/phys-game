@@ -4,10 +4,12 @@
 #include "PhysGame\Source\Actor.h"
 #include "Layer.h"
 #include <cassert>
-Scene::Scene(int numLayers){
+Scene::Scene(int idx, int numLayers,char * file){
 	m_numlayers = numLayers;
 	m_lists = new RenderList[numLayers];
 	m_layers = new Layer[numLayers];
+	m_sceneidx = idx;
+	m_lua_file = file;
 }
 
 Layer* Scene::getLayer(int layer){
@@ -31,4 +33,9 @@ void Scene::tick(){
 	for (int i = 0; i < m_numlayers; i++){
 		(m_layers + i)->updateScroll(offX,offY,&m_mainCam);
 	}
+}
+
+Scene::~Scene(){
+	delete m_lists;
+	delete m_layers;
 }

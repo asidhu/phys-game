@@ -3,7 +3,7 @@
 #include "LayerButton.h"
 #include "LayerTexture.h"
 #include "LayerWorldViewport.h"
-
+#include "Scene.h"
 Layer::Layer(){
 	this->x = this->y = 0;
 	this->width = this->height = 0;
@@ -71,6 +71,8 @@ void Layer::addTextureComponent(int regularID, float x, float y, float w, float 
 	LayerTexture * tex = new LayerTexture(x, y, w, h, regularID);
 	addComponent(tex);
 }
-void Layer::addGameWorld(){
-	addComponent(new LayerWorldViewport());
+void Layer::addGameWorld(Scene* s){
+	LayerWorldViewport* lwvp = new LayerWorldViewport(s);
+	lwvp->world = s->getGameWorld();
+	addComponent(lwvp);
 }
