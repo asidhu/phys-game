@@ -15,7 +15,7 @@ public:
 	Mob(int id, body* b);
 	virtual void dmg(int d){ dmgfx = 50; m_hp -= d; }
 	virtual void render(RenderList*);
-	virtual bool tick(GameWorld*){
+	virtual bool tick( float timestep, GameWorld*){
 		if(dmgfx>0)dmgfx--;
 		if (m_hp<=0 && m_deathframes++>300)
 		{

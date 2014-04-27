@@ -7,6 +7,6 @@ public:
 	int dmg;
 	float r, g, b;
 	Shrapnel(int id, body* b);
-	bool tick(GameWorld*);
+	bool tick(float timestep, GameWorld*);
 	void render(RenderList*);
 };

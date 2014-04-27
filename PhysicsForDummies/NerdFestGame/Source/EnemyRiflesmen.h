@@ -7,5 +7,5 @@ class EnemyRiflesmen : public Mob{
 public:
 	EnemyRiflesmen(body*);
 	void fireMissile(GameWorld* e, float x, float y);
-	bool tick(GameWorld*);
+	bool tick(float timestep, GameWorld*);
 };

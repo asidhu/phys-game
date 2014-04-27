@@ -24,7 +24,7 @@ Player::Player(int id, body* b) :Mob(id, b){
 	dmgfx = 0;
 	createMissile = fireGrapplingHook = fire2ndGrapplingHook = 0;
 }
-bool Player::tick(GameWorld* e){
+bool Player::tick(float timestep, GameWorld* e){
 	if(dmgfx>0)dmgfx--;
 	if (m_hp<=0 && m_deathframes++>500)
 	{

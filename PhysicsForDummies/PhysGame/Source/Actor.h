@@ -21,7 +21,7 @@ public:
 
 	virtual void render(RenderList*);
 
-	virtual bool tick(GameWorld*){
+	virtual bool tick(float timestep,GameWorld*){
 		return false;
 	}
 	

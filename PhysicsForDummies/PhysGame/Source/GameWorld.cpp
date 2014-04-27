@@ -15,7 +15,7 @@ void GameWorld::tick(float timestep){
 	m_physEngine->step(timestep);
 	for (std::list<Actor*>::iterator it = m_actors.begin(); it != m_actors.end();){
 		Actor* actor = *it;
-		if (actor->tick(this)){
+		if (actor->tick(timestep, this)){
 			m_physEngine->removeBody(actor->getBody());
 			it = m_actors.erase(it);
 			delete actor;

@@ -5,10 +5,10 @@
 #define LASTPOS 8
 class Missile :public GameObject{
 public:
-	int life;
-	int dmg;
+	float life;
+	float dmg;
 	GameObject* launcher;
 	Missile(int id, body* b);
-	bool tick(GameWorld*);
+	bool tick(float timestep, GameWorld*);
 	void render(RenderList*);
 };

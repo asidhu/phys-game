@@ -19,6 +19,6 @@ public:
 	void releaseGrappleHook();
 	void fireSecondHook(float x, float y);
 	void fireMissile(GameEngine*,float x, float y);
-	virtual bool tick(GameWorld*);
+	virtual bool tick(float timestep,GameWorld*);
 	void render(RenderList*);
 };

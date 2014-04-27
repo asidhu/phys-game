@@ -7,7 +7,7 @@
 #include "Missile.h"
 #include "Grapple.h"
 #include "PhysGame\Source\RenderList.h"
-bool Shrapnel::tick(GameWorld* e){
+bool Shrapnel::tick(float timestep, GameWorld* e){
 	if (life--<0){
 		return true;
 	}

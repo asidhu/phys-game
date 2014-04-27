@@ -12,7 +12,7 @@
 #include "PhysGame\Source\GameWorld.h"
 #include "MyActorManager.h"
 
-bool Missile::tick(GameWorld* e){
+bool Missile::tick(float timestep, GameWorld* e){
 	if (life == -1){
 		int numGen = (int)(((float)rand()) / RAND_MAX * 4) + 2;
 		for (int i = 0; i < numGen; i++)
@@ -32,9 +32,9 @@ bool Missile::tick(GameWorld* e){
 		}
 		return true;
 	}
-	if (life %3==0)
-		e->addEffect(new SmokeEffect(getBody()->position.x, getBody()->position.y));
-	life++;
+	//if (life %3==0)
+	//	e->addEffect(new SmokeEffect(getBody()->position.x, getBody()->position.y));
+	life += timestep;
 	return life >3000;
 }
 void Missile::render(RenderList* lst){

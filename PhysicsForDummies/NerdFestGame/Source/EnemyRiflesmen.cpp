@@ -20,7 +20,7 @@ EnemyRiflesmen::EnemyRiflesmen(body* b) :Mob(0, b){
 	fire = 0;
 	jump = 0;
 }
-bool EnemyRiflesmen::tick(GameWorld* e){
+bool EnemyRiflesmen::tick(float timestep, GameWorld* e){
 	/*if ((fire++ % 50) == 0){
 		Player* p = (Player*)e->player;
 		float dx = p->getBody()->position.x - getBody()->position.x;
@@ -31,7 +31,7 @@ bool EnemyRiflesmen::tick(GameWorld* e){
 	jump = 0;
 	getBody()->applyImpulse(vec2(rand()%10-5, 20));
 	}*/
-	return Mob::tick(e);
+	return Mob::tick(timestep, e);
 }
 void EnemyRiflesmen::fireMissile(GameWorld* e, float x, float y){
 	/*

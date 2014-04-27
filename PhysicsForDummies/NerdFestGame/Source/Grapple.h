@@ -18,7 +18,7 @@ public:
 	float maxdist;
 	float speed;
 	Grapple(int id, body* b);
-	bool tick(GameWorld*);
+	bool tick(float timestep, GameWorld*);
 	void erase(GameWorld*);
 	void createOtherHook(body*);
 	bool oneHookOut(GameWorld*);

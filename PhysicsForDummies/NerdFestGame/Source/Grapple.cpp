@@ -157,7 +157,7 @@ bool Grapple::twoHookOut(GameWorld* e){
 	}
 	return false;
 }
-bool Grapple::tick(GameWorld* e){
+bool Grapple::tick(float timestep, GameWorld* e){
 	if (attach != NULL && !attach->isAlive())
 		destroy = true;
 	if (otherattach != NULL && !otherattach->isAlive())
