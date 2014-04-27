@@ -55,6 +55,7 @@ public:
 		angularVelocity *= angularDamping;
 	}
 
+	void setMass(float m);
 	void lockRotation(){
 		invMomentInertia = 0;
 	}

@@ -30,12 +30,17 @@ public:
 	GameWorld* getGameWorld(){			return m_world;					}
 	ActorManager* getActorManager(){ return m_actor_manager; }
 	ResourceManager* getResourceManager(){ return m_resource_manager; }
-
+	PlatformGraphics* getGraphics(){ return m_graphics; }
 	GameEngine();
 	void setup(PlatformGraphics* g, PlatformInput* i,
 		GameInputHandler* handler,
 		ActorManager* actor_manager);
-
+	void setTimeStep(float f){
+		m_timestep = f;
+	}
+	float getTimeStep(){
+		return m_timestep;
+	}
 	void start(char* sceneFile);
 	void close(){
 		m_exit = true;

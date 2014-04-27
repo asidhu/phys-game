@@ -5,6 +5,8 @@
 #include "PhysicsEngine\Source\BodyDef.h"
 #include "PhysicsEngine\Source\PhysEngine.h"
 #include "PhysGame\Source\RenderList.h"
+#include "MyActorManager.h"
+#include "PhysGame\Source\GameWorld.h"
 #define max(a,b) ((a<b)?b:a)
 #define PROJECTILESPEED 45
 #define INVULNERABLETIME 300.f
@@ -20,14 +22,55 @@ Player::Player(int id, body* b) :Mob(id, b){
 	grappleHook = NULL;
 	b->post_collide = onGroundCheck;
 	dmgfx = 0;
+	createMissile = fireGrapplingHook = fire2ndGrapplingHook = 0;
 }
-bool Player::tick(GameEngine* e){
+bool Player::tick(GameWorld* e){
 	if(dmgfx>0)dmgfx--;
 	if (m_hp<=0 && m_deathframes++>500)
 	{
 		//e->close();
 		//return false;
 	}
+
+	if (createMissile){
+		vec2 dist = (vec2(missileTo.x, missileTo.y) - getBody()->position);
+		dist.normalize();
+		body* b = am_createbody(e->m_physEngine, getBody()->position.x, getBody()->position.y, 1.f, 1.f, 1.f, atan2(dist.y, dist.x) * 180 / 3.14159f);
+		Missile *a = new Missile(0, b);
+		dist *= PROJECTILESPEED + max(dist.dot(getBody()->velocity), 0);
+		b->velocity += dist;
+		e->addActor(a);
+		a->launcher = this;
+		createMissile = 0;
+	}
+
+	if (fireGrapplingHook){
+		vec2 dist = (vec2(grapplingHookTo.x, grapplingHookTo.y) - getBody()->position);
+		dist.normalize();
+		body* b = am_createbody(e->m_physEngine, getBody()->position.x, getBody()->position.y, 1.3f, 1.3f, .1f, 0);
+		grappleHook = new Grapple(0, b);
+		grappleHook->player = this;
+		grappleHook->force = 2.f;
+		grappleHook->speed = PROJECTILESPEED - 1;
+		dist *= grappleHook->speed + max(dist.dot(getBody()->velocity), 0);
+		b->velocity += dist;
+		b->data = grappleHook;
+		e->addActor(grappleHook);
+		fireGrapplingHook = 0;
+	}
+
+	if (fire2ndGrapplingHook){
+		vec2 dist = (vec2(grapplingHookTo.x, grapplingHookTo.y) - getBody()->position);
+		dist.normalize();
+		body* b = am_createbody(e->m_physEngine, getBody()->position.x, getBody()->position.y, 1.3f, 1.3f, .1f, 0);
+		grappleHook->otherHook = b;
+		dist *= grappleHook->speed + max(dist.dot(getBody()->velocity), 0);
+		b->velocity += dist;
+		grappleHook->createOtherHook(b);
+		grappleHook = NULL;
+		fire2ndGrapplingHook = 0;
+	}
+
 	return false;
 }
 
@@ -39,27 +82,11 @@ void Player::dmg(int d){
 	}
 }
 
-body* createBody2(PhysEngine* engine, float x, float y, float w, float h, float mass, float rot = 0){
-	bodydef bdef;
-	bdef.position.x = x;
-	bdef.position.y = y;
-	bdef.width = w;
-	bdef.height = h;
-	bdef.mass = mass;
-	bdef.rotation = rot;
-	return engine->buildBody(bdef);
-}
+
 void Player::fireMissile(GameEngine* e,float x, float y){
-	/*
-	vec2 dist = (vec2(x, y) - getBody()->position);
-	dist.normalize();
-	body* b = createBody2(e->getPhysEngine(), getBody()->position.x, getBody()->position.y, 1.f, 1.f, 1.f, atan2(dist.y, dist.x) * 180 / 3.14159f);
-	Missile *a = new Missile(0, b);
-	dist *= PROJECTILESPEED + max(dist.dot(getBody()->velocity), 0);
-	b->velocity += dist;
-	e->addActor(a);
-	a->launcher = this;
-	*/
+	createMissile = 1;
+	missileTo.x = x;
+	missileTo.y = y;
 }
 
 void Player::render(RenderList* lst){
@@ -81,48 +108,23 @@ void Player::render(RenderList* lst){
 	}*/
 }
 
-body* createBody3(PhysEngine* engine, float x, float y, float w, float h, float mass, float rot = 0){
-	bodydef bdef;
-	bdef.position.x = x;
-	bdef.position.y = y;
-	bdef.width = w;
-	bdef.height = h;
-	bdef.mass = mass;
-	bdef.rotation = rot;
-	return engine->buildBody(bdef);
-}
-
 void Player::fireGrappleHook(float x, float y){
-	/*
 	if (grappleHook == NULL){
-		vec2 dist = (vec2(x, y) - getBody()->position);
-		dist.normalize();
-		body* b = createBody3(engine->getPhysEngine(), getBody()->position.x, getBody()->position.y, 1.3f,1.3f,.1f,0);
-		grappleHook = new Grapple(0, b);
-		grappleHook->player = this;
-		grappleHook->force = 2.f;
-		grappleHook->speed = PROJECTILESPEED-1;
-		dist *= grappleHook->speed + max(dist.dot(getBody()->velocity),0);
-		b->velocity += dist;
-		b->data = grappleHook;
-		engine->addActor(grappleHook);
+		fireGrapplingHook = 1;
+		grapplingHookTo.x = x;
+		grapplingHookTo.y = y;
 	}
-	*/
 }
 
 void Player::fireSecondHook(float x, float y){
-	/*
-	if (grappleHook == NULL || grappleHook->otherHook!=NULL)
+	if (grappleHook == NULL || grappleHook->otherHook != NULL)
 		return;
-	vec2 dist = (vec2(x, y) - getBody()->position);
-	dist.normalize();
-	body* b = createBody3(engine->getPhysEngine(), getBody()->position.x, getBody()->position.y, 1.3f, 1.3f, .1f, 0);
-	grappleHook->otherHook = b;
-	dist *= grappleHook->speed + max(dist.dot(getBody()->velocity), 0);
-	b->velocity += dist;
-	grappleHook->createOtherHook(b);
-	grappleHook = NULL;
-	*/
+
+	fire2ndGrapplingHook = 1;
+	grapplingHookTo.x = x;
+	grapplingHookTo.y = y;
+
+	
 }
 
 void Player::releaseGrappleHook(){

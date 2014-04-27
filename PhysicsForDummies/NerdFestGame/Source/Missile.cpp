@@ -9,25 +9,17 @@
 #include "PhysGame\Source\RenderList.h"
 #include "GameEffects.h"
 #include <cstdlib>
-body* createBody9(PhysEngine* engine, float x, float y, float w, float h, float mass, float rot = 0){
-	bodydef bdef;
-	bdef.position.x = x;
-	bdef.position.y = y;
-	bdef.width = w;
-	bdef.height = h;
-	bdef.mass = mass;
-	bdef.rotation = rot;
-	return engine->buildBody(bdef);
-}
+#include "PhysGame\Source\GameWorld.h"
+#include "MyActorManager.h"
+
 bool Missile::tick(GameWorld* e){
-	/*
 	if (life == -1){
 		int numGen = (int)(((float)rand()) / RAND_MAX * 4) + 2;
 		for (int i = 0; i < numGen; i++)
 		{
 			float randX = ((float)rand()) / RAND_MAX, randY = ((float)rand()) / RAND_MAX;
 			float randSize = ((float)rand()) / RAND_MAX * .3f + .3f;
-			body* b = createBody9(e->getPhysEngine(), getBody()->position.x, getBody()->position.y, randSize, randSize, randSize / 80);
+			body* b = am_createbody(e->m_physEngine, getBody()->position.x, getBody()->position.y, randSize, randSize, randSize / 80,0);
 			b->velocity.x = randX*((float)rand()) / RAND_MAX * 10;
 			b->velocity.y = randY*((float)rand()) / RAND_MAX * 10;
 			Shrapnel* s = new Shrapnel(1, b);
@@ -43,8 +35,7 @@ bool Missile::tick(GameWorld* e){
 	if (life %3==0)
 		e->addEffect(new SmokeEffect(getBody()->position.x, getBody()->position.y));
 	life++;
-	*/
-	return false;
+	return life >3000;
 }
 void Missile::render(RenderList* lst){
 	RenderItem* item = lst->getItem();
@@ -71,7 +62,7 @@ void Missile::render(RenderList* lst){
 bool missile_check_explode(body* b, contactdetails* cd){
 	Missile* m = (Missile*)b->data;
 	
-	if (m->life > 6){
+	if (m->life > 20){
 		return true;
 	}
 	body* other;

@@ -52,11 +52,11 @@ void Layer::handleMouseUpdate(float x, float y){
 
 }
 
-bool Layer::handleMouseClick(int type, float x, float y){
+bool Layer::handleMouseClick(SceneManager* m,int type, float x, float y){
 	std::vector<LayerComponent*>::iterator it = m_components.begin();
 	for (; it != m_components.end(); it	++){
 		LayerComponent* comp = *it;
-		if (comp->mouseClick(type,x, y, this->x, this->y))
+		if (comp->mouseClick(m,type,x, y, this->x, this->y))
 			return true;
 	}
 	return false;
@@ -64,7 +64,7 @@ bool Layer::handleMouseClick(int type, float x, float y){
 }
 
 void Layer::addButtonComponent(int regularID, int mouseID, float x, float y, float w, float h, int btnEvent){
-	LayerButton * btn = new LayerButton(x, y, w, h, regularID, mouseID);
+	LayerButton * btn = new LayerButton(x, y, w, h, regularID, mouseID,btnEvent);
 	addComponent(btn);
 }
 void Layer::addTextureComponent(int regularID, float x, float y, float w, float h){

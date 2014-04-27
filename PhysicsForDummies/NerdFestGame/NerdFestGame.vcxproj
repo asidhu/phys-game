@@ -33,12 +33,15 @@
     <ClInclude Include="Source\GameObjects.h" />
     <ClInclude Include="Source\Grapple.h" />
     <ClInclude Include="Source\Grappleable.h" />
+    <ClInclude Include="Source\LuaBindings.h" />
     <ClInclude Include="Source\Missile.h" />
     <ClInclude Include="Source\Mob.h" />
+    <ClInclude Include="Source\MyActorManager.h" />
     <ClInclude Include="Source\MyEngine.h" />
     <ClInclude Include="Source\MyInputHandler.h" />
     <ClInclude Include="Source\Player.h" />
     <ClInclude Include="Source\Shrapnel.h" />
+    <ClInclude Include="Source\Wall.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\EnemyRiflesmen.cpp" />
@@ -46,11 +49,14 @@
     <ClCompile Include="Source\GameEffects.cpp" />
     <ClCompile Include="Source\GameObject.cpp" />
     <ClCompile Include="Source\Grapple.cpp" />
+    <ClCompile Include="Source\LuaBindings.cpp" />
     <ClCompile Include="Source\Missile.cpp" />
     <ClCompile Include="Source\Mob.cpp" />
+    <ClCompile Include="Source\MyActorManager.cpp" />
     <ClCompile Include="Source\MyInputHandler.cpp" />
     <ClCompile Include="Source\Player.cpp" />
     <ClCompile Include="Source\Shrapnel.cpp" />
+    <ClCompile Include="Source\Wall.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{73FA1D65-7F4F-4A59-81CD-563DC0C29879}</ProjectGuid>

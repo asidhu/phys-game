@@ -4,11 +4,12 @@
 class RenderList;
 class Camera;
 class Scene;
+class SceneManager;
 class LayerComponent{
 public:
 	virtual void render(RenderList*,Camera*, float x, float y)=0;
 	virtual void mouseUpdate(float mX, float mY, float scrollX, float scrollY){}
-	virtual bool mouseClick(int type, float mX, float mY, float scrollX, float scrollY){ return false; }
+	virtual bool mouseClick(SceneManager*, int type, float mX, float mY, float scrollX, float scrollY){ return false; }
 };
 class Layer{
 	bool scrolling;
@@ -27,6 +28,6 @@ public:
 	void setScroll(bool s){ scrolling = s; }
 	void updateScroll(float offx, float offy,Camera* main_cam);
 	void handleMouseUpdate(float x, float y);
-	bool handleMouseClick(int type, float x, float y);
+	bool handleMouseClick(SceneManager*,int type, float x, float y);
 
 };

@@ -150,3 +150,5 @@ contactdetails* PhysEngine::debug_getCollisions(){
 int PhysEngine::debug_getNumCollisions(){
 	return contacts->nContacts;
 }
+
+

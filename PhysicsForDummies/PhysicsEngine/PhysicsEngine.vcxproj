@@ -148,6 +148,7 @@
     <ClInclude Include="Source\sort.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Body.cpp" />
     <ClCompile Include="Source\collider.cpp" />
     <ClCompile Include="Source\math.cpp" />
     <ClCompile Include="Source\PhysEngine.cpp" />

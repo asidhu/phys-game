@@ -104,7 +104,7 @@ void GLFWGraphics::renderBatchTextureSquare(RenderList* list){
 		instanceAttributes[num].z = item->zIndex;
 		instanceAttributes[num].rotation = item->rot;
 		instanceAttributes[num].sx = item->tex.w;
-		instanceAttributes[num].sy = item->tex.h;
+		instanceAttributes[num].sy = -item->tex.h;
 		instanceAttributes[num].tx = item->tex.s1;// 1.5f;
 		instanceAttributes[num].ty = item->tex.s2;// 1.5f;
 		GLint texid = m_resourceMap[item->tex.resID];

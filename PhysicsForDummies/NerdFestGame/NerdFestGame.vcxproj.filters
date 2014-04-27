@@ -4,12 +4,12 @@
     <Filter Include="Source">
       <UniqueIdentifier>{1bd63710-edcb-41f6-9d7f-a1204c52c5b7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\GameObjects">
+      <UniqueIdentifier>{12be083a-fdc2-400c-b258-05269ee7505e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\autoptr.h">
-      <Filter>Source</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\EnemyRiflesmen.h">
       <Filter>Source</Filter>
     </ClInclude>
     <ClInclude Include="Source\GameEffects.h">
@@ -18,22 +18,7 @@
     <ClInclude Include="Source\GameObjects.h">
       <Filter>Source</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Grapple.h">
-      <Filter>Source</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Grappleable.h">
-      <Filter>Source</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Missile.h">
-      <Filter>Source</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Mob.h">
-      <Filter>Source</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Player.h">
-      <Filter>Source</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Shrapnel.h">
       <Filter>Source</Filter>
     </ClInclude>
     <ClInclude Include="Source\MyEngine.h">
@@ -42,30 +27,39 @@
     <ClInclude Include="Source\MyInputHandler.h">
       <Filter>Source</Filter>
     </ClInclude>
+    <ClInclude Include="Source\MyActorManager.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\LuaBindings.h">
+      <Filter>Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Missile.h">
+      <Filter>Source\GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Mob.h">
+      <Filter>Source\GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\EnemyRiflesmen.h">
+      <Filter>Source\GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Grapple.h">
+      <Filter>Source\GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Player.h">
+      <Filter>Source\GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Shrapnel.h">
+      <Filter>Source\GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Wall.h">
+      <Filter>Source\GameObjects</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Source\EnemyRiflesmen.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
     <ClCompile Include="Source\GameEffects.cpp">
       <Filter>Source</Filter>
     </ClCompile>
     <ClCompile Include="Source\GameObject.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Grapple.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Missile.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Mob.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Player.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Shrapnel.cpp">
       <Filter>Source</Filter>
     </ClCompile>
     <ClCompile Include="Source\Entry.cpp">
@@ -73,6 +67,33 @@
     </ClCompile>
     <ClCompile Include="Source\MyInputHandler.cpp">
       <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\MyActorManager.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\LuaBindings.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Missile.cpp">
+      <Filter>Source\GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Mob.cpp">
+      <Filter>Source\GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\EnemyRiflesmen.cpp">
+      <Filter>Source\GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Grapple.cpp">
+      <Filter>Source\GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Player.cpp">
+      <Filter>Source\GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Shrapnel.cpp">
+      <Filter>Source\GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Wall.cpp">
+      <Filter>Source\GameObjects</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

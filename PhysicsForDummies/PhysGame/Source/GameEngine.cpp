@@ -10,6 +10,7 @@
 #include "LuaEngine.h"
 #include "ResourceManager.h"
 #include "Layer.h"
+#include "GameInputHandler.h"
 
 GameEngine::GameEngine(){
 	m_list = new RenderList();
@@ -21,14 +22,13 @@ GameEngine::GameEngine(){
 	m_scene_manager->setupResources(m_resource_manager);
 	m_scene_manager->setGameWorld(m_world);
 	m_scene_manager->getLuaEngine()->initiializeEngine(this);
+	m_timestep = 1.0f / 60;
 }	
 
 void GameEngine::tick(){
 	m_world->tick(m_timestep);
+	m_inputHandler->tick(m_timestep);
 	m_scene_manager->tick(m_timestep);
-	/*
-
-	*/
 	m_input->pollInput();
 }
 

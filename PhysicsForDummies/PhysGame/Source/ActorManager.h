@@ -5,8 +5,8 @@ class ActorManager{
 public:
 
 	//Gets or creates actor of this actorType? probably creates.
-	virtual Actor* getActorByType(int actorType)=0;
+	virtual Actor* getActorByType(int actorType,float w, float h)=0;
 	//Gets or creates actor of this unique ID
-	virtual Actor* getActorByID(int actorID) = 0;
+	virtual Actor* getActorByID(int actorID,float w, float h) = 0;
 
 };

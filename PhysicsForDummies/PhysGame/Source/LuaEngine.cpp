@@ -6,15 +6,35 @@
 #include "GameEngine.h"
 #include "Camera.h"
 #include "ActorManager.h"
+#include "GameWorld.h"
 #include "Actor.h"
+#include "PlatformDependent\PlatformGraphics.h"
+/*
+Lua Engine DOC
+
+Objects:
+Layer:
+	constructButton x, y, w, h, regid, mouseoverid, btnevt
+	constructTexture x, y, w, h, regid
+
+
+
+
+*/
+
+
 LuaEngine::LuaEngine(){
 	m_state = 0L;
+	m_hook = 0L;
 }
 
 void LuaEngine::initializeLua(Scene* s ){
 	if (m_state != 0L){
+		lua_getglobal(m_state, "end");
+		lua_call(m_state, 0, 0);
 		lua_close(m_state);
 	}
+	
 	m_state = luaL_newstate();
 	luaL_openlibs(m_state);
 	registerBindings(m_state);
@@ -23,6 +43,12 @@ void LuaEngine::initializeLua(Scene* s ){
 	luaL_getmetatable(m_state, "luaL_Scene");
 	lua_setmetatable(m_state, -2);
 	lua_setglobal(m_state, "Scene");
+
+	if (m_hook){
+		m_hook(m_state);
+	}
+
+
 	luaL_dofile(m_state, s->getLuaFile());
 	lua_getglobal(m_state, "start");
 	lua_call(m_state, 0, 0);
@@ -58,12 +84,32 @@ Scene Management
 			-reqs: scenemanager, lots of stuff.
 */
 
+int l_PlatformGraphics_setupViewport(lua_State* L){
+	// stack -> PlatformGraphics*, t,b,cx
+	PlatformGraphics* graphics = *(PlatformGraphics**)lua_touserdata(L, 1); 
+	float t = luaL_checknumber(L, 2),
+		b = luaL_checknumber(L, 3),
+		cx = luaL_checknumber(L, 4);
+	graphics->setupViewport(t, b, cx);
+	return 0;
+}
+
+int l_GameWorld_addActor(lua_State* L){
+	// stack -> GameWorld*, Actor*
+	GameWorld* gameWorld = *(GameWorld**)lua_touserdata(L, 1);
+	Actor* myActor = *(Actor**)lua_touserdata(L, 2);
+	gameWorld->addActor(myActor);
+	return 0;
+}
+
 
 int l_ActorManager_getActorByID(lua_State* L){
-	// stack -> actor manager*, id -> returns actor*
-	ActorManager* actorManager = *(ActorManager**)luaL_checkudata(L, 1, "luaL_ActorManager");
+	// stack -> actor manager*, id, w, h -> returns actor*
+	ActorManager* actorManager = *(ActorManager**)lua_touserdata(L, 1);
 	int id = luaL_checkint(L, 2);
-	Actor* myActor = actorManager->getActorByID(id);
+	float w = luaL_checknumber(L, 3),
+		h = luaL_checknumber(L, 4);
+	Actor* myActor = actorManager->getActorByID(id,w,h);
 	if (myActor == NULL){
 		lua_pushnil(L);
 	}
@@ -78,9 +124,11 @@ int l_ActorManager_getActorByID(lua_State* L){
 
 int l_ActorManager_getActorByType(lua_State* L){
 	// stack -> actor manager*, id -> returns actor*
-	ActorManager* actorManager = *(ActorManager**)luaL_checkudata(L, 1, "luaL_ActorManager");
+	ActorManager* actorManager = *(ActorManager**)lua_touserdata(L, 1);
 	int id = luaL_checkint(L, 2);
-	Actor* myActor = actorManager->getActorByType(id);
+	float w = luaL_checknumber(L, 3),
+		h = luaL_checknumber(L, 4);
+	Actor* myActor = actorManager->getActorByType(id, w, h);
 	if (myActor == NULL){
 		lua_pushnil(L);
 	}
@@ -95,7 +143,7 @@ int l_ActorManager_getActorByType(lua_State* L){
 
 int l_ResourceManager_registerTexture(lua_State* L){
 	// stack -> resmanager*, int, char*
-	ResourceManager* resManager = *(ResourceManager**)luaL_checkudata(L,1, "luaL_ResourceManager");
+	ResourceManager* resManager = *(ResourceManager**)lua_touserdata(L, 1);
 	int resNumber = luaL_checkint(L, 2);
 	const char* resName = luaL_checkstring(L, 3);
 	resManager->registerTexture(resNumber, resName);
@@ -108,7 +156,7 @@ int l_Scene_getLayer(lua_State* L){
 		stack should be a Scene*,int
 		return layer
 	*/
-	Scene*  s = *(Scene**)luaL_checkudata(L, 1, "luaL_Scene");
+	Scene*  s = *(Scene**)lua_touserdata(L, 1);
 	int layerNum = luaL_checkint(L, 2);
 	Layer ** udata = (Layer **)lua_newuserdata(L, sizeof(Layer *));
 	*udata = s->getLayer(layerNum);
@@ -122,14 +170,14 @@ int l_Scene_getNumLayers(lua_State* L){
 	stack should be a Scene*
 	return layer
 	*/
-	Scene*  s = *(Scene**)luaL_checkudata(L, 1, "luaL_Scene");
+	Scene*  s = *(Scene**)lua_touserdata(L, 1);
 	lua_pushinteger(L, s->getNumLayers());
 	return 1;
 }
 
 int l_Scene_setSceneBounds(lua_State* L){
 	/* stack should be Scene*, 4 numbers*/
-	Scene*  s = *(Scene**)luaL_checkudata(L, 1, "luaL_Scene");
+	Scene*  s = *(Scene**)lua_touserdata(L, 1);
 	float l = luaL_checknumber(L, 2),
 		r = luaL_checknumber(L, 3),
 		t = luaL_checknumber(L, 4),
@@ -143,7 +191,7 @@ int l_Scene_setSceneBounds(lua_State* L){
 }
 int l_Scene_getSceneBounds(lua_State* L){
 	/* stack should be Scene**/
-	Scene*  s = *(Scene**)luaL_checkudata(L, 1, "luaL_Scene");
+	Scene*  s = *(Scene**)lua_touserdata(L, 1);
 	Camera* cam = s->getBounds();
 	lua_pushnumber(L, cam->l);
 	lua_pushnumber(L, cam->r);
@@ -153,7 +201,7 @@ int l_Scene_getSceneBounds(lua_State* L){
 }
 int l_Scene_getCameraBounds(lua_State* L){
 	/* stack should be Scene**/
-	Scene*  s = *(Scene**)luaL_checkudata(L, 1, "luaL_Scene");
+	Scene*  s = *(Scene**)lua_touserdata(L, 1);
 	Camera* cam = s->getCamera();
 	lua_pushnumber(L, cam->l);
 	lua_pushnumber(L, cam->r);
@@ -164,7 +212,7 @@ int l_Scene_getCameraBounds(lua_State* L){
 
 int l_Scene_setCameraBounds(lua_State* L){
 	/* stack should be Scene*, 4 numbers*/
-	Scene*  s = *(Scene**)luaL_checkudata(L, 1, "luaL_Scene");
+	Scene*  s = *(Scene**)lua_touserdata(L, 1);
 	float l = luaL_checknumber(L, 2),
 		r = luaL_checknumber(L, 3),
 		t = luaL_checknumber(L, 4),
@@ -182,7 +230,7 @@ int l_Layer_constructButton(lua_State* L){
 	/*
 		on stack should be Layer*,x,y,w,h, resid1, resid2, btnevt
 	*/
-	Layer* lay = *(Layer**)luaL_checkudata(L, 1, "luaL_Layer");
+	Layer* lay = *(Layer**)lua_touserdata(L, 1);
 	float x = luaL_checknumber(L, 2);
 	float y = luaL_checknumber(L, 3);
 	float w = luaL_checknumber(L, 4);
@@ -195,7 +243,7 @@ int l_Layer_constructButton(lua_State* L){
 }
 int l_Layer_setupDimensions(lua_State* L){
 	// stack Layer*, w,h,
-	Layer* lay = *(Layer**)luaL_checkudata(L, 1, "luaL_Layer");
+	Layer* lay = *(Layer**)lua_touserdata(L, 1);
 	float w = luaL_checknumber(L, 2);
 	float h = luaL_checknumber(L, 3);
 	lay->width = w;
@@ -206,7 +254,7 @@ int l_Layer_constructTexture(lua_State* L){
 	/*
 	on stack should be Layer*,x,y,w,h, resid1
 	*/
-	Layer* lay = *(Layer**)luaL_checkudata(L, 1, "luaL_Layer");
+	Layer* lay = *(Layer**)lua_touserdata(L, 1);
 	float x = luaL_checknumber(L, 2);
 	float y = luaL_checknumber(L, 3);
 	float w = luaL_checknumber(L, 4);
@@ -218,14 +266,14 @@ int l_Layer_constructTexture(lua_State* L){
 
 int l_Layer_setScrolling(lua_State* L){
 	// stack Layer*, bool
-	Layer* lay = *(Layer**)luaL_checkudata(L, 1, "luaL_Layer");
+	Layer* lay = *(Layer**)lua_touserdata(L, 1);
 	bool scrolling = luaL_checkint(L, 2);
 	lay->setScroll(scrolling);
 	return 0;
 }
 int l_Layer_setEnabled(lua_State* L){
 	// stack Layer*, bool
-	Layer* lay = *(Layer**)luaL_checkudata(L, 1, "luaL_Layer");
+	Layer* lay = *(Layer**)lua_touserdata(L, 1);
 	bool scrolling = luaL_checkint(L, 2);
 	lay->enabled = scrolling;
 	return 0;
@@ -234,10 +282,22 @@ int l_Layer_constructWorld(lua_State* L){
 	/*
 	on stack should be Layer*, Scene*
 	*/
-	Layer* lay = *(Layer**)luaL_checkudata(L, 1, "luaL_Layer");
-	Scene*  s = *(Scene**)luaL_checkudata(L, 2, "luaL_Scene");
+	Layer* lay = *(Layer**)lua_touserdata(L, 1);
+	Scene*  s = *(Scene**)lua_touserdata(L, 2);
 	lay->addGameWorld(s);
 	return 0;
+}
+
+
+
+
+void LuaEngine::sendButtonEvent(int evt){
+	
+	lua_getglobal(m_state, "evtButton");
+	lua_pushinteger(m_state, evt);
+	lua_call(m_state, 1, 0);
+
+
 }
 
 
@@ -293,7 +353,7 @@ void LuaEngine::registerBindings(lua_State* state){
 		{NULL,NULL}
 	};
 	luaL_newmetatable(state, "luaL_ActorManager");
-	luaL_setfuncs(state, resManagerFunctions, 0);
+	luaL_setfuncs(state, actorManagerFunctions, 0);
 	lua_pushvalue(state, -1);
 	lua_setfield(state, -1, "__index");
 
@@ -304,6 +364,38 @@ void LuaEngine::registerBindings(lua_State* state){
 	lua_setglobal(state, "ActorManager");
 
 
+	luaL_Reg gameWorldFunctions[] = {
+		{"addActor", l_GameWorld_addActor},
+		{NULL,NULL}
+	};
+	luaL_newmetatable(state, "luaL_GameWorld");
+	luaL_setfuncs(state, resManagerFunctions, 0);
+	lua_pushvalue(state, -1);
+	lua_setfield(state, -1, "__index");
+
+	GameWorld** gameworld = (GameWorld**)lua_newuserdata(state, sizeof(GameWorld*));
+	*gameworld = engine->getGameWorld();
+	luaL_getmetatable(state, "luaL_GameWorld");
+	lua_setmetatable(state, -2);
+	lua_setglobal(state, "GameWorld");
+
+	luaL_newmetatable(state, "luaL_Actor");
+	lua_setfield(state, -1, "__index");
+
+	luaL_Reg graphicsFunctions[] = {
+		{"setupViewport",l_PlatformGraphics_setupViewport},
+		{NULL,NULL}
+	};
+	luaL_newmetatable(state, "luaL_PlatformGraphics");
+	luaL_setfuncs(state, graphicsFunctions, 0);
+	lua_pushvalue(state, -1);
+	lua_setfield(state, -1, "__index");
+
+	PlatformGraphics** graphics = (PlatformGraphics**)lua_newuserdata(state, sizeof(PlatformGraphics*));
+	*graphics = engine->getGraphics();
+	luaL_getmetatable(state, "luaL_PlatformGraphics");
+	lua_setmetatable(state, -2);
+	lua_setglobal(state, "Graphics");
 
 }
 

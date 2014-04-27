@@ -1,11 +1,13 @@
 #include "LayerButton.h"
 #include "Camera.h"
 #include "RenderList.h"
+#include "SceneManager.h"
+#include "LuaEngine.h"
 
 LayerButton::LayerButton(){
 	mousedOver = false;
 }
-LayerButton::LayerButton(float x, float y, float w, float h, int texid, int overid){
+LayerButton::LayerButton(float x, float y, float w, float h, int texid, int overid, int btnevt){
 	mX = x;
 	mY = y;
 	mW = w;
@@ -13,6 +15,7 @@ LayerButton::LayerButton(float x, float y, float w, float h, int texid, int over
 	regularID = texid;
 	mouseOverID = overid;
 	mousedOver = false;
+	buttonID = btnevt;
 }
 void LayerButton::render(RenderList* list,Camera* cam, float x, float y){
 	float displayX = cam->l + mX + x,
@@ -44,8 +47,12 @@ void LayerButton::mouseUpdate(float mouseX, float mouseY, float scrollX, float s
 	}
 }
 
-bool LayerButton::mouseClick(int type, float mouseX, float mouseY, float scrollX, float scrollY){
-	//Forward click press to layer manager!!!
-
-	return true;
+bool LayerButton::mouseClick(SceneManager* sm, int type, float mouseX, float mouseY, float scrollX, float scrollY){
+	float dx = mouseX - mX - scrollX,
+		dy = mouseY - mY - scrollY;
+	if (abs(dx) < mW / 2 && abs(dy) < mH / 2){
+		sm->getLuaEngine()->sendButtonEvent(buttonID);
+		return true;
+	}
+	return false;
 }
