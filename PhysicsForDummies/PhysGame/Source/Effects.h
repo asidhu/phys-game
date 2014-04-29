@@ -2,6 +2,6 @@
 class RenderList;
 class Effect{
 public:
-	virtual bool tick() = 0;
+	virtual bool tick(float timestep) = 0;
 	virtual void render(RenderList*) = 0;
 };

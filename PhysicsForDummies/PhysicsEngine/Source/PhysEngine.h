@@ -34,4 +34,10 @@ public:
 	void debug_collisionAdvance(){ debug_collidedState = 2; }
 	contactdetails* debug_getCollisions();
 	int	debug_getNumCollisions();
+	float getGravity(){
+		return gravity;
+	}
+	void setGravity(float f){
+		gravity = f;
+	}
 };

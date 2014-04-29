@@ -3,6 +3,7 @@
 #include "LayerButton.h"
 #include "LayerTexture.h"
 #include "LayerWorldViewport.h"
+#include "LayerExternalRenderList.h"
 #include "Scene.h"
 Layer::Layer(){
 	this->x = this->y = 0;
@@ -17,6 +18,11 @@ Layer::Layer(float w, float h){
 	this->height = h;
 	scrolling = true;
 	enabled = true;
+}
+
+void Layer::addExternalList(int id, bool followWorld, Scene* s){
+	LayerExternalRenderList* ext = new LayerExternalRenderList(id,s,followWorld);
+	addComponent(ext);
 }
 
 void Layer::render(RenderList* list, Camera* cam){

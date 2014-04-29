@@ -32,6 +32,8 @@ GLFWGraphics::GLFWGraphics(int w, int h){
 	m_win_width = w;
 	m_win_height = h;
 	m_fb_width = m_fb_height = 0;
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	//glEnable(GL_DEPTH_TEST);
 	//glDepthFunc(GL_LEQUAL);
 }

@@ -11,6 +11,7 @@ GameObject::GameObject(body* b, bool grapple, bool missile):Actor(1,b){
 	if (missile)
 		b->dataFlag |= OKMISSILE;
 	m_grapple = NULL;
+	projectilePathVisible = false;
 }
 void GameObject::grapple(Grapple* m){
 	m_grapple = m;

@@ -27,15 +27,16 @@ bool Missile::tick(float timestep, GameWorld* e){
 			s->r = 1 - ((float)rand()) / RAND_MAX*.2f;
 			s->g = ((float)rand()) / RAND_MAX*.6f;
 			s->b = .01f;
-			s->life += (int)(((float)rand()) / RAND_MAX * 500)+200;
 			e->addActor(s);
 		}
 		return true;
 	}
-	//if (life %3==0)
-	//	e->addEffect(new SmokeEffect(getBody()->position.x, getBody()->position.y));
+	if (life > effectCreationTimer){
+		e->addEffect(new SmokeEffect(getBody()->position.x, getBody()->position.y));
+		effectCreationTimer += .1;
+	}
 	life += timestep;
-	return life >3000;
+	return life >60;
 }
 void Missile::render(RenderList* lst){
 	RenderItem* item = lst->getItem();
@@ -62,7 +63,7 @@ void Missile::render(RenderList* lst){
 bool missile_check_explode(body* b, contactdetails* cd){
 	Missile* m = (Missile*)b->data;
 	
-	if (m->life > 20){
+	if (m->life > 1.5f){
 		return true;
 	}
 	body* other;
@@ -93,5 +94,6 @@ Missile::Missile(int id, body* b) :GameObject(b,true,true){
 	b->pre_collide = missile_check_explode;
 	b->post_collide = missile_explode;
 	dmg = 1;
-	life = 0;
+	life = effectCreationTimer = 0;
+	projectilePathVisible = true;
 }

@@ -115,4 +115,13 @@ public:
 		size = 0;
 	}
 
+	std::vector<RenderItem*> getAllocatedItems(){
+		return allocateRenderItems;
+	}
+
+	int getNumAllocatedItems(){
+		return size;
+	}
+
+
 };

@@ -9,4 +9,6 @@ public:
 	//Gets or creates actor of this unique ID
 	virtual Actor* getActorByID(int actorID,float w, float h) = 0;
 
+
+	virtual void handleNewActor(Actor*){}
 };

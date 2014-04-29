@@ -24,6 +24,19 @@ Player::Player(int id, body* b) :Mob(id, b){
 	dmgfx = 0;
 	createMissile = fireGrapplingHook = fire2ndGrapplingHook = 0;
 }
+
+bool Player::canSlowTime(){
+	return true;
+}
+bool Player::canFireMissile(){
+	return true;
+}
+bool Player::canFireSecondHook(){
+	return grappleHook != NULL && grappleHook->otherHook == NULL;
+}
+bool Player::canFireGrapplingHook(){
+	return grappleHook == NULL;
+}
 bool Player::tick(float timestep, GameWorld* e){
 	if(dmgfx>0)dmgfx--;
 	if (m_hp<=0 && m_deathframes++>500)
@@ -34,9 +47,9 @@ bool Player::tick(float timestep, GameWorld* e){
 
 	if (createMissile){
 		vec2 dist = (vec2(missileTo.x, missileTo.y) - getBody()->position);
-		dist.normalize();
 		body* b = am_createbody(e->m_physEngine, getBody()->position.x, getBody()->position.y, 1.f, 1.f, 1.f, atan2(dist.y, dist.x) * 180 / 3.14159f);
 		Missile *a = new Missile(0, b);
+		dist.normalize();
 		dist *= PROJECTILESPEED + max(dist.dot(getBody()->velocity), 0);
 		b->velocity += dist;
 		e->addActor(a);

@@ -1,9 +1,9 @@
 #pragma once
 #include "PhysGame\Source\Actor.h"
-
-class Shrapnel :public Actor{
+#include "GameObjects.h"
+class Shrapnel :public GameObject{
 public:
-	int life;
+	float life;
 	int dmg;
 	float r, g, b;
 	Shrapnel(int id, body* b);

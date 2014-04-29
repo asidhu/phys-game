@@ -1,6 +1,6 @@
 #pragma once
-#include "Grappleable.h"
 #include "GameObjects.h"
+#include "PhysicsEngine\Source\Body.h"
 #define MOB_FLAG	0xf0000000
 class body;
 class RenderList;

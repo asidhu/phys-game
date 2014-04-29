@@ -18,9 +18,6 @@
     <ClInclude Include="Source\GameObjects.h">
       <Filter>Source</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Grappleable.h">
-      <Filter>Source</Filter>
-    </ClInclude>
     <ClInclude Include="Source\MyEngine.h">
       <Filter>Source</Filter>
     </ClInclude>
@@ -53,6 +50,9 @@
     </ClInclude>
     <ClInclude Include="Source\Wall.h">
       <Filter>Source\GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\ProjectilePathRenderer.h">
+      <Filter>Source</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -94,6 +94,12 @@
     </ClCompile>
     <ClCompile Include="Source\Wall.cpp">
       <Filter>Source\GameObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\ProjectilePathRenderer.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\MyEngine.cpp">
+      <Filter>Source</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -19,6 +19,7 @@ GameEngine::GameEngine(){
 	m_scene_manager = new SceneManager();
 	m_world = new GameWorld();
 	m_resource_manager = new ResourceManager();
+	m_world->m_engine = this;
 	m_scene_manager->setupResources(m_resource_manager);
 	m_scene_manager->setGameWorld(m_world);
 	m_scene_manager->getLuaEngine()->initiializeEngine(this);

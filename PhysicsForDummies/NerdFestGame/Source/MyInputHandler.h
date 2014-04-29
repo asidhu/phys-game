@@ -3,7 +3,9 @@
 
 class MyInputHandler : public GameInputHandler{
 	MyEngine* engine;
-	bool A_DOWN, S_DOWN, W_DOWN, D_DOWN, RIGHT_DOWN;
+	bool A_DOWN, S_DOWN, W_DOWN, D_DOWN, RIGHT_DOWN, Z_DOWN;
+	float chargeTime;
+	float mX, mY;
 public:
 	MyInputHandler(MyEngine* e){ engine = e; A_DOWN = S_DOWN = W_DOWN = D_DOWN= RIGHT_DOWN = false; }
 	void handleKey(int key, int state);

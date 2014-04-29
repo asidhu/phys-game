@@ -37,3 +37,11 @@ Actor* MyActorManager::getActorByID(int id, float w, float h){
 Actor* MyActorManager::getActorByType(int type, float w, float h){
 	return 0L;
 }
+
+void MyActorManager::handleNewActor(Actor* a){
+	if (m_my_engine->projectilePathsVisible && ((GameObject*)a)->projectilePathVisible)
+	{
+		m_my_engine->enableProjectilePath((GameObject*)a);
+	}
+
+}

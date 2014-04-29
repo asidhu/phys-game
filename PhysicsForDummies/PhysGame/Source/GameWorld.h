@@ -6,14 +6,15 @@ class Actor;
 class PhysEngine;
 class Camera;
 class RenderList;
+class GameEngine;
 class GameWorld{
+	
 public:
+	GameEngine* m_engine;
 	GameWorld();
 	void tick(float timestep);
 	void render(RenderList*, Camera* viewport, Camera* window);
-	void addActor(Actor* a){
-		m_actors.push_back(a);
-	}
+	void addActor(Actor* a);
 	void addEffect(Effect* e){
 		m_effects.push_back(e);
 	}

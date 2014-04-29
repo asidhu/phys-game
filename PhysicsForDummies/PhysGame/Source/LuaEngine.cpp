@@ -288,6 +288,19 @@ int l_Layer_constructWorld(lua_State* L){
 	return 0;
 }
 
+int l_Layer_constructExternalList(lua_State* L){
+	/*
+	on stack should be Layer*, Scene*, int id, bool 
+	*/
+	Layer* lay = *(Layer**)lua_touserdata(L, 1);
+	Scene*  s = *(Scene**)lua_touserdata(L, 2);
+	int id = luaL_checkint(L, 3);
+	bool followWorld = luaL_checkint(L, 4);
+	lay->addExternalList(id, followWorld, s);
+	return 0;
+}
+
+
 
 
 
@@ -309,6 +322,7 @@ void LuaEngine::registerBindings(lua_State* state){
 		{ "constructButton", l_Layer_constructButton },
 		{ "constructTexture", l_Layer_constructTexture },
 		{ "constructWorld", l_Layer_constructWorld },
+		{ "constructExternalList", l_Layer_constructExternalList },
 		{ "setScrolling", l_Layer_setScrolling },
 		{ "setEnabled", l_Layer_setEnabled },
 		{ "setupDimensions", l_Layer_setupDimensions },

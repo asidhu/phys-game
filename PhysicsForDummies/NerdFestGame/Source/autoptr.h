@@ -22,7 +22,7 @@ public:
 	}
 	void free(){
 		ref--;
-		if (ref == 0)
+		if (ref <= 0)
 			delete this;
 	}
 	friend T;

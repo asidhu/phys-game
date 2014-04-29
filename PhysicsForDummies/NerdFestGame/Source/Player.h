@@ -20,5 +20,9 @@ public:
 	void fireSecondHook(float x, float y);
 	void fireMissile(GameEngine*,float x, float y);
 	virtual bool tick(float timestep,GameWorld*);
+	bool canSlowTime();
+	bool canFireMissile();
+	bool canFireSecondHook();
+	bool canFireGrapplingHook();
 	void render(RenderList*);
 };

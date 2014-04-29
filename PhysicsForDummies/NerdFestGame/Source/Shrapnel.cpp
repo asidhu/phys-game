@@ -8,15 +8,15 @@
 #include "Grapple.h"
 #include "PhysGame\Source\RenderList.h"
 bool Shrapnel::tick(float timestep, GameWorld* e){
-	if (life--<0){
+	if ((life-=timestep)<0){
 		return true;
 	}
 	return false;
 }
 
-Shrapnel::Shrapnel(int id, body* b) :Actor(id, b){
+Shrapnel::Shrapnel(int id, body* b) :GameObject(b,false,false){
 	b->data = this;
-	life = 300;
+	life = 5;
 }
 
 void Shrapnel::render(RenderList* lst){
@@ -35,7 +35,6 @@ void Shrapnel::render(RenderList* lst){
 		item->square.r = r;
 		item->square.g = g;	
 		item->square.b = this->b;
-		
 	}
 	item->rot = b->rotation;
 	lst->addItem(item);

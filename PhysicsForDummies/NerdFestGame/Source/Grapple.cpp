@@ -6,6 +6,7 @@
 #include "PhysicsEngine\Source\PhysEngine.h"
 #include "Player.h"
 #include "Missile.h"
+#include "PhysGame\Source\GameWorld.h"
 
 
 
@@ -20,7 +21,7 @@ bool grapplehooknothit(body* b, contactdetails* cd){
 		return false;
 	if (hook->otherHook == b)
 		return hook->otherattach == NULL;
-	if (hook->attach != NULL || hook->shouldreturn)
+	if (hook->attach != NULL)
 		return false;
 	return true;
 }
@@ -51,6 +52,7 @@ void grapplehookhit(body* b, contactdetails* cd){
 		else
 			hook->attach = ((GameObject*)cd->b1->data)->m_obj;
 		GameObject* grap = (GameObject*)hook->attach->getdata();
+		hook->shouldreturn = false;
 		hook->attach->get();
 		hook->relativeAttach = hook->getBody()->position - grap->getBody()->position;
 		hook->getBody()->velocity.x = hook->getBody()->velocity.y = 0;
@@ -61,9 +63,9 @@ Grapple::Grapple(int id, body* b) :GameObject(b,false,false){
 	attach = otherattach=NULL;
 	shouldreturn = false;
 	destroy = false;
-	maxlife = 150;
+	maxlife = 5;
 	maxdist = 500 * 500;
-	lifetime = 600;
+	lifetime = 20;
 	otherHook = NULL;
 	b->data = this;
 	b->pre_collide = grapplehooknothit;
@@ -77,8 +79,8 @@ void Grapple::erase(GameWorld* e){
 		attach->free();
 	if (otherattach != NULL)
 		otherattach->free();
-	//if (otherHook != NULL)
-	//	e->getPhysEngine()->removeBody(otherHook);
+	if (otherHook != NULL)
+		e->m_physEngine->removeBody(otherHook);
 }
 
 void Grapple::createOtherHook(body* b){
@@ -88,7 +90,7 @@ void Grapple::createOtherHook(body* b){
 	b->post_collide = grapplehookhit;
 }
 
-bool Grapple::oneHookOut(GameWorld* e){
+bool Grapple::oneHookOut(float t,GameWorld* e){
 	vec2 dist = player->getBody()->position - getBody()->position;
 	float d = dist.lengthSq();
 	if (d > maxdist)
@@ -108,7 +110,7 @@ bool Grapple::oneHookOut(GameWorld* e){
 		return false;
 	}
 	if (attach == NULL){
-		if (maxlife-- < 0)
+		if ((maxlife-=t) < 0)
 			shouldreturn = true;
 		if (destroy)
 		{
@@ -123,12 +125,12 @@ bool Grapple::oneHookOut(GameWorld* e){
 	dist *= force;
 	player->getBody()->applyImpulse(-1 * dist);
 	attach->getdata()->getBody()->applyImpulse(dist);
-	if (lifetime-- < 0)
+	if ((lifetime-=t) < 0)
 		shouldreturn = true;
 	
 	return false;
 }
-bool Grapple::twoHookOut(GameWorld* e){
+bool Grapple::twoHookOut(float t, GameWorld* e){
 	if (attach != NULL){
 		getBody()->angularVelocity = 1.5f;
 		this->getBody()->position = attach->getdata()->getBody()->position + relativeAttach;
@@ -137,7 +139,7 @@ bool Grapple::twoHookOut(GameWorld* e){
 		otherHook->angularVelocity = 1.5f;
 		otherHook->position = otherattach->getdata()->getBody()->position + otherRelAttach;
 	}
-	if (lifetime-- < 0){
+	if ((lifetime-=t) < 0){
 		player = NULL;
 		erase(e);
 		return true;
@@ -167,8 +169,8 @@ bool Grapple::tick(float timestep, GameWorld* e){
 		return true;
 	}
 	if (otherHook == NULL)
-		return oneHookOut(e);
-	return twoHookOut(e);
+		return oneHookOut(timestep,e);
+	return twoHookOut(timestep,e);
 }
 void Grapple::release(){
 	destroy = true;

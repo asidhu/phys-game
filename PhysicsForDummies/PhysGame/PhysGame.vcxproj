@@ -32,6 +32,7 @@
     <ClCompile Include="Source\GameWorld.cpp" />
     <ClCompile Include="Source\Layer.cpp" />
     <ClCompile Include="Source\LayerButton.cpp" />
+    <ClCompile Include="Source\LayerExternalRenderList.cpp" />
     <ClCompile Include="Source\LayerTexture.cpp" />
     <ClCompile Include="Source\LayerWorldViewport.cpp" />
     <ClCompile Include="Source\LuaEngine.cpp" />
@@ -48,11 +49,13 @@
     <ClInclude Include="Source\Actor.h" />
     <ClInclude Include="Source\ActorManager.h" />
     <ClInclude Include="Source\Camera.h" />
+    <ClInclude Include="Source\Effects.h" />
     <ClInclude Include="Source\GameEngine.h" />
     <ClInclude Include="Source\GameInputHandler.h" />
     <ClInclude Include="Source\GameWorld.h" />
     <ClInclude Include="Source\Layer.h" />
     <ClInclude Include="Source\LayerButton.h" />
+    <ClInclude Include="Source\LayerExternalRenderList.h" />
     <ClInclude Include="Source\LayerTexture.h" />
     <ClInclude Include="Source\LayerWorldViewport.h" />
     <ClInclude Include="Source\LuaEngine.h" />

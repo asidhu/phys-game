@@ -34,17 +34,6 @@ GameEngine engine;
 bool step = false, go = true;
 void iteration();
 
-body* createBody(PhysEngine* engine, float x, float y, float w, float h, float mass, float rot = 0){
-	bodydef bdef;
-	bdef.position.x = x;
-	bdef.position.y = y;
-	bdef.width = w;
-	bdef.height = h;
-	bdef.mass = mass;
-	bdef.rotation = rot;
-	return engine->buildBody(bdef);
-}
-
 int main(int argc, char* argv[])
 {
 	GLFWGraphics *graphics = new GLFWGraphics(1366, 700);
@@ -100,7 +89,6 @@ int main(int argc, char* argv[])
 				//std::cout << " bodies:" << engine.getPhysEngine()->getNumBodies() << std::endl;
 				frames = 0;
 				totTime = 0;
-
 			}
 			step = false;
 		}

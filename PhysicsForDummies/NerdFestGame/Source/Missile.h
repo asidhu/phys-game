@@ -5,7 +5,7 @@
 #define LASTPOS 8
 class Missile :public GameObject{
 public:
-	float life;
+	float life,effectCreationTimer;
 	float dmg;
 	GameObject* launcher;
 	Missile(int id, body* b);

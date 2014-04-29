@@ -3,13 +3,17 @@
 #include <PhysicsEngine\Source\PhysEngine.h>
 #include "Effects.h"
 #include "Camera.h"
-
+#include "GameEngine.h"
+#include "ActorManager.h"
 GameWorld::GameWorld(){
 	//setup physics engine
 	m_physEngine = new PhysEngine();
 	m_physEngine->setup(-9.81f);// no magic constants... oh well
 }
-
+void GameWorld::addActor(Actor* a){
+	m_engine->getActorManager()->handleNewActor(a);
+	m_actors.push_back(a);
+}
 
 void GameWorld::tick(float timestep){
 	m_physEngine->step(timestep);
@@ -25,7 +29,7 @@ void GameWorld::tick(float timestep){
 	}
 	for (std::list<Effect*>::iterator it = m_effects.begin(); it != m_effects.end();){
 		Effect* actor = *it;
-		if (actor->tick()){
+		if (actor->tick(timestep)){
 			it = m_effects.erase(it);
 			delete actor;
 		}

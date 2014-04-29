@@ -19,6 +19,7 @@ public:
 	Actor* getActorByType(int actorType,float w, float h);
 	//Gets or creates actor of this unique ID
 	Actor* getActorByID(int actorID, float w, float h);
+	void handleNewActor(Actor*);
 };
 
 body* am_createbody(PhysEngine* engine, float x, float y, float w, float h, float mass, float rot);

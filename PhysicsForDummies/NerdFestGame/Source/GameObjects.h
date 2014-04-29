@@ -7,6 +7,7 @@ class Grapple;
 #define OKGRAPPLE 0x00F00000
 class GameObject :public Actor{
 	public:
+		bool projectilePathVisible;
 		autoptr<GameObject> *m_obj;
 		Grapple* m_grapple;
 		GameObject(body* b, bool grapplable, bool missilable);
