@@ -11,7 +11,7 @@
 #include "ResourceManager.h"
 #include "Layer.h"
 #include "GameInputHandler.h"
-
+#include "ActorManager.h"
 GameEngine::GameEngine(){
 	m_list = new RenderList();
 	m_debug_list = new RenderList();
@@ -30,6 +30,7 @@ void GameEngine::tick(){
 	m_world->tick(m_timestep);
 	m_inputHandler->tick(m_timestep);
 	m_scene_manager->tick(m_timestep);
+	m_actor_manager->tick(m_timestep);
 	m_input->pollInput();
 }
 

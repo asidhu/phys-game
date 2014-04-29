@@ -26,7 +26,7 @@ Actor* MyActorManager::getActorByID(int id, float w, float h){
 		if (m_my_engine->m_player != NULL)
 			return m_my_engine->m_player;
 		body* mybody = am_createbody(phys, 0, 0, w, h, 0, 0);
-		Player* p = new Player(1, mybody);
+		Player* p = m_game_engine->getGameWorld()->allocateActor<Player>(1, mybody);
 		m_game_engine->getGameWorld()->addActor(p);
 		m_my_engine->m_player = p;
 		return p;
@@ -39,9 +39,13 @@ Actor* MyActorManager::getActorByType(int type, float w, float h){
 }
 
 void MyActorManager::handleNewActor(Actor* a){
-	if (m_my_engine->projectilePathsVisible && ((GameObject*)a)->projectilePathVisible)
-	{
-		m_my_engine->enableProjectilePath((GameObject*)a);
-	}
+	GameObject* o = (GameObject*)a;
+	o->renderPathDetails = &(m_my_engine->path_rendering_specifications);
 
+}
+
+void MyActorManager::tick(float t){
+	m_my_engine->path_rendering_specifications.toff += t;
+	if (m_my_engine->path_rendering_specifications.toff > .2f)
+		m_my_engine->path_rendering_specifications.toff -= .2f;
 }

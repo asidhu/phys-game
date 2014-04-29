@@ -40,7 +40,7 @@ int l_ActorManager_constructWall(lua_State* L){
 	int texid = luaL_checkint(L, 7);
 	PhysEngine* phys = actorManager->m_game_engine->getGameWorld()->m_physEngine;
 	body* mybody=lua_createbody(phys, x, y, w, h, 0, rot);
-	Wall* obj = new Wall(mybody, texid);
+	Wall* obj = actorManager->m_game_engine->getGameWorld()->allocateActor<Wall>(mybody, texid);
 	actorManager->m_game_engine->getGameWorld()->addActor(obj);
 	Actor** lua_obj = (Actor**)lua_newuserdata(L, sizeof(Actor*));
 	*lua_obj = obj;

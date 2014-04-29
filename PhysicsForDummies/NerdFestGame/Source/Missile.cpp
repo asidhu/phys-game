@@ -22,7 +22,7 @@ bool Missile::tick(float timestep, GameWorld* e){
 			body* b = am_createbody(e->m_physEngine, getBody()->position.x, getBody()->position.y, randSize, randSize, randSize / 80,0);
 			b->velocity.x = randX*((float)rand()) / RAND_MAX * 10;
 			b->velocity.y = randY*((float)rand()) / RAND_MAX * 10;
-			Shrapnel* s = new Shrapnel(1, b);
+			Shrapnel* s = e->allocateActor<Shrapnel>(1, b);
 			float rndColor = ((float)rand()) / RAND_MAX*.2f;
 			s->r = 1 - ((float)rand()) / RAND_MAX*.2f;
 			s->g = ((float)rand()) / RAND_MAX*.6f;
@@ -32,8 +32,9 @@ bool Missile::tick(float timestep, GameWorld* e){
 		return true;
 	}
 	if (life > effectCreationTimer){
-		e->addEffect(new SmokeEffect(getBody()->position.x, getBody()->position.y));
-		effectCreationTimer += .1;
+		SmokeEffect *fx = e->allocateEffect<SmokeEffect>(getBody()->position.x, getBody()->position.y);
+		e->addEffect(fx);
+		effectCreationTimer += .1f;
 	}
 	life += timestep;
 	return life >60;
@@ -58,6 +59,7 @@ void Missile::render(RenderList* lst){
 	}
 	item->rot = b->rotation;
 	lst->addItem(item);
+	this->renderPath(lst,getBody());
 }
 
 bool missile_check_explode(body* b, contactdetails* cd){
@@ -95,5 +97,4 @@ Missile::Missile(int id, body* b) :GameObject(b,true,true){
 	b->post_collide = missile_explode;
 	dmg = 1;
 	life = effectCreationTimer = 0;
-	projectilePathVisible = true;
 }

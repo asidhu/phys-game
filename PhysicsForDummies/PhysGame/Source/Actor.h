@@ -18,6 +18,7 @@ public:
 	body* getBody(){
 		return m_body;
 	}
+	virtual void release(){}
 
 	virtual void render(RenderList*);
 

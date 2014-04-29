@@ -11,4 +11,5 @@ public:
 
 
 	virtual void handleNewActor(Actor*){}
+	virtual void tick(float t){}
 };

@@ -207,4 +207,8 @@ void Grapple::render(RenderList* lst){
 		item->rot = otherHook->rotation;
 		lst->addItem(item);
 	}
+	if(!attach)
+		renderPath(lst, getBody());
+	if(otherHook && !otherattach)
+		renderPath(lst, otherHook);
 }

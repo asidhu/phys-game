@@ -11,11 +11,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PhysGame", "PhysGame\PhysGa
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{CA63ED85-6CC9-43E2-976B-87A01A710434}"
-	ProjectSection(SolutionItems) = preProject
-		Performance1.psess = Performance1.psess
-		Performance2.psess = Performance2.psess
-		Performance3.psess = Performance3.psess
-	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NerdFestGame", "NerdFestGame\NerdFestGame.vcxproj", "{73FA1D65-7F4F-4A59-81CD-563DC0C29879}"
 	ProjectSection(ProjectDependencies) = postProject

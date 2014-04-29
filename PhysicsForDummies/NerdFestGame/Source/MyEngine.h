@@ -5,12 +5,12 @@
 #include <vector>
 class ProjectilePathRenderer;
 class MyEngine{
+	bool m_renderPaths;
 public:
 	Player* m_player;
 	GameEngine* game_engine;
-	bool projectilePathsVisible;
-	//std::vector<ProjectilePathRenderer*> m_projectilepaths;
-	MyEngine(){ m_player = 0L; projectilePathsVisible = false; }
+	PathRenderDetails path_rendering_specifications;
+	MyEngine();
 
 	void slowTime(float newtimeStep);
 	void setProjectilePathVisibility(bool on);

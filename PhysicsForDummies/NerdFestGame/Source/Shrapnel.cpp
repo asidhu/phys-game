@@ -34,6 +34,7 @@ void Shrapnel::render(RenderList* lst){
 		item->square.h = ((box*)b->form)->halfheight * 2;
 		item->square.r = r;
 		item->square.g = g;	
+		item->square.a = (life>1)?1:life;
 		item->square.b = this->b;
 	}
 	item->rot = b->rotation;

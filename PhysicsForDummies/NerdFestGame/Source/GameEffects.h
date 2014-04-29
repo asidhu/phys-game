@@ -5,7 +5,7 @@ class SmokeEffect :public Effect{
 	float x, y;
 	float dur;
 public:
-	SmokeEffect(float x, float y){ dur = 0; this->x = x; this->y = y; }
+	SmokeEffect(float x, float y):Effect(){ dur = 0; this->x = x; this->y = y; }
 	bool tick(float timestep);
 	void render(RenderList*);
 };

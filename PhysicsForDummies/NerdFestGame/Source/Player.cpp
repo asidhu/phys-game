@@ -48,7 +48,8 @@ bool Player::tick(float timestep, GameWorld* e){
 	if (createMissile){
 		vec2 dist = (vec2(missileTo.x, missileTo.y) - getBody()->position);
 		body* b = am_createbody(e->m_physEngine, getBody()->position.x, getBody()->position.y, 1.f, 1.f, 1.f, atan2(dist.y, dist.x) * 180 / 3.14159f);
-		Missile *a = new Missile(0, b);
+		Missile *a = (Missile*)e->allocateActor(sizeof(Missile));
+		a = new (a) Missile(0, b);
 		dist.normalize();
 		dist *= PROJECTILESPEED + max(dist.dot(getBody()->velocity), 0);
 		b->velocity += dist;
@@ -61,7 +62,8 @@ bool Player::tick(float timestep, GameWorld* e){
 		vec2 dist = (vec2(grapplingHookTo.x, grapplingHookTo.y) - getBody()->position);
 		dist.normalize();
 		body* b = am_createbody(e->m_physEngine, getBody()->position.x, getBody()->position.y, 1.3f, 1.3f, .1f, 0);
-		grappleHook = new Grapple(0, b);
+		grappleHook = (Grapple*)e->allocateActor(sizeof(Grapple));
+		grappleHook= new (grappleHook)Grapple(0, b);
 		grappleHook->player = this;
 		grappleHook->force = 2.f;
 		grappleHook->speed = PROJECTILESPEED - 1;

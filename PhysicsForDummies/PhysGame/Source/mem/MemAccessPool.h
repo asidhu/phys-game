@@ -6,7 +6,7 @@ Purpose of class, Memory pool allocator with triple linked list optimized for li
 
 min allocation size is so tiny memory blocks arent created wasting space. This does mean that some memory is wasted 
 
-doesn't support resize :O that would be inefficient. could be added tho.
+doesn't support resize :O that would be inefficient cache wise. could be added tho.
 
 Free list is sorted in ascending block size order for speedy creation.
 Used list is sorted in-memory order for highest cache hit rate during linear iteration(but skips over free blocks)
@@ -33,15 +33,20 @@ class MemAccessPool{
 	MemChunk * m_rootFree;
 	int freeSpace;
 	int size;
+	int numFree;
+	int numAllocated;
 	int minimumFreeChunkSize;
 	void addToFreeList(MemChunk* chunk);
+	void removeFromFreeList(MemChunk* chunk);
+	void innerFree(MemChunk* chunk);
+	void validateLists();
 public:
 	MemAccessPool(int maxSize,int minAllocationSize=8);
 	~MemAccessPool();
 	void* allocate(int size);
 	void  deallocate(void* data);
 	int getFreeSpace(){ return freeSpace; }
-
+	bool own(void*);
 	class iterator{
 	public:
 		typedef iterator self_type;
@@ -56,6 +61,7 @@ public:
 		bool operator!=(const self_type& rhs) { return it != rhs.it; }
 	private:
 		MemChunk* it;
+		friend class MemAccessPool;
 	};
 
 	iterator begin(){
@@ -65,4 +71,25 @@ public:
 		return iterator(NULL);
 	}
 
+	iterator& erase(iterator& it){
+		MemChunk* freed = it.it;
+		assert(freed);
+		it++;
+		innerFree(freed);
+		return it;
+	}
+
+	template<class T>
+	T* allocate(){
+		void* data = allocate(sizeof(T));
+		return (T*)(data);
+	}
+
+	template<class T, typename... ConstructorArgs>
+	T* allocate(ConstructorArgs... args){
+		void* data = allocate(sizeof(T));
+		if (!data)
+			return NULL;
+		return new (data)T( args... );
+	}
 };

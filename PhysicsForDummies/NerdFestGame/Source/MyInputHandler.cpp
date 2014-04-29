@@ -50,7 +50,7 @@ void MyInputHandler::tick(float timestep){
 	}
 	if (Z_DOWN){
 		if (player->canSlowTime()){
-			engine->slowTime(1.f / 240.f);
+			engine->slowTime(1.f / 360.f);
 			engine->setProjectilePathVisibility(true);
 		}
 		else{
