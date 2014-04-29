@@ -27,6 +27,7 @@
 #include "PhysGame\Source\LuaEngine.h"
 #include "MyActorManager.h"
 #include "LuaBindings.h"
+#include "PhysGame\Source\mem\MemAccessPool.h"
 GameEngine engine;
 
 #define random() (float)rand()/RAND_MAX
@@ -36,6 +37,27 @@ void iteration();
 
 int main(int argc, char* argv[])
 {
+	/*
+	Testing of memory access pool :D I'll implement it tmrw.
+	MemAccessPool pool = MemAccessPool(8192);
+	void* a = pool.allocate(1024 - sizeof(MemChunk));
+	void* b = pool.allocate(1024 - sizeof(MemChunk));
+	void* c = pool.allocate(1024 - sizeof(MemChunk));
+	void* d = pool.allocate(1024 - sizeof(MemChunk));
+	assert(pool.getFreeSpace() == 8192 - 1024*4  - sizeof(MemChunk));
+	pool.deallocate(c);
+	assert(pool.getFreeSpace() == 8192 - 1024*3 -  sizeof(MemChunk));
+	pool.deallocate(b);
+	assert(pool.getFreeSpace() == 8192 - 1024*2 -  sizeof(MemChunk));
+	pool.deallocate(a);
+	assert(pool.getFreeSpace() == 8192 - 1024 -  sizeof(MemChunk));
+	pool.deallocate(d);
+	assert(pool.getFreeSpace() == 8192 - sizeof(MemChunk));
+	*/
+	
+
+
+
 	GLFWGraphics *graphics = new GLFWGraphics(1366, 700);
 	if (!graphics->m_initialized)
 		return -1;

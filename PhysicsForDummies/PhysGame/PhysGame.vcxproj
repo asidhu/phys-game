@@ -36,6 +36,7 @@
     <ClCompile Include="Source\LayerTexture.cpp" />
     <ClCompile Include="Source\LayerWorldViewport.cpp" />
     <ClCompile Include="Source\LuaEngine.cpp" />
+    <ClCompile Include="Source\mem\MemAccessPool.cpp" />
     <ClCompile Include="Source\opengl\primitives.cpp" />
     <ClCompile Include="Source\opengl\stb_image.cpp" />
     <ClCompile Include="Source\PlatformDependent\GLFWGraphics.cpp" />
@@ -59,6 +60,7 @@
     <ClInclude Include="Source\LayerTexture.h" />
     <ClInclude Include="Source\LayerWorldViewport.h" />
     <ClInclude Include="Source\LuaEngine.h" />
+    <ClInclude Include="Source\mem\MemAccessPool.h" />
     <ClInclude Include="Source\opengl\opengl.h" />
     <ClInclude Include="Source\opengl\primitives.h" />
     <ClInclude Include="Source\opengl\stb_image.h" />
