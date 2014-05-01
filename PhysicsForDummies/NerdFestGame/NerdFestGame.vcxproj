@@ -28,6 +28,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\autoptr.h" />
+    <ClInclude Include="Source\GameButton.h" />
     <ClInclude Include="Source\EnemyRiflesmen.h" />
     <ClInclude Include="Source\GameEffects.h" />
     <ClInclude Include="Source\GameObjects.h" />
@@ -46,6 +47,7 @@
   <ItemGroup>
     <ClCompile Include="Source\EnemyRiflesmen.cpp" />
     <ClCompile Include="Source\Entry.cpp" />
+    <ClCompile Include="Source\GameButton.cpp" />
     <ClCompile Include="Source\GameEffects.cpp" />
     <ClCompile Include="Source\GameObject.cpp" />
     <ClCompile Include="Source\Grapple.cpp" />

@@ -10,7 +10,7 @@ void SmokeEffect::render(RenderList* lst){
 	itm->x = x;
 	itm->y = y;
 	itm->circle.radius =  (float)dur / SMOKELENGTH*3.f + .4f;
-	itm->circle.a = 1- ((float)dur/SMOKELENGTH);
+	itm->circle.a = .6f*(1.f- ((float)dur/SMOKELENGTH));
 	itm->circle.r = itm->circle.g = itm->circle.b = .6f- ((float)dur / SMOKELENGTH*.4f);
 	lst->addItem(itm);
 }

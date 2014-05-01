@@ -7,6 +7,8 @@
 #include "GameObjects.h"
 #include "Wall.h"
 #include "Player.h"
+#include "EnemyRiflesmen.h"
+#include "GameButton.h"
 body* am_createbody(PhysEngine* engine, float x, float y, float w, float h, float mass, float rot = 0){
 	bodydef bdef;
 	bdef.position.x = x;
@@ -36,6 +38,19 @@ Actor* MyActorManager::getActorByID(int id, float w, float h){
 }
 
 Actor* MyActorManager::getActorByType(int type, float w, float h){
+	PhysEngine* phys = m_game_engine->getGameWorld()->m_physEngine;
+	if (type == 1){
+		body* mybody = am_createbody(phys, 0, 0, w, h, 0, 0);
+		EnemyRiflesmen* p = m_game_engine->getGameWorld()->allocateActor<EnemyRiflesmen>( mybody);
+		m_game_engine->getGameWorld()->addActor(p);
+		return p;
+	}
+	if (type == 2){
+		body* mybody = am_createbody(phys, 0, 0, w, h, 0, 0);
+		GameButton* p = m_game_engine->getGameWorld()->allocateActor<GameButton>(mybody);
+		m_game_engine->getGameWorld()->addActor(p);
+		return p;
+	}
 	return 0L;
 }
 

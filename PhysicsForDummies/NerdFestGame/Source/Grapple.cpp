@@ -86,6 +86,7 @@ void Grapple::erase(GameWorld* e){
 void Grapple::createOtherHook(body* b){
 	otherHook = b;
 	b->data = this;
+	b->dataFlag = getBody()->dataFlag;
 	b->pre_collide = grapplehooknothit;
 	b->post_collide = grapplehookhit;
 }

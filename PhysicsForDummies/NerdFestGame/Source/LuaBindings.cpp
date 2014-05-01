@@ -5,6 +5,7 @@
 #include "PhysicsEngine\Source\PhysEngine.h"
 #include "PhysGame\Source\GameEngine.h"
 #include "PhysGame\Source\GameWorld.h"
+#include "GameButton.h"
 #include "GameObjects.h"
 #include "Wall.h"
 void luaL_addfuncs(lua_State* L,const char* tname, luaL_Reg* funcs){
@@ -40,6 +41,8 @@ int l_ActorManager_constructWall(lua_State* L){
 	int texid = luaL_checkint(L, 7);
 	PhysEngine* phys = actorManager->m_game_engine->getGameWorld()->m_physEngine;
 	body* mybody=lua_createbody(phys, x, y, w, h, 0, rot);
+	mybody->linearDamping = 1;
+	mybody->coeffFriction = 1;
 	Wall* obj = actorManager->m_game_engine->getGameWorld()->allocateActor<Wall>(mybody, texid);
 	actorManager->m_game_engine->getGameWorld()->addActor(obj);
 	Actor** lua_obj = (Actor**)lua_newuserdata(L, sizeof(Actor*));
@@ -87,6 +90,50 @@ int l_Actor_setTexture(lua_State* L){
 	return 1;
 }
 
+int l_Actor_lockRotation(lua_State* L){
+	//stack -> actor*, 
+	GameObject* act = (GameObject*)*(Actor**)lua_touserdata(L, 1);
+	act->getBody()->lockRotation();
+	lua_pushvalue(L, 1);
+	return 1;
+}
+int l_Actor_setV(lua_State* L){
+	//stack -> actor*, x, y
+	Actor* act = *(Actor**)lua_touserdata(L, 1);
+	float x = luaL_checknumber(L, 2),
+		y = luaL_checknumber(L, 3);
+	body* b = act->getBody();
+	b->velocity.x = x;
+	b->velocity.y = y;
+	lua_pushvalue(L, 1);
+	return 1;
+}
+int l_Actor_addImpulse(lua_State* L){
+	//stack -> actor*, x, y
+	Actor* act = *(Actor**)lua_touserdata(L, 1);
+	float x = luaL_checknumber(L, 2),
+		y = luaL_checknumber(L, 3);
+	body* b = act->getBody();
+	b->impulse.x += x;
+	b->impulse.y += y;
+	lua_pushvalue(L, 1);
+	return 1;
+}
+int l_Actor_getV(lua_State* L){
+	//stack -> actor*,
+	Actor* act = *(Actor**)lua_touserdata(L, 1);
+	body* b = act->getBody();
+	lua_pushnumber(L, b->velocity.x);
+	lua_pushnumber(L, b->velocity.y);
+	return 2;
+}
+int l_Actor_isToggled(lua_State* L){
+	//stack -> GameButton,
+	GameButton* act = *(GameButton**)lua_touserdata(L, 1);
+	body* b = act->getBody();
+	lua_pushboolean(L, act->toggled());
+	return 1;
+}
 void registerGameBindings(lua_State* L){
 	luaL_Reg new_ActorManagerFunctions[] = {
 		{"constructWall",l_ActorManager_constructWall},
@@ -98,7 +145,12 @@ void registerGameBindings(lua_State* L){
 		{ "setXY", l_Actor_setXY },
 		{ "getXY", l_Actor_getXY },
 		{ "setMass", l_Actor_setMass },
-		{"setTexture",l_Actor_setTexture},
+		{ "setTexture", l_Actor_setTexture },
+		{ "lockRotation", l_Actor_lockRotation },
+		{ "setV", l_Actor_setV },
+		{ "getV", l_Actor_getV },
+		{ "addImpulse", l_Actor_addImpulse},
+		{ "isToggled", l_Actor_isToggled },
 		{NULL,NULL}
 	};
 

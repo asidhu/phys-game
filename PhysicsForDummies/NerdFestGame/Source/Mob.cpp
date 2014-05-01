@@ -18,7 +18,7 @@ Mob::Mob(int id, body* b) :GameObject(b,true,true){
 
 void Mob::checkExtremeCollision(Mob* m, contactdetails* cd){
 	if (cd->normalImpulse > 20){
-		m->dmg((int)((cd->normalImpulse-20)/5));
+		m->dmg(((cd->normalImpulse-20)/5));
 	}
 }
 
@@ -33,7 +33,7 @@ void Mob::render(RenderList* lst){
 	item->tex.h = ((box*)b->form)->halfheight * 2;
 	item->tex.s1 = item->y*.4f;
 	item->tex.t1 = item->x*.4f;
-	item->zIndex = -90.f;
+	item->zIndex = -1.f;
 	if (item->tex.h > item->tex.w){
 		item->tex.s2 = item->y*.4f - item->tex.h * 2;
 		item->tex.t2 = item->x*.4f - item->tex.h * 2;
@@ -51,6 +51,7 @@ void Mob::render(RenderList* lst){
 	item = lst->getItem();
 	item->x = b->position.x;
 	item->y = b->position.y;
+	item->zIndex = -1.f;
 	item->myType = hollowsquare;
 	item->rot = b->rotation;
 	item->square.lw = 1;
@@ -64,12 +65,13 @@ void Mob::render(RenderList* lst){
 		RenderItem* item = lst->getItem();
 		item->x = b->position.x;
 		item->y = b->position.y;
+		item->zIndex = -10.f;
 		item->myType = solidsquare;
 		item->rot = b->rotation;
 		item->square.lw = 1;
 		item->square.w = ((box*)b->form)->halfwidth * 2;
 		item->square.h = ((box*)b->form)->halfheight * 2;
-		item->square.a = 1;
+		item->square.a = .8f;
 		item->square.r = 1;
 		item->square.g = item->square.b = 0;
 		lst->addItem(item);

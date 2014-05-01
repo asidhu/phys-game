@@ -3,9 +3,10 @@
 #include "PhysGame\Source\Actor.h"
 class Grapple;
 
-#define OKMISSILE 0x0f000000
-#define OKGRAPPLE 0x00F00000
-#define OKGRAVITYWELL 0x000F0000
+#define OKMISSILE		0x0f000000
+#define OKGRAPPLE		0x00F00000
+#define OKGRAVITYWELL	0x000F0000
+#define ISENEMY			0X0000F000
 #define INFOTYPE_RESID 10
 struct PathRenderDetails{
 	bool *shouldRender;
@@ -21,7 +22,8 @@ struct PathRenderDetails{
 };
 
 class GameObject :public Actor{
-	public:
+public:
+		unsigned int m_tex;
 		PathRenderDetails* renderPathDetails;
 		autoptr<GameObject> *m_obj;
 		Grapple* m_grapple;

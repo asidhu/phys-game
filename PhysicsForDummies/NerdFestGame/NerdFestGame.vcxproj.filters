@@ -54,6 +54,9 @@
     <ClInclude Include="Source\ProjectilePathRenderer.h">
       <Filter>Source</Filter>
     </ClInclude>
+    <ClInclude Include="Source\GameButton.h">
+      <Filter>Source\GameObjects</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\GameEffects.cpp">
@@ -100,6 +103,9 @@
     </ClCompile>
     <ClCompile Include="Source\MyEngine.cpp">
       <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\GameButton.cpp">
+      <Filter>Source\GameObjects</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

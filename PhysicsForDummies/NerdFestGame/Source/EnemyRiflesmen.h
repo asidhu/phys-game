@@ -2,8 +2,7 @@
 #include "Mob.h"
 
 class EnemyRiflesmen : public Mob{
-	int fire;
-	int jump;
+	float fire;
 public:
 	EnemyRiflesmen(body*);
 	void fireMissile(GameWorld* e, float x, float y);

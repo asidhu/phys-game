@@ -11,13 +11,18 @@
 #define max(a,b) ((a<b)?b:a)
 #define PROJECTILESPEED 45
 #define INVULNERABLETIME 300.f
+Player* Player::me = NULL;
+
 void onGroundCheck(body* b, contactdetails* dets){
 	const vec2 up = vec2(0, 1);
-	if (((Player*)b->data)->onGround>100 || dets->contactNormal.dot(up) < .5f)
+	Player* p = (Player*)b->data;
+	Player::checkExtremeCollision(p, dets);
+	if (p->onGround>100 || dets->contactNormal.dot(up) < .5f)
 		return;
 	float relV = b->velocity.dot(up);
 	if (fabs(relV) < 1)
-		((Player*)b->data)->onGround++;
+		p->onGround++;
+
 }
 Player::Player(int id, body* b) :Mob(id, b){
 	grappleHook = NULL;
@@ -26,6 +31,7 @@ Player::Player(int id, body* b) :Mob(id, b){
 	dmgfx = 0;
 	createMissile = fireGrapplingHook = fire2ndGrapplingHook = 0;
 	psychicPowerMeter = 0;
+	m_hp = 100;
 }
 
 bool Player::canSlowTime(){
@@ -95,6 +101,12 @@ bool Player::tick(float timestep, GameWorld* e){
 			engine->slomo(false);
 		}
 	}
+
+
+	PhysEngine *phys = engine->game_engine->getGameWorld()->m_physEngine;
+	me = this;
+	phys->findAll(getBody()->position.x, getBody()->position.y, 300, targetme);
+
 	if(psychicPowerMeter<100)
 		psychicPowerMeter += 10*timestep;
 	return false;
@@ -107,7 +119,12 @@ void Player::implode(body* b, float r,vec2 diff){
 		b->impulse += diff * 10;
 	}
 }
-
+void Player::targetme(body* b, float r, vec2 diff){
+	if (b->dataFlag & ISENEMY){
+		Mob* o = (Mob*)b->data;
+		o->acquireTarget(me);
+	}
+}
 void Player::explode(body* b, float r, vec2 diff){
 	if (b->dataFlag & OKGRAVITYWELL){
 		diff.normalize();
@@ -126,6 +143,26 @@ void Player::initiateGravityWell(float wX, float wY,float radius, bool inwards){
 	}
 }
 
+void Player::renderHealthBar(RenderList* lst){
+	const float color1[3] = { 0,1,0 },
+		color2[3] = { 1,0,0};
+	float t = this->m_hp / 100;
+	RenderItem* itm = lst->getItem();
+	itm->myType = solidsquare;
+	itm->myAnchorX = left;
+	itm->myAnchorY = top;
+	itm->x = 10;
+	itm->y = 65 - 30 * t;
+	itm->rot = 0;
+	itm->zIndex = -100;
+	itm->square.w = 5;
+	itm->square.h = 60 * t;
+	itm->square.a = 1;
+	itm->square.r = color1[0] * t + color2[0] * (1 - t);
+	itm->square.g = color1[1] * t + color2[1] * (1 - t);
+	itm->square.b = color1[2] * t + color2[2] * (1 - t);
+	lst->addItem(itm);
+}
 
 void Player::renderPsychicBar(RenderList* lst){
 	const float color1[3] = { 153.f/255, 51.f/255, 1 },
@@ -135,7 +172,7 @@ void Player::renderPsychicBar(RenderList* lst){
 	itm->myType = solidsquare;
 	itm->myAnchorX = left;
 	itm->myAnchorY = top;
-	itm->x = 10;
+	itm->x = 20;
 	itm->y = 65-30*t;
 	itm->rot = 0;
 	itm->zIndex = -100;
@@ -214,6 +251,7 @@ void Player::render(RenderList* lst){
 		renderProjectilePath(lst);
 	}
 	renderPsychicBar(lst);
+	renderHealthBar(lst);
 	body* b = getBody();
 	/*if (dmgfx > 0){
 		RenderItem* item = lst->getItem();

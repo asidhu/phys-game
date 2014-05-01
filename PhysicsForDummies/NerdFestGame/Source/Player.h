@@ -7,6 +7,7 @@ class GameEngine;
 class MyEngine;
 class Player : public Mob{
 public:
+	static Player* me;
 	Grapple* grappleHook;
 	MyEngine* engine;
 	int onGround;
@@ -31,9 +32,11 @@ public:
 	void initiateGravityWell(float wX, float wY,float radius, bool);
 	static void explode(body*, float, vec2);
 	static void implode(body*, float, vec2);
+	static void targetme(body*, float, vec2);
 	void render(RenderList*);
 	void renderProjectilePath(RenderList* list);
 	void renderPsychicBar(RenderList* list);
+	void renderHealthBar(RenderList* list);
 	bool cullActor(Camera* cam){
 		return true;
 	}

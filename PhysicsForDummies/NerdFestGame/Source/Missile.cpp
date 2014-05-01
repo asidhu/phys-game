@@ -37,7 +37,7 @@ bool Missile::tick(float timestep, GameWorld* e){
 		effectCreationTimer += .1f;
 	}
 	life += timestep;
-	return life >60;
+	return life >30;
 }
 void Missile::render(RenderList* lst){
 	RenderItem* item = lst->getItem();

@@ -6,7 +6,7 @@ function start()
 	ResourceManager:registerTexture(3,"./bluediamond.png")
 	ResourceManager:registerTexture(4,"./CloudySunset.png")
 	Graphics:setupViewport(100,-100,0)
-	Scene:setSceneBounds(-100,100,100,-100)
+	Scene:setSceneBounds(-100,800,100,-100)
 	Scene:setCameraBounds(-1,1,1,-1)
 	local lay = Scene:getLayer(1)
 	lay:constructButton(50,30,10,10,2,3,1)
@@ -15,9 +15,16 @@ function start()
 	gui:setScrolling(0)	
 	gui:setupDimensions(4,4)
 	
-	
-	ActorManager:constructWall(0,-30,400,4,0,1)
+	-- floor
+	ActorManager:constructWall(200,-60,800,62,0,1)
+	--left wall
+	ActorManager:constructWall(-200,30,4,120,0,1)
+	--roof
+	ActorManager:constructWall(200,90,800,4,0,1)
+	--platform
 	ActorManager:constructWall(0,50,50,8,0,1)
+	--wall above trap1
+	ActorManager:constructWall(150,60,100,60,0,1)
 	
 	local world = Scene:getLayer(2)
 	
@@ -25,7 +32,27 @@ function start()
 	
 	
 	player = ActorManager:getActorByID(1,5,5)
-	player:setXY(-50,10):setMass(1):setTexture(1)
+	player:setXY(230,20):setMass(1):setTexture(1)
+	
+	local enemy = ActorManager:getActorByType(1,3,3)
+	enemy:setTexture(3):setMass(1)
+	
+	
+	--first obstacle
+	
+	trap1 = ActorManager:constructWall(100,50,6,60,0,1):lockRotation():setV(0,-100)
+	trap2 = ActorManager:constructWall(105,-80,6,50,0,1):lockRotation():setV(0,100)
+	trap1Counter=0
+	
+	trap3 = ActorManager:constructWall(150,30,6,50,0,1):lockRotation():setV(0,-60)
+	trap4 = ActorManager:constructWall(165,-80,6,50,0,1):lockRotation():setV(0,60)
+	trap5 = ActorManager:constructWall(160,30,6,50,0,1):lockRotation():setV(0,-60)
+	trap6 = ActorManager:constructWall(155,-80,6,50,0,1):lockRotation():setV(0,100)
+	trap2Counter=0
+	trap3Counter=0
+	
+	button1 = ActorManager:getActorByType(2,2,2):setXY(250,60):setTexture(2)
+	
 end
 
 
@@ -56,6 +83,38 @@ function update(timestep)
 		b=bb
 	end
 	Scene:setCameraBounds(l,r,t,b)
+	if trap1Counter > .5 then
+		local vx,vy=trap1:getV()
+		trap1:setV(vx,-vy)
+		local vx,vy=trap2:getV()
+		trap2:setV(vx,-vy)
+		trap1Counter=0
+	end
+	trap1Counter=trap1Counter+timestep
+	if trap2Counter > .8 then
+		local vx,vy=trap3:getV()
+		trap3:setV(vx,-vy)
+		local vx,vy=trap4:getV()
+		trap4:setV(vx,-vy)
+		local vx,vy=trap5:getV()
+		trap5:setV(vx,-vy)
+		trap2Counter=0
+	end
+	trap2Counter=trap2Counter+timestep
+	if trap3Counter > .6 then
+		local vx,vy=trap6:getV()
+		trap6:setV(vx,-vy)
+		trap3Counter=0
+	end
+	trap3Counter=trap3Counter+timestep
+	
+	if button1:isToggled() then
+		button1:setTexture(1)
+	else 
+		button1:setTexture(2)
+	
+	end
+	
 end
 
 
