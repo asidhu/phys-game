@@ -16,6 +16,7 @@ bool Shrapnel::tick(float timestep, GameWorld* e){
 
 Shrapnel::Shrapnel(int id, body* b) :GameObject(b,false,false){
 	b->data = this;
+	b->dataFlag &= ~TRIGGERBUTTON;
 	life = 5;
 	setAffectedByGravityWell(false);
 }

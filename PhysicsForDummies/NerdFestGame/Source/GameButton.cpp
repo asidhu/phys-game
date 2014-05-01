@@ -5,7 +5,13 @@
 #include "PhysicsEngine\Source\shape.h"
 void GameButton::toggle(body* b, contactdetails* cd){
 	GameButton *gb = (GameButton*)b->data;
-	gb->isHit = gb->setTime;
+	body* other;
+	if (cd->b1 == b)
+		other = cd->b2;
+	else
+		other = cd->b1;
+	if (other->dataFlag&TRIGGERBUTTON)
+		gb->isHit = gb->setTime;
 }
 GameButton::GameButton(body* b):GameObject(b,false,true){
 	isHit = 0;

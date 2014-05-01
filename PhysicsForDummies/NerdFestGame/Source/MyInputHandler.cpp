@@ -39,9 +39,14 @@ void MyInputHandler::tick(float timestep){
 	if (isDown(GLFW_KEY_A) && player->getBody()->velocity.x > -30){
 		player->getBody()->impulse += move_speed* -1;
 	}
-	if (isDown(GLFW_KEY_W) && ((Player*)player)->onGround>30){
-		player->getBody()->velocity += (up_speed);
-		((Player*)player)->onGround = 0;
+	if (isDown(GLFW_KEY_W) ){
+		if (((Player*)player)->onGround > 30){
+			player->getBody()->velocity += (up_speed);
+			((Player*)player)->onGround = 0;
+		}
+		else if (player->getBody()->velocity.y<-8){
+			player->getBody()->velocity += fastfall_speed*-1;
+		}
 	}
 	if (isDown(GLFW_KEY_S) && player->getBody()->velocity.y > -30){
 		player->getBody()->velocity += (fastfall_speed);

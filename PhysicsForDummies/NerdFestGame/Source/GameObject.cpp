@@ -11,6 +11,7 @@ GameObject::GameObject(body* b, bool grapple, bool missile):Actor(1,b){
 	if (missile)
 		b->dataFlag |= OKMISSILE;
 	b->dataFlag |= OKGRAVITYWELL;
+	b->dataFlag |= TRIGGERBUTTON;
 	m_grapple = NULL;
 	renderPathDetails = NULL;
 }

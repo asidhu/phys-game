@@ -1,19 +1,34 @@
 
 
+
+t_text1=5
+t_text2=6
+t_text3=7
+
 function start()
 	ResourceManager:registerTexture(1,"./reddiamond.png")
 	ResourceManager:registerTexture(2,"./orangediamond.png")
 	ResourceManager:registerTexture(3,"./bluediamond.png")
 	ResourceManager:registerTexture(4,"./CloudySunset.png")
+	ResourceManager:registerTexture(5,"./TutorialText1.png")
+	ResourceManager:registerTexture(6,"./TutorialText2.png")
+	ResourceManager:registerTexture(7,"./TutorialText3.png")
+	
 	Graphics:setupViewport(100,-100,0)
-	Scene:setSceneBounds(-100,800,100,-100)
+	Scene:setSceneBounds(-100,800,100,20)
 	Scene:setCameraBounds(-1,1,1,-1)
 	local lay = Scene:getLayer(1)
-	lay:constructButton(50,30,10,10,2,3,1)
+	lay:setScrolling(1)
+	lay:setupDimensions(2,2)
+	lay:constructTexture(100,00,100,60,5)
+	--lay:constructButton(50,30,10,10,2,3,1)
 	local gui = Scene:getLayer(0)
 	gui:constructTexture(400,100,800,200,4)
 	gui:setScrolling(0)	
 	gui:setupDimensions(4,4)
+	
+	
+	
 	
 	-- floor
 	ActorManager:constructWall(200,-60,800,62,0,1)
@@ -26,6 +41,18 @@ function start()
 	--wall above trap1
 	ActorManager:constructWall(150,60,100,60,0,1)
 	
+	--wall with button
+	ActorManager:constructWall(230,35,60,4,0,1)
+	--wall with button
+	ActorManager:constructWall(260,55,40,4,0,1)
+	--wall with button again
+	ActorManager:constructWall(280,60,5,60,0,1)
+	--button activated wall
+	button1wall=ActorManager:constructWall(280,0,5,60,0,1)
+	
+	
+	
+	
 	local world = Scene:getLayer(2)
 	
 	world:constructWorld(Scene)
@@ -34,8 +61,8 @@ function start()
 	player = ActorManager:getActorByID(1,5,5)
 	player:setXY(230,20):setMass(1):setTexture(1)
 	
-	local enemy = ActorManager:getActorByType(1,3,3)
-	enemy:setTexture(3):setMass(1)
+	--local enemy = ActorManager:getActorByType(1,3,3)
+	--enemy:setTexture(3):setMass(1)
 	
 	
 	--first obstacle
@@ -51,7 +78,7 @@ function start()
 	trap2Counter=0
 	trap3Counter=0
 	
-	button1 = ActorManager:getActorByType(2,2,2):setXY(250,60):setTexture(2)
+	button1 = ActorManager:getActorByType(2,2,8):setXY(205,80):setTexture(2):setButtonTime(5)
 	
 end
 
@@ -110,9 +137,16 @@ function update(timestep)
 	
 	if button1:isToggled() then
 		button1:setTexture(1)
+		local r = button1wall:getRot()
+		if r<1.5 then
+			button1wall:setRot(r+.06)
+		end
 	else 
 		button1:setTexture(2)
-	
+		local r = button1wall:getRot()
+		if r>0 then
+			button1wall:setRot(r-.06)
+		end
 	end
 	
 end

@@ -7,6 +7,7 @@ class Grapple;
 #define OKGRAPPLE		0x00F00000
 #define OKGRAVITYWELL	0x000F0000
 #define ISENEMY			0X0000F000
+#define TRIGGERBUTTON	0x00000F00
 #define INFOTYPE_RESID 10
 struct PathRenderDetails{
 	bool *shouldRender;

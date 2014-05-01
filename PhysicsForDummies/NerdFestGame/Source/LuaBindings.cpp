@@ -72,6 +72,23 @@ int l_Actor_getXY(lua_State* L){
 	return 2;
 }
 
+int l_Actor_setRot(lua_State* L){
+	//stack -> actor*, x
+	Actor* act = *(Actor**)lua_touserdata(L, 1);
+	float x = luaL_checknumber(L, 2);
+	body* b = act->getBody();
+	b->rotation = x;
+	lua_pushvalue(L, 1);
+	return 1;
+}
+
+int l_Actor_getRot(lua_State* L){
+	//stack -> actor*,
+	Actor* act = *(Actor**)lua_touserdata(L, 1);
+	body* b = act->getBody();
+	lua_pushnumber(L, b->rotation);
+	return 1;
+}
 int l_Actor_setMass(lua_State* L){
 	//stack -> actor*, mass
 	Actor* act = *(Actor**)lua_touserdata(L, 1);
@@ -134,6 +151,15 @@ int l_Actor_isToggled(lua_State* L){
 	lua_pushboolean(L, act->toggled());
 	return 1;
 }
+int l_Actor_setBtnTime(lua_State* L){
+	//stack -> GameButton,
+	GameButton* act = *(GameButton**)lua_touserdata(L, 1);
+	body* b = act->getBody();
+	float time = luaL_checknumber(L, 2);
+	act->setTime = time;
+	lua_pushvalue(L, 1);
+	return 1;
+}
 void registerGameBindings(lua_State* L){
 	luaL_Reg new_ActorManagerFunctions[] = {
 		{"constructWall",l_ActorManager_constructWall},
@@ -144,6 +170,8 @@ void registerGameBindings(lua_State* L){
 	luaL_Reg new_ActorFunctions[] = {
 		{ "setXY", l_Actor_setXY },
 		{ "getXY", l_Actor_getXY },
+		{ "setRot", l_Actor_setRot },
+		{ "getRot", l_Actor_getRot },
 		{ "setMass", l_Actor_setMass },
 		{ "setTexture", l_Actor_setTexture },
 		{ "lockRotation", l_Actor_lockRotation },
@@ -151,6 +179,7 @@ void registerGameBindings(lua_State* L){
 		{ "getV", l_Actor_getV },
 		{ "addImpulse", l_Actor_addImpulse},
 		{ "isToggled", l_Actor_isToggled },
+		{ "setButtonTime", l_Actor_setBtnTime },
 		{NULL,NULL}
 	};
 
