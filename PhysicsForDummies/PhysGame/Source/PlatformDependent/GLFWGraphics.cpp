@@ -34,8 +34,8 @@ GLFWGraphics::GLFWGraphics(int w, int h){
 	m_fb_width = m_fb_height = 0;
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	//glEnable(GL_DEPTH_TEST);
-	//glDepthFunc(GL_LEQUAL);
+	glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_LEQUAL);
 }
 void GLFWGraphics::start(){
 	float  ratio;
@@ -101,8 +101,18 @@ void GLFWGraphics::renderBatchTextureSquare(RenderList* list){
 	while(list->batchTexSquare.size()){
 		RenderItem* item = list->batchTexSquare.top();
 		list->batchTexSquare.pop();
-		instanceAttributes[num].x = item->x;
-		instanceAttributes[num].y = item->y;
+		if (item->myAnchorX == left)
+			instanceAttributes[num].x = m_left+item->x;
+		else if (item->myAnchorX == right)
+			instanceAttributes[num].x = m_right - item->x;
+		else
+			instanceAttributes[num].x = item->x;
+		if (item->myAnchorY == top)
+			instanceAttributes[num].y = m_top-item->y;
+		else if (item->myAnchorY == bottom)
+			instanceAttributes[num].y = m_bottom+item->y;
+		else
+			instanceAttributes[num].y = item->y;
 		instanceAttributes[num].z = item->zIndex;
 		instanceAttributes[num].rotation = item->rot;
 		instanceAttributes[num].sx = item->tex.w;
@@ -136,8 +146,18 @@ void GLFWGraphics::renderBatchCircle(bool hollow, std::list<RenderItem*> &list){
 	int num = 0;
 	for (std::list<RenderItem*>::iterator it = list.begin(); it != list.end(); ++it){
 		RenderItem* item = *it;
-		instanceAttributes[num].x = item->x;
-		instanceAttributes[num].y = item->y;
+		if (item->myAnchorX == left)
+			instanceAttributes[num].x = m_left + item->x;
+		else if (item->myAnchorX == right)
+			instanceAttributes[num].x = m_right - item->x;
+		else
+			instanceAttributes[num].x = item->x;
+		if (item->myAnchorY == top)
+			instanceAttributes[num].y = m_top - item->y;
+		else if (item->myAnchorY == bottom)
+			instanceAttributes[num].y = m_bottom + item->y;
+		else
+			instanceAttributes[num].y = item->y;
 		instanceAttributes[num].z = item->zIndex;
 		instanceAttributes[num].radius = item->circle.radius;
 		instanceAttributes[num].red = item->circle.r;
@@ -168,8 +188,18 @@ void GLFWGraphics::renderBatchSquare(bool hollow, std::list<RenderItem*> &list){
 	int num = 0;
 	for (std::list<RenderItem*>::iterator it = list.begin(); it != list.end(); ++it){
 		RenderItem* item = *it;
-		instanceAttributes[num].x = item->x;
-		instanceAttributes[num].y = item->y;
+		if (item->myAnchorX == left)
+			instanceAttributes[num].x = m_left + item->x;
+		else if (item->myAnchorX == right)
+			instanceAttributes[num].x = m_right - item->x;
+		else
+			instanceAttributes[num].x = item->x;
+		if (item->myAnchorY == top)
+			instanceAttributes[num].y = m_top - item->y;
+		else if (item->myAnchorY == bottom)
+			instanceAttributes[num].y = m_bottom + item->y;
+		else
+			instanceAttributes[num].y = item->y;
 		instanceAttributes[num].z = item->zIndex;
 		instanceAttributes[num].rot = item->rot;
 		instanceAttributes[num].sx = item->square.w;

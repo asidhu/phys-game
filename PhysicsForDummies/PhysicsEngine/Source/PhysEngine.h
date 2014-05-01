@@ -7,6 +7,9 @@
 class body;
 class solver;
 struct bodydef;
+
+typedef void (*bodysearchfunctor)(body* b, float r, vec2 diff);
+
 class PhysEngine{
 private:
 	float gravity;
@@ -32,6 +35,9 @@ public:
 	void enableDebugger(bool stopOnCollision){ debug_enabled = true; debug_onCollisionStop = stopOnCollision; debug_collidedState = false; }
 	void disableDebugger(){ debug_enabled = false; }
 	void debug_collisionAdvance(){ debug_collidedState = 2; }
+
+	void findAll(float x, float y,float radius, bodysearchfunctor fctn);
+
 	contactdetails* debug_getCollisions();
 	int	debug_getNumCollisions();
 	float getGravity(){

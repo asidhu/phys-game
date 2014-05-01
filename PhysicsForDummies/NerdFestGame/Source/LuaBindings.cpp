@@ -60,6 +60,15 @@ int l_Actor_setXY(lua_State* L){
 	return 1;
 }
 
+int l_Actor_getXY(lua_State* L){
+	//stack -> actor*,
+	Actor* act = *(Actor**)lua_touserdata(L, 1);
+	body* b = act->getBody();
+	lua_pushnumber(L,b->position.x);
+	lua_pushnumber(L,b->position.y);
+	return 2;
+}
+
 int l_Actor_setMass(lua_State* L){
 	//stack -> actor*, mass
 	Actor* act = *(Actor**)lua_touserdata(L, 1);
@@ -69,7 +78,14 @@ int l_Actor_setMass(lua_State* L){
 	lua_pushvalue(L, 1);
 	return 1;
 }
-
+int l_Actor_setTexture(lua_State* L){
+	//stack -> actor*, texid
+	GameObject* act = (GameObject*)*(Actor**)lua_touserdata(L, 1);
+	int txid = luaL_checkint(L, 2);
+	act->giveInfo(INFOTYPE_RESID, txid);
+	lua_pushvalue(L, 1);
+	return 1;
+}
 
 void registerGameBindings(lua_State* L){
 	luaL_Reg new_ActorManagerFunctions[] = {
@@ -79,8 +95,10 @@ void registerGameBindings(lua_State* L){
 	luaL_addfuncs(L, "luaL_ActorManager", new_ActorManagerFunctions);
 
 	luaL_Reg new_ActorFunctions[] = {
-		{"setXY",l_Actor_setXY},
+		{ "setXY", l_Actor_setXY },
+		{ "getXY", l_Actor_getXY },
 		{ "setMass", l_Actor_setMass },
+		{"setTexture",l_Actor_setTexture},
 		{NULL,NULL}
 	};
 

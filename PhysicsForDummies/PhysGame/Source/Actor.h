@@ -13,7 +13,7 @@ public:
 		m_actorID = actorID;
 		m_body = body;
 	}
-	bool cullActor(Camera* cam);
+	virtual bool cullActor(Camera* cam);
 	virtual ~Actor(){}
 	body* getBody(){
 		return m_body;

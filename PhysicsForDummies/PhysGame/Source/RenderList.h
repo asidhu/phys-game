@@ -9,11 +9,15 @@ enum DrawType{
 	texture, stenciltexture
 };
 
+enum Anchor{
+	top,bottom,left,right, absolute
+};
 class RenderItem{
 public:
 	float x, y;
 	float rot;
 	DrawType myType;
+	Anchor myAnchorX, myAnchorY;
 	float zIndex;
 	union{
 		struct{
@@ -30,7 +34,8 @@ public:
 	RenderItem(){
 		myType = hollowsquare;
 		zIndex = 0;
-		
+		myAnchorX = absolute;
+		myAnchorY = absolute;
 	}
 };
 class RenderList{
@@ -60,8 +65,10 @@ public:
 		sY = sy;
 	}
 	RenderItem* transformRenderItem(RenderItem* item){
-		item->x += tX;
-		item->y += tY;
+		if (item->myAnchorX == absolute)
+			item->x += tX;
+		if (item->myAnchorY == absolute)
+			item->y += tY;
 		if (item->myType == solidcircle || item->myType == hollowcircle){
 			item->circle.radius *= sX;
 		}
@@ -102,6 +109,11 @@ public:
 			allocateRenderItems.push_back(new RenderItem());
 		}
 		RenderItem* ret = allocateRenderItems.at(size);
+
+		ret->myType = hollowsquare;
+		ret->zIndex = 0;
+		ret->myAnchorX = absolute;
+		ret->myAnchorY = absolute;
 		size++;
 		return ret;
 	}

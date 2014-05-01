@@ -88,6 +88,24 @@ void PhysEngine::createBox(float x, float y, float hw,float hh, float vx, float 
 	b->form->calcAABB(b, &(b->AABB));
 }
 
+
+void PhysEngine::findAll(float x, float y,float r, bodysearchfunctor fctn){
+	body *ptr = root.nextX;
+	float r2 = r*r;
+	while (ptr != NULL){
+		body* b = ptr;
+		float dx =(b->position.x - x);
+		if (abs(dx) < r){
+			float dy = (b->position.y - y);
+			float radius2 = dx*dx + dy*dy;
+			if (radius2 < r2)
+				fctn(b, sqrtf(radius2),vec2(dx,dy));
+		}
+		ptr = ptr->nextX;
+	}
+}
+
+
 void PhysEngine::setup(float g, float minX, float minY, float maxX, float maxY){
 	gravity = g;
 	mX = minX;

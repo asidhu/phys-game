@@ -5,7 +5,8 @@ class Grapple;
 
 #define OKMISSILE 0x0f000000
 #define OKGRAPPLE 0x00F00000
-
+#define OKGRAVITYWELL 0x000F0000
+#define INFOTYPE_RESID 10
 struct PathRenderDetails{
 	bool *shouldRender;
 	float ti, tf, toff;
@@ -25,9 +26,11 @@ class GameObject :public Actor{
 		autoptr<GameObject> *m_obj;
 		Grapple* m_grapple;
 		GameObject(body* b, bool grapplable, bool missilable);
+		void setAffectedByGravityWell(bool g);
 		void grapple(Grapple* m);
 		virtual void release();
 		void releaseHook();
 		~GameObject(){}
 		void renderPath(RenderList*,body* obj);
+		virtual void giveInfo(int infotype, int info){}
 };

@@ -577,7 +577,7 @@ void primitives::drawLine(float x1,float y1, float x2, float y2){
 #include <cmath>
 #include <vector>
 #include <cstring>
-#define CIRCLE_RES 10
+#define CIRCLE_RES 30
 #define PIPERDEG 3.14159/180.0
 const char *simpleVertexShader = "glsl\\SimpleVShader.glsl";
 const char *simpleFragmentShader = "glsl\\SimpleFShader.glsl";

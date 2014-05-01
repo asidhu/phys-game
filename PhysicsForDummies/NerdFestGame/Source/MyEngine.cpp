@@ -11,6 +11,7 @@ void MyEngine::enableProjectilePath(GameObject* o){
 }
 void MyEngine::setProjectilePathVisibility(bool b){
 	m_renderPaths = b;
+	m_player->mRenderProjectilePath = b;
 }
 MyEngine::MyEngine(){
 	m_player = 0L;
@@ -26,4 +27,15 @@ MyEngine::MyEngine(){
 	path_rendering_specifications.toff = 0;
 	path_rendering_specifications.num = 10;
 
+}
+
+void MyEngine::slomo(bool b){
+	slow_time = b;
+	setProjectilePathVisibility(b);
+	if (b){
+		slowTime(1 / 360.f);
+	}
+	else{
+		slowTime(1 / 60.f);
+	}
 }

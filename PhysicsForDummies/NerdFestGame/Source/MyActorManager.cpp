@@ -29,6 +29,7 @@ Actor* MyActorManager::getActorByID(int id, float w, float h){
 		Player* p = m_game_engine->getGameWorld()->allocateActor<Player>(1, mybody);
 		m_game_engine->getGameWorld()->addActor(p);
 		m_my_engine->m_player = p;
+		p->engine = m_my_engine;
 		return p;
 	}
 	return 0L;

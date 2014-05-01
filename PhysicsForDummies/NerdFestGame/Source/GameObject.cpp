@@ -10,6 +10,7 @@ GameObject::GameObject(body* b, bool grapple, bool missile):Actor(1,b){
 		b->dataFlag |= OKGRAPPLE;
 	if (missile)
 		b->dataFlag |= OKMISSILE;
+	b->dataFlag |= OKGRAVITYWELL;
 	m_grapple = NULL;
 	renderPathDetails = NULL;
 }
@@ -24,6 +25,12 @@ void GameObject::release(){
 	m_obj->free();
 }
 
+void GameObject::setAffectedByGravityWell(bool g){
+	if (g)
+		getBody()->dataFlag |= OKGRAVITYWELL;
+	else
+		getBody()->dataFlag &= ~OKGRAVITYWELL;
+}
 void GameObject::renderPath(RenderList* list, body* obj){
 	if (!(*renderPathDetails->alive))return;
 	float astep = (renderPathDetails->af - renderPathDetails->ai) / renderPathDetails->num;

@@ -23,4 +23,9 @@ public:
 		}
 		return false;
 	}
+
+	virtual void giveInfo(int infotype, int info){
+		if (infotype == INFOTYPE_RESID)
+			m_tex = info;
+	}
 };
