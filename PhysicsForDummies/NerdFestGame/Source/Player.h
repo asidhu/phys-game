@@ -14,7 +14,7 @@ public:
 	vec2 missileTo;
 	vec2 grapplingHookTo;
 	int createMissile, fireGrapplingHook, fire2ndGrapplingHook;
-	float mX, mY;
+	float mX, mY;	
 	float psychicPowerMeter;
 	bool mRenderProjectilePath;
 

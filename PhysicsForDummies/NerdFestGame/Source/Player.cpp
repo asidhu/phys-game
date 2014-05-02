@@ -48,10 +48,17 @@ bool Player::canFireGrapplingHook(){
 }
 bool Player::tick(float timestep, GameWorld* e){
 	if(dmgfx>0)dmgfx--;
-	if (m_hp<=0 && m_deathframes++>500)
+	if (m_hp<=0)
 	{
-		//e->close();
-		//return false;
+		getBody()->position.x = -50;
+		getBody()->position.y = -15;
+		getBody()->velocity.x = 0;
+		getBody()->velocity.y = 0;
+		getBody()->rotation = 0;
+		getBody()->angularVelocity = 0;
+		m_hp = 100;
+		if(grappleHook)
+			this->grappleHook->release();
 	}
 
 	if (createMissile){
@@ -253,6 +260,44 @@ void Player::render(RenderList* lst){
 	renderPsychicBar(lst);
 	renderHealthBar(lst);
 	body* b = getBody();
+	RenderItem* itm = lst->getItem();
+	itm->myType = DrawType::texture;
+	itm->x = -100;
+	itm->y = 10;
+	itm->rot = 0;
+	itm->zIndex = 0;
+	itm->tex.w = 100;
+	itm->tex.h = 60;
+	itm->tex.resID = 5;
+	itm->tex.t1 = itm->tex.t2 = 1;
+	itm->tex.s1 = itm->tex.s2 = 1;
+	lst->addItem(itm);
+
+	itm = lst->getItem();
+	itm->myType = DrawType::texture;
+	itm->x = 40;
+	itm->y = 10;
+	itm->rot = 0;
+	itm->zIndex = 0;
+	itm->tex.w = 100;
+	itm->tex.h = 60;
+	itm->tex.resID = 6;
+	itm->tex.t1 = itm->tex.t2 = 1;
+	itm->tex.s1 = itm->tex.s2 = 1;
+	lst->addItem(itm);
+
+	itm = lst->getItem();
+	itm->myType = DrawType::texture;
+	itm->x = 350;
+	itm->y = 10;
+	itm->rot = 0;
+	itm->zIndex = 0;
+	itm->tex.w = 100;
+	itm->tex.h = 60;
+	itm->tex.resID = 7;
+	itm->tex.t1 = itm->tex.t2 = 1;
+	itm->tex.s1 = itm->tex.s2 = 1;
+	lst->addItem(itm);
 	/*if (dmgfx > 0){
 		RenderItem* item = lst->getItem();
 		item->x = b->position.x;

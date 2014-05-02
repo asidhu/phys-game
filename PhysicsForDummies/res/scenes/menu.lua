@@ -14,7 +14,7 @@ function start()
 	ResourceManager:registerTexture(6,"./TutorialText2.png")
 	ResourceManager:registerTexture(7,"./TutorialText3.png")
 	
-	Graphics:setupViewport(100,-100,0)
+	Graphics:setupViewport(80,-80,0)
 	Scene:setSceneBounds(-100,800,100,20)
 	Scene:setCameraBounds(-1,1,1,-1)
 	local lay = Scene:getLayer(1)
@@ -40,6 +40,7 @@ function start()
 	ActorManager:constructWall(0,50,50,8,0,1)
 	--wall above trap1
 	ActorManager:constructWall(150,60,100,60,0,1)
+	ActorManager:constructWall(600,30,4,120,0,1)
 	
 	--wall with button
 	ActorManager:constructWall(230,35,60,4,0,1)
@@ -59,10 +60,11 @@ function start()
 	
 	
 	player = ActorManager:getActorByID(1,5,5)
-	player:setXY(230,20):setMass(1):setTexture(1)
-	
-	--local enemy = ActorManager:getActorByType(1,3,3)
-	--enemy:setTexture(3):setMass(1)
+	player:setXY(-30,00):setMass(1):setTexture(1)
+	for i= 1,10,1 do
+		local enemy = ActorManager:getActorByType(1,3,3)
+		enemy:setTexture(3):setMass(1):setXY(390,5)
+	end
 	
 	
 	--first obstacle
@@ -133,7 +135,7 @@ function update(timestep)
 		trap6:setV(vx,-vy)
 		trap3Counter=0
 	end
-	trap3Counter=trap3Counter+timestep
+	--trap3Counter=trap3Counter+timestep
 	
 	if button1:isToggled() then
 		button1:setTexture(1)

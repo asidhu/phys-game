@@ -49,6 +49,7 @@ void Missile::render(RenderList* lst){
 	{
 		item->myType = solidsquare;
 		item->square.a = item->square.r = item->square.g = item->square.b = 1.f;
+		item->zIndex = -1;
 		item->square.lw = 1;
 		item->square.w = ((box*)b->form)->halfwidth * 2;
 		item->square.h = ((box*)b->form)->halfheight * 2;
