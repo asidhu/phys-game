@@ -13,15 +13,24 @@
 #define INVULNERABLETIME 300.f
 Player* Player::me = NULL;
 
+/*
+void Player::checkExtremeCollision(Player* m, contactdetails* cd){
+	if (cd->normalImpulse > 20){
+		m->dmg(((cd->normalImpulse - 20) / 5));
+	}
+}
+*/
 void onGroundCheck(body* b, contactdetails* dets){
 	const vec2 up = vec2(0, 1);
 	Player* p = (Player*)b->data;
 	Player::checkExtremeCollision(p, dets);
-	if (p->onGround>100 || dets->contactNormal.dot(up) < .5f)
-		return;
 	float relV = b->velocity.dot(up);
+	if (dets->contactNormal.dot(up) < 1.f){
+		p->onGround = 0;
+	}
 	if (fabs(relV) < 1)
 		p->onGround++;
+	
 
 }
 Player::Player(int id, body* b) :Mob(id, b){
@@ -32,6 +41,7 @@ Player::Player(int id, body* b) :Mob(id, b){
 	createMissile = fireGrapplingHook = fire2ndGrapplingHook = 0;
 	psychicPowerMeter = 0;
 	m_hp = 100;
+	b->coeffFriction = .95f;
 }
 
 bool Player::canSlowTime(){
@@ -82,7 +92,7 @@ bool Player::tick(float timestep, GameWorld* e){
 		grappleHook= new (grappleHook)Grapple(0, b);
 		grappleHook->player = this;
 		grappleHook->force = 2.f;
-		grappleHook->speed = PROJECTILESPEED - 1;
+		grappleHook->speed = PROJECTILESPEED*1.5f;
 		dist *= grappleHook->speed + max(dist.dot(getBody()->velocity), 0);
 		b->velocity += dist;
 		b->data = grappleHook;
@@ -102,13 +112,15 @@ bool Player::tick(float timestep, GameWorld* e){
 		fire2ndGrapplingHook = 0;
 	}
 	if (engine->slow_time){
+		getBody()->position += getBody()->velocity*timestep * 5;
+		getBody()->rotation += getBody()->angularVelocity*timestep * 5;
 		if (psychicPowerMeter > 1)
 			psychicPowerMeter-=.1f;
 		else{
 			engine->slomo(false);
 		}
 	}
-
+	
 
 	PhysEngine *phys = engine->game_engine->getGameWorld()->m_physEngine;
 	me = this;
@@ -148,7 +160,7 @@ void Player::initiateGravityWell(float wX, float wY,float radius, bool inwards){
 		phys->findAll(wX, wY, 20, inwards ? implode : explode);
 		setAffectedByGravityWell(true);
 	}
-}
+}			
 
 void Player::renderHealthBar(RenderList* lst){
 	const float color1[3] = { 0,1,0 },
@@ -238,9 +250,9 @@ void Player::renderProjectilePath(RenderList* list){
 
 
 
-void Player::dmg(int d){
+void Player::dmg(float d){
+	m_hp -= d;
 	if (dmgfx <= 0){
-		m_hp -= d;
 		dmgfx = INVULNERABLETIME;
 	}
 }

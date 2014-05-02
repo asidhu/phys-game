@@ -19,7 +19,7 @@ public:
 	bool mRenderProjectilePath;
 
 	Player(int id, body* b);
-	void dmg(int d);
+	void dmg(float d);
 	void fireGrappleHook(float x, float y);
 	void releaseGrappleHook();
 	void fireSecondHook(float x, float y);
@@ -37,6 +37,7 @@ public:
 	void renderProjectilePath(RenderList* list);
 	void renderPsychicBar(RenderList* list);
 	void renderHealthBar(RenderList* list);
+	//static void checkExtremeCollision(Player*, contactdetails*);
 	bool cullActor(Camera* cam){
 		return true;
 	}

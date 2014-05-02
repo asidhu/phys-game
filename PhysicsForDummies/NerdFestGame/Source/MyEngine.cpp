@@ -30,12 +30,12 @@ MyEngine::MyEngine(){
 }
 
 void MyEngine::slomo(bool b){
-	slow_time = b;
 	setProjectilePathVisibility(b);
-	if (b){
+	if (b && !slow_time){
 		slowTime(1 / 360.f);
 	}
-	else{
+	if(!b && slow_time){
 		slowTime(1 / 60.f);
 	}
+	slow_time = b;
 }

@@ -29,8 +29,8 @@ bool MyInputHandler::justReleased(int key){
 	return m_keys[key] == KEY_UP;
 }
 void MyInputHandler::tick(float timestep){
-	const vec2 move_speed = vec2(3, 0);
-	const vec2 up_speed = vec2(0,30);
+	const vec2 move_speed = vec2(10, 0);
+	const vec2 up_speed = vec2(0,10);
 	const vec2 fastfall_speed = vec2(0, -1);
 	Player* player = engine->m_player;
 	if (isDown(GLFW_KEY_D) &&  player->getBody()->velocity.x < 30){
@@ -66,7 +66,7 @@ void MyInputHandler::tick(float timestep){
 			engine->slomo(true);
 		}
 	}
-	else{
+	else if(justReleased(GLFW_KEY_SPACE)){
 		engine->slomo(false);
 	}
 
